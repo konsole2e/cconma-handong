@@ -2,10 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "23.0.0 rc2"
 
     defaultConfig {
-        applicationId "cconma.handong.cconma_admin_app"
+        applicationId "handong.cconma.cconmaadmin"
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
@@ -19,12 +19,7 @@ android {
     }
 }
 
-repositories {
-    maven { url "https://jitpack.io" }
-}
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
 }
