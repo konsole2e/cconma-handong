@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">Cconma_admin_app</string>
-    <string name="title_activity_static_main">StaticMain</string>
+    <string name="app_name">Cconma Admin</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

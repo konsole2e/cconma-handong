@@ -1,10 +1,6 @@
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/build
-/captures
+*.class
+*.log
+*.exe
 
 # Android
 gen/
@@ -72,6 +68,10 @@ Thumbs.db
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+.DS_Store
 /build
-Cconma_admin_app/.idea/
-Cconma_admin_app/app/app.iml
+/captures
+/build
+*/.idea
+.idea/*
+*/app.iml
