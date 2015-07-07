@@ -18,7 +18,9 @@
         <activity
             android:name=".BoardWrite"/>
         <activity
-            android:name=".BoardModify"/>
+            android:name=".BoardModify"/>            
+        <activity android:name=".BoardCconma"></activity>
+        <activity android:name=".BoardView"></activity>
     </application>
 
 </manifest>

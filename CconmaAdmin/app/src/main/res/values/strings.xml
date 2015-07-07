@@ -3,4 +3,10 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+        <string-array name="board_search">
+        <item>제목</item>
+        <item>내용</item>
+        <item>작성자</item>
+    </string-array>
 </resources>

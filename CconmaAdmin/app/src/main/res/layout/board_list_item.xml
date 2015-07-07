@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8sp">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/text_board_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="제목"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/text_board_notice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="알림"/>
+                <TextView
+                    android:id="@+id/text_board_comment_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="+3"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/text_board_writer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="김은지"/>
+            <TextView
+                android:id="@+id/text_board_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="2015/06/30"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ToggleButton
+        android:id="@+id/btn_board_mark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:textOff=""
+        android:textOn=""/>
+
+</FrameLayout>
