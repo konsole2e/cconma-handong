@@ -1,8 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="board_condition">
         <item>제목</item>
         <item>내용</item>
         <item>작성자</item>
+    </string-array>
+
+    <string-array name="write_notice">
+        <item></item>
+        <item>- 마을지기전체 -</item>
+        <item>최동훈</item>
+        <item>- IT개발팀</item>
+        <item>황석헌</item>
+        <item>김현</item>
+        <item>이승호</item>
+        <item>손보훈</item>
+        <item>- 디자인팀</item>
+        <item>문서연</item>
+        <item>이선화</item>
+        <item>송혜림</item>
+        <item>장유정</item>
+        <item>- CM1팀</item>
+        <item>김은실</item>
+        <item>김재원</item>
+        <item>손웅배</item>
+        <item>박민규</item>
+        <item>- CM2팀</item>
+        <item>박서유</item>
+        <item>최애영</item>
+        <item>신명재</item>
+        <item>- 마케팅팀</item>
+        <item>이하림</item>
+        <item>백준하</item>
+        <item>이경배</item>
+        <item>최성국</item>
+        <item>- 재무팀</item>
+        <item>고민정</item>
+        <item>김명지</item>
+        <item>이진경</item>
+        <item>김미정</item>
+        <item>- 행밥팀</item>
+        <item>백재승</item>
+        <item>김서종</item>
+        <item>- 행복센터</item>
+        <item>김홍자</item>
+        <item>신영숙</item>
+        <item>김희숙</item>
+        <item>이은영</item>
+        <item>이정화</item>
+        <item>정현옥</item>
+        <item>이정애</item>
+        <item>최소영</item>
+        <item>- 물류센터</item>
+        <item>양경환</item>
+        <item>김옥자</item>
+        <item>이승수</item>
+        <item>유혜정</item>
+        <item>김문학</item>
+        <item>김순례</item>
+        <item>권성덕</item>
+        <item>지영희</item>
+        <item>- 꽃마USA</item>
+        <item>김지웅</item>
     </string-array>
 </resources>
