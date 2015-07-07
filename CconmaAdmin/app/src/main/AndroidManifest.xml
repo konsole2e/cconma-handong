@@ -19,6 +19,14 @@
             android:name=".BoardWrite"/>
         <activity
             android:name=".BoardModify"/>
+        <service
+            android:name=".IconService">
+            <intent-filter>
+                <action android:name="iconservice"/>
+            </intent-filter>
+        </service>
     </application>
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
 </manifest>
