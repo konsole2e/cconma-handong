@@ -18,7 +18,8 @@ import android.widget.Toast;
  * Created by √÷º≠¿≤ on 2015-07-07.
  */
 public class BoardModify extends Activity {
-
+    private static int i;
+    
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
