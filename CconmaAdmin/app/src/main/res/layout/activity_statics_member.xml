@@ -1,0 +1,36 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/member_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/member_daily_barChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp"/>
+
+    <!--    <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/member_daily_combineChart"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />-->
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/member_weekly_lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/member_monthly_lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />
+    </LinearLayout>
+</ScrollView>
