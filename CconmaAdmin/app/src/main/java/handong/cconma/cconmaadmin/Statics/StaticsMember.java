@@ -77,20 +77,23 @@ public class StaticsMember extends Activity {
         monthlyChart.setData(manager.monthlyChartSetting());
         leftAxisM.addLimitLine(manager.monthlyAVG());
 
-        dailyChart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mode == false) {
-                    mode = true;
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
-                    dailyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                    weeklyChart.setVisibility(View.GONE);
-                    monthlyChart.setVisibility(View.GONE);
-                }
-            }
-        });
+        (findViewById(R.id.member_daily_zoom)).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 if (mode == false) {
+                     mode = true;
+                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                     dailyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                     weeklyChart.setVisibility(View.GONE);
+                     monthlyChart.setVisibility(View.GONE);
+                     (findViewById(R.id.member_daily_rl)).setVisibility(View.GONE);
+                     (findViewById(R.id.member_weekly_rl)).setVisibility(View.GONE);
+                     (findViewById(R.id.member_monthly_rl)).setVisibility(View.GONE);
+                 }
+             }
+         });
 
-        weeklyChart.setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.member_weekly_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mode == false) {
@@ -99,11 +102,14 @@ public class StaticsMember extends Activity {
                     weeklyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     dailyChart.setVisibility(View.GONE);
                     monthlyChart.setVisibility(View.GONE);
+                    (findViewById(R.id.member_daily_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.member_weekly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.member_monthly_rl)).setVisibility(View.GONE);
                 }
             }
         });
 
-        monthlyChart.setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.member_monthly_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mode == false) {
@@ -112,6 +118,9 @@ public class StaticsMember extends Activity {
                     monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     dailyChart.setVisibility(View.GONE);
                     weeklyChart.setVisibility(View.GONE);
+                    (findViewById(R.id.member_daily_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.member_weekly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.member_monthly_rl)).setVisibility(View.GONE);
                 }
             }
         });

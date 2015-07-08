@@ -18,7 +18,7 @@
             android:text="시간별 주문수" />
 
         <Button
-            android:id="@+id/order_Recent_btn"
+            android:id="@+id/order_recent_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -63,7 +63,7 @@
             android:text="주민되기" />
 
         <Button
-            android:id="@+id/member_Recent_btn"
+            android:id="@+id/member_recent_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

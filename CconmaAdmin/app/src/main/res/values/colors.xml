@@ -7,4 +7,5 @@
     <color name="statics_gray">#AAAAAA</color>
     <color name="statics_blue">#058DC7</color>
     <color name="statics_black">#000000</color>
+    <color name="transparent">#00000000</color>
 </resources>

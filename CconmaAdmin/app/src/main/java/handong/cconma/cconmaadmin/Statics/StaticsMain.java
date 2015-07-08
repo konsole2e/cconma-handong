@@ -2,10 +2,7 @@ package handong.cconma.cconmaadmin.Statics;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -26,7 +23,7 @@ public class StaticsMain extends Activity implements View.OnClickListener{
 
         orderH = (Button)findViewById(R.id.order_hourly_btn);
         orderH.setOnClickListener(this);
-        orderRcnt = (Button)findViewById(R.id.order_Recent_btn);
+        orderRcnt = (Button)findViewById(R.id.order_recent_btn);
         orderRcnt.setOnClickListener(this);
         trade = (Button)findViewById(R.id.trade_btn);
         trade.setOnClickListener(this);
@@ -34,7 +31,7 @@ public class StaticsMain extends Activity implements View.OnClickListener{
         like.setOnClickListener(this);
         member = (Button)findViewById(R.id.member_btn);
         member.setOnClickListener(this);
-        memberRcnt = (Button)findViewById(R.id.member_Recent_btn);
+        memberRcnt = (Button)findViewById(R.id.member_recent_btn);
         memberRcnt.setOnClickListener(this);
     }
 
@@ -44,7 +41,7 @@ public class StaticsMain extends Activity implements View.OnClickListener{
             case R.id.order_hourly_btn :
                 startActivity(new Intent(this, StaticsOrderH.class));
                 break;
-            case R.id.order_Recent_btn :
+            case R.id.order_recent_btn:
                 startActivity(new Intent(this, StaticsOrderRecent.class));
                 break;
             case R.id.trade_btn :
@@ -56,7 +53,7 @@ public class StaticsMain extends Activity implements View.OnClickListener{
             case R.id.member_btn :
                 startActivity(new Intent(this, StaticsMember.class));
                 break;
-            case R.id.member_Recent_btn :
+            case R.id.member_recent_btn:
                 startActivity(new Intent(this, StaticsMemberRecent.class));
                 break;
         }

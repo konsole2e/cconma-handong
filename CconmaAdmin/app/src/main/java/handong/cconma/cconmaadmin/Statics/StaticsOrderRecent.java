@@ -61,7 +61,7 @@ public class StaticsOrderRecent extends Activity {
         pcChart.setDoubleTapToZoomEnabled(false);
         mobChart.setDoubleTapToZoomEnabled(false);
 
-        pcChart.setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.order_recent_pc_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mode == false) {
@@ -69,11 +69,13 @@ public class StaticsOrderRecent extends Activity {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     pcChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     mobChart.setVisibility(View.GONE);
+                    (findViewById(R.id.order_recent_pc_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.order_recent_mobile_rl)).setVisibility(View.GONE);
                 }
             }
         });
 
-        mobChart.setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.order_recent_mobile_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mode == false) {
@@ -81,6 +83,8 @@ public class StaticsOrderRecent extends Activity {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     pcChart.setVisibility(View.GONE);
+                    (findViewById(R.id.order_recent_pc_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.order_recent_mobile_rl)).setVisibility(View.GONE);
                 }
             }
         });

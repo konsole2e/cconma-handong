@@ -85,7 +85,7 @@ public class StaticsTrade extends Activity {
         monthlyChart.setData(manager.monthlyChartSetting());
         leftAxisM.addLimitLine(manager.monthlyAVG());
 
-        hourlyChart.setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.trade_hourly_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mode == false) {
@@ -95,11 +95,15 @@ public class StaticsTrade extends Activity {
                     dailyChart.setVisibility(View.GONE);
                     weeklyChart.setVisibility(View.GONE);
                     monthlyChart.setVisibility(View.GONE);
+                    (findViewById(R.id.trade_hourly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_daily_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_weekly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_monthly_rl)).setVisibility(View.GONE);
                 }
             }
         });
 
-        dailyChart.setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.trade_daily_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mode == false) {
@@ -109,11 +113,15 @@ public class StaticsTrade extends Activity {
                     hourlyChart.setVisibility(View.GONE);
                     weeklyChart.setVisibility(View.GONE);
                     monthlyChart.setVisibility(View.GONE);
+                    (findViewById(R.id.trade_hourly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_daily_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_weekly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_monthly_rl)).setVisibility(View.GONE);
                 }
             }
         });
 
-        weeklyChart.setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.trade_weekly_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mode == false) {
@@ -123,11 +131,15 @@ public class StaticsTrade extends Activity {
                     hourlyChart.setVisibility(View.GONE);
                     dailyChart.setVisibility(View.GONE);
                     monthlyChart.setVisibility(View.GONE);
+                    (findViewById(R.id.trade_hourly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_daily_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_weekly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_monthly_rl)).setVisibility(View.GONE);
                 }
             }
         });
 
-        monthlyChart.setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.trade_monthly_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mode == false) {
@@ -137,6 +149,10 @@ public class StaticsTrade extends Activity {
                     hourlyChart.setVisibility(View.GONE);
                     dailyChart.setVisibility(View.GONE);
                     weeklyChart.setVisibility(View.GONE);
+                    (findViewById(R.id.trade_hourly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_daily_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_weekly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.trade_monthly_rl)).setVisibility(View.GONE);
                 }
             }
         });
