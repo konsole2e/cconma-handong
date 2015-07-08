@@ -6,11 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Selection;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -56,20 +57,10 @@ public class BoardView extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_view);
 
-        text_board_view_title = (TextView)findViewById(R.id.text_board_view_title);
-        text_board_view_notice = (TextView)findViewById(R.id.text_board_view_notice);
-        text_board_view_writer = (TextView)findViewById(R.id.text_board_view_writer);
-        text_board_view_date = (TextView)findViewById(R.id.text_board_view_date);
-        check_board_view_complete = (CheckBox)findViewById(R.id.check_board_view_complete);
-        check_board_view_complete.setOnClickListener(clickListener);
-
-        text_board_view_content = (TextView)findViewById(R.id.text_board_view_content);
-        btn_board_view_modify = (Button)findViewById(R.id.btn_board_view_modify);
-        btn_board_view_modify.setOnClickListener(clickListener);
-        btn_board_view_delete = (Button)findViewById(R.id.btn_board_view_delete);
-        btn_board_view_delete.setOnClickListener(clickListener);
+        View header =getLayoutInflater().inflate(R.layout.board_list_header, null, false);
 
         list_board_view_comment = (ListView)findViewById(R.id.list_board_view_comment);
+        list_board_view_comment.addHeaderView(header);
         adapter_comment = new BoardCommentAdapter(this);
         list_board_view_comment.setAdapter(adapter_comment);
         //list_board_view_comment.setOnScrollListener(scrollListener);
@@ -78,6 +69,20 @@ public class BoardView extends Activity{
         edit_board_view_comment = (EditText)findViewById(R.id.edit_board_view_comment);
         btn_board_view_comment = (Button)findViewById(R.id.btn_board_view_comment);
         btn_board_view_comment.setOnClickListener(clickListener);
+
+
+        text_board_view_title = (TextView)header.findViewById(R.id.text_board_view_title);
+        text_board_view_notice = (TextView)header.findViewById(R.id.text_board_view_notice);
+        text_board_view_writer = (TextView)header.findViewById(R.id.text_board_view_writer);
+        text_board_view_date = (TextView)header.findViewById(R.id.text_board_view_date);
+        check_board_view_complete = (CheckBox)header.findViewById(R.id.check_board_view_complete);
+        check_board_view_complete.setOnClickListener(clickListener);
+
+        text_board_view_content = (TextView)header.findViewById(R.id.text_board_view_content);
+        btn_board_view_modify = (Button)header.findViewById(R.id.btn_board_view_modify);
+        btn_board_view_modify.setOnClickListener(clickListener);
+        btn_board_view_delete = (Button)header.findViewById(R.id.btn_board_view_delete);
+        btn_board_view_delete.setOnClickListener(clickListener);
 
     }
 
@@ -99,10 +104,18 @@ public class BoardView extends Activity{
                         SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd\nHH:mm:ss");
                         String strNow = sdfNow.format(date);
 
-                        adapter_comment.addItem("김은지", strNow, edit_board_view_comment.getText().toString());
+                        if(edit_board_view_comment.getTag() != null){
+                            adapter_comment.updateComment((Integer) edit_board_view_comment.getTag(),
+                                    edit_board_view_comment.getText().toString());
+                            adapter_comment.notifyDataSetChanged();
+                            edit_board_view_comment.setTag(null);
+                        }else{
+                            adapter_comment.addItem("김은지", strNow, edit_board_view_comment.getText().toString());
+                        }
                         edit_board_view_comment.setText("");
                         input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         input_manager.hideSoftInputFromWindow(edit_board_view_comment.getWindowToken(), 0);
+
                     }
                     break;
                 case R.id.btn_board_view_modify:
@@ -250,13 +263,14 @@ public class BoardView extends Activity{
             holder.btn_board_view_comment_complete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    board_comment_list_data.get((Integer)v.getTag()).setComment(holder.edit_board_view_comment_modify.getText().toString());
+                    board_comment_list_data.get((Integer) v.getTag()).setComment(edit_board_view_comment.getText().toString());
                     holder.text_board_view_comment.setText(board_comment_list_data.get((Integer) v.getTag()).comment);
                     adapter_comment.notifyDataSetChanged();
-                    holder.layout_board_view_comment_modify.setVisibility(View.GONE);
-                    input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    input_manager.hideSoftInputFromWindow(holder.edit_board_view_comment_modify.getWindowToken(), 0);
-
+                    edit_board_view_comment.setText("");
+                    //holder.layout_board_view_comment_modify.setVisibility(View.GONE);
+                    //input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    //input_manager.hideSoftInputFromWindow(holder.edit_board_view_comment_modify.getWindowToken(), 0);
+                    //layout_board_view_comment.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -271,6 +285,10 @@ public class BoardView extends Activity{
             addData.commnet_writer = comment_writer;
 
             board_comment_list_data.add(addData);
+        }
+
+        public void updateComment(int position, String content){
+            board_comment_list_data.get(position).setComment(content);
         }
 
         public class ViewHolder{
@@ -306,9 +324,19 @@ public class BoardView extends Activity{
                         public void onClick(DialogInterface dialog, int which) {
                             //수정하거나 삭제하는 코드.
                             if(index == 0){
-                                holder.layout_board_view_comment_modify.setVisibility(View.VISIBLE);
-                                holder.edit_board_view_comment_modify.setText((board_comment_list_data.get(index).comment).toString());
-                                holder.edit_board_view_comment_modify.requestFocus();
+                                //holder.layout_board_view_comment_modify.setVisibility(View.VISIBLE);
+                                //holder.edit_board_view_comment_modify.setText((board_comment_list_data.get(position).comment).toString());
+                                //layout_board_view_comment.setVisibility(View.GONE);
+                                edit_board_view_comment.setText((board_comment_list_data.get(position).comment).toString());
+                                edit_board_view_comment.setTag(position);
+                                //커서 위치 문자열 뒤쪽에 위치하도록.
+                                Editable edt = edit_board_view_comment.getText();
+                                Selection.setSelection(edt, edt.length());
+
+                                /*input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                input_manager.showSoftInput(edit_board_view_comment, 0);
+                                list_board_view_comment.setSelection(position);*/
+                                list_board_view_comment.setSelectionFromTop(position, 0);
                             }
                             else {
                                 board_comment_list_data.remove(position);
