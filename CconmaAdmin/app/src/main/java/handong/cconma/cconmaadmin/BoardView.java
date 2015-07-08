@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,7 +123,7 @@ public class BoardView extends Activity{
         }
     };
 
-    public void dialog(int index){
+    public void dialog(final int index){
         String alert_message = "";
         AlertDialog.Builder alert_build = new AlertDialog.Builder(this);
         switch(index){
@@ -140,6 +140,13 @@ public class BoardView extends Activity{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //수정하거나 삭제하는 코드.
+                        if(index == 0){
+                            Intent intent = new Intent(BoardView.this, BoardModify.class);
+                            intent.putExtra("number", "7128");
+                            startActivity(intent);
+                        }else{
+                            //게시글 삭제하는 코드.
+                        }
 
                     }
                 }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -239,6 +246,8 @@ public class BoardView extends Activity{
                     holder.text_board_view_comment.setText(board_comment_list_data.get((Integer)v.getTag()).comment);
                     adapter_comment.notifyDataSetChanged();
                     holder.layout_board_view_comment_modify.setVisibility(View.GONE);
+                    input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    input_manager.hideSoftInputFromWindow(holder.edit_board_view_comment_modify.getWindowToken(), 0);
                 }
             });
 
@@ -290,6 +299,7 @@ public class BoardView extends Activity{
                             if(index == 0){
                                 holder.layout_board_view_comment_modify.setVisibility(View.VISIBLE);
                                 holder.edit_board_view_comment_modify.setText((board_comment_list_data.get(index).comment).toString());
+
                             }
                             else {
                                 board_comment_list_data.remove(position);

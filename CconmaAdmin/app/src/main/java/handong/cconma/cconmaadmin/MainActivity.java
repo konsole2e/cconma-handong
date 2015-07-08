@@ -17,6 +17,15 @@ public class MainActivity extends ActionBarActivity {
         Button writeButton = (Button)findViewById(R.id.write_button);
         Button modifyButton = (Button)findViewById(R.id.modify_button);
 
+        boardMainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, BoardCconma.class);
+
+                startActivity(intent);
+            }
+        });
         writeButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
