@@ -21,7 +21,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.SimpleFormatter;
 
 /**
  * 게시판 목록에서 하나 선택하여 글 내용을 보여주는 화면
@@ -40,7 +43,7 @@ public class BoardView extends Activity{
     Button btn_board_view_delete;
 
     ListView list_board_view_comment;
-    boolean lastitemVisibleFlag = false;
+    //boolean lastitemVisibleFlag = false;
     BoardCommentAdapter adapter_comment;
 
     LinearLayout layout_board_view_comment;
@@ -69,7 +72,7 @@ public class BoardView extends Activity{
         list_board_view_comment = (ListView)findViewById(R.id.list_board_view_comment);
         adapter_comment = new BoardCommentAdapter(this);
         list_board_view_comment.setAdapter(adapter_comment);
-        list_board_view_comment.setOnScrollListener(scrollListener);
+        //list_board_view_comment.setOnScrollListener(scrollListener);
 
         layout_board_view_comment = (LinearLayout)findViewById(R.id.layout_board_view_comment);
         edit_board_view_comment = (EditText)findViewById(R.id.edit_board_view_comment);
@@ -91,7 +94,12 @@ public class BoardView extends Activity{
                     break;
                 case R.id.btn_board_view_comment:
                     if(!(edit_board_view_comment.getText().toString()).equals("")) {
-                        adapter_comment.addItem("김은지", "2015/07/06", edit_board_view_comment.getText().toString());
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd\nHH:mm:ss");
+                        String strNow = sdfNow.format(date);
+
+                        adapter_comment.addItem("김은지", strNow, edit_board_view_comment.getText().toString());
                         edit_board_view_comment.setText("");
                         input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         input_manager.hideSoftInputFromWindow(edit_board_view_comment.getWindowToken(), 0);
@@ -108,7 +116,7 @@ public class BoardView extends Activity{
         }
     };
 
-    AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
+    /*AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag)
@@ -121,7 +129,7 @@ public class BoardView extends Activity{
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             lastitemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
         }
-    };
+    };*/
 
     public void dialog(final int index){
         String alert_message = "";
@@ -243,11 +251,12 @@ public class BoardView extends Activity{
                 @Override
                 public void onClick(View v) {
                     board_comment_list_data.get((Integer)v.getTag()).setComment(holder.edit_board_view_comment_modify.getText().toString());
-                    holder.text_board_view_comment.setText(board_comment_list_data.get((Integer)v.getTag()).comment);
+                    holder.text_board_view_comment.setText(board_comment_list_data.get((Integer) v.getTag()).comment);
                     adapter_comment.notifyDataSetChanged();
                     holder.layout_board_view_comment_modify.setVisibility(View.GONE);
                     input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     input_manager.hideSoftInputFromWindow(holder.edit_board_view_comment_modify.getWindowToken(), 0);
+
                 }
             });
 
@@ -299,7 +308,7 @@ public class BoardView extends Activity{
                             if(index == 0){
                                 holder.layout_board_view_comment_modify.setVisibility(View.VISIBLE);
                                 holder.edit_board_view_comment_modify.setText((board_comment_list_data.get(index).comment).toString());
-
+                                holder.edit_board_view_comment_modify.requestFocus();
                             }
                             else {
                                 board_comment_list_data.remove(position);

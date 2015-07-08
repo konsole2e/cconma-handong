@@ -22,6 +22,15 @@
         <activity android:name=".BoardCconma"></activity>
         <activity android:name=".BoardView"></activity>
         <activity android:name=".BoardMarked"></activity>
+
+        <service
+            android:name=".IconService">
+            <intent-filter>
+                <action android:name="iconservice"/>
+            </intent-filter>
+        </service>
     </application>
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
 </manifest>

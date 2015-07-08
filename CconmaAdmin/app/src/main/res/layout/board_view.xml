@@ -5,12 +5,12 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="8dp">
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -62,7 +62,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="right">
+            android:layout_gravity="right"
+            android:paddingRight="8dp">
             <Button
                 android:id="@+id/btn_board_view_modify"
                 android:layout_width="wrap_content"
@@ -77,12 +78,13 @@
         <ListView
             android:id="@+id/list_board_view_comment"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="50dp"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/layout_board_view_comment"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
         android:layout_gravity="bottom"

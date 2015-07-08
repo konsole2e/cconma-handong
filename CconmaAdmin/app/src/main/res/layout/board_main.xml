@@ -103,8 +103,8 @@
         <ListView
             android:id="@+id/list_board"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        </ListView>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"/>
     </LinearLayout>
 
 
@@ -118,7 +118,7 @@
             android:layout_height="50dp"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
-            android:src="@drawable/write"
+            android:src="@drawable/btn_write"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:background="@android:color/transparent"/>

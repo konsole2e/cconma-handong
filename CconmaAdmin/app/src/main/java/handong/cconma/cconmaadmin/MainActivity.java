@@ -13,6 +13,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        startService(new Intent("iconservice"));
+
         Button boardMainButton = (Button)findViewById(R.id.board_main_button);
         Button writeButton = (Button)findViewById(R.id.write_button);
         Button modifyButton = (Button)findViewById(R.id.modify_button);

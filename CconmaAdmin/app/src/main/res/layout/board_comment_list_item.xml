@@ -12,6 +12,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="#000000"
             android:hint="김은지"/>
         <TextView
             android:id="@+id/text_board_view_comment"
@@ -23,6 +24,7 @@
             android:id="@+id/text_board_view_comment_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:layout_weight="1"
             android:hint="2015/07/06"/>
         <ImageButton
