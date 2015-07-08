@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -20,13 +21,13 @@ public class StaticsMemberRecent extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statics_order_recent);
+        setContentView(R.layout.activity_statics_member_recent);
         backPressCloseHandler = new BackPressCloseHandler(this);
 
-        StaticsMemberRecManager manager = new StaticsMemberRecManager();
+        StaticsMemberRecManager manager = new StaticsMemberRecManager(this);
 
-        pcChart = (LineChart) findViewById(R.id.order_recent_pc_chart);
-        mobChart = (LineChart) findViewById(R.id.order_recent_mobile_chart);
+        pcChart = (LineChart) findViewById(R.id.member_recent_pc_chart);
+        mobChart = (LineChart) findViewById(R.id.member_recent_mobile_chart);
 
         pcChart.setDescription("pc");
         mobChart.setDescription("mobile");
@@ -48,17 +49,14 @@ public class StaticsMemberRecent extends Activity {
         xAxis2.setLabelsToSkip(0);
         xAxis2.setDrawGridLines(false);
 
-        pcChart.getAxisLeft().setDrawGridLines(false);
-        mobChart.getAxisLeft().setDrawGridLines(false);
+    /*    pcChart.getAxisLeft().setDrawGridLines(false);
+        mobChart.getAxisLeft().setDrawGridLines(false);*/
 
         pcChart.getAxisRight().setEnabled(false);
         mobChart.getAxisRight().setEnabled(false);
 
-        pcChart.getLegend().setEnabled(false);
-        mobChart.getLegend().setEnabled(false);
-
-        pcChart.setData(manager.setting());
-        mobChart.setData(manager.setting());
+        pcChart.setData(manager.setting("pc"));
+        mobChart.setData(manager.setting("mobile"));
 
         pcChart.setDoubleTapToZoomEnabled(false);
         mobChart.setDoubleTapToZoomEnabled(false);
@@ -69,6 +67,7 @@ public class StaticsMemberRecent extends Activity {
                 if (mode == false) {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                    pcChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     mobChart.setVisibility(View.GONE);
                 }
             }
@@ -80,6 +79,7 @@ public class StaticsMemberRecent extends Activity {
                 if (mode == false) {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                    mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     pcChart.setVisibility(View.GONE);
                 }
             }

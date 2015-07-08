@@ -1,31 +1,23 @@
 package handong.cconma.cconmaadmin.Statics;
 
 import android.content.Context;
-import android.graphics.Color;
 
 import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
 import handong.cconma.cconmaadmin.R;
 
-public class StaticsMemberManager {
+public class StaticsLikeManager {
     Context con;
-    String dSet1 = "test";
-    String dSet2;
-    String dSet3;
-    String dSet4;
 
-    public StaticsMemberManager(Context context) {
+    public StaticsLikeManager(Context context) {
         con = context;
     }
 
@@ -141,33 +133,27 @@ public class StaticsMemberManager {
         ArrayList<BarEntry> e1 = new ArrayList<BarEntry>();
         ArrayList<BarEntry> e2 = new ArrayList<BarEntry>();
         ArrayList<BarEntry> e3 = new ArrayList<BarEntry>();
-        ArrayList<BarEntry> e4 = new ArrayList<BarEntry>();
 
         for (int i = 0; i < 7; i++) {
             e1.add(new BarEntry((float) Math.random() * 50, i));
             e2.add(new BarEntry((float) Math.random() * 50, i));
             e3.add(new BarEntry((float) Math.random() * 50, i));
-            e4.add(new BarEntry((float) Math.random() * 50, i));
         }
 
         BarDataSet set1 = new BarDataSet(e1, "Bar DataSet1");
-        set1.setColor(con.getResources().getColor(R.color.statics_blue));
+        set1.setColor(con.getResources().getColor(R.color.statics_green));
 
         BarDataSet set2 = new BarDataSet(e2, "Bar DataSet2");
-        set2.setColor(con.getResources().getColor(R.color.statics_green));
+        set2.setColor(con.getResources().getColor(R.color.statics_red));
 
         BarDataSet set3 = new BarDataSet(e3, "Bar DataSet3");
-        set3.setColor(con.getResources().getColor(R.color.statics_red));
-
-        BarDataSet set4 = new BarDataSet(e4, "Bar DataSet4");
-        set4.setColor(con.getResources().getColor(R.color.statics_gray));
+        set3.setColor(con.getResources().getColor(R.color.statics_gray));
 
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
 
         dataSets.add(set1);
         dataSets.add(set2);
         dataSets.add(set3);
-        dataSets.add(set4);
 
      /* set.setValueTextColor(Color.rgb(60, 220, 78));
         set.setValueTextSize(10f);

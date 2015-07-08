@@ -19,16 +19,21 @@
         <activity
             android:name=".Statics.StaticsOrderH"
             android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity android:name=".Statics.StaticsOrderRecent"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name=".Statics.StaticsTrade"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name=".Statics.StaticsLike"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name=".Statics.StaticsMember"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name=".Statics.StaticsMemberRecent"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity
+            android:name=".Statics.StaticsLike"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".Statics.StaticsOrderRecent"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".Statics.StaticsTrade"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".Statics.StaticsMember"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".Statics.StaticsMemberRecent"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
     </application>
 
 </manifest>

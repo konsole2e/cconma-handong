@@ -30,7 +30,7 @@ public class StaticsOrderH extends Activity {
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 
-        StaticsOrderHManager manager = new StaticsOrderHManager();
+        StaticsOrderHManager manager = new StaticsOrderHManager(this);
 
         pcChart = (LineChart) findViewById(R.id.order_hourly_pc_chart);
         mobChart = (LineChart) findViewById(R.id.order_hourly_mobile_chart);
@@ -55,14 +55,14 @@ public class StaticsOrderH extends Activity {
         xAxis2.setLabelsToSkip(0);
         xAxis2.setDrawGridLines(false);
 
-        pcChart.getAxisLeft().setDrawGridLines(false);
-        mobChart.getAxisLeft().setDrawGridLines(false);
+        //pcChart.getAxisLeft().setDrawGridLines(false);
+//        mobChart.getAxisLeft().setDrawGridLines(false);
 
         pcChart.getAxisRight().setEnabled(false);
         mobChart.getAxisRight().setEnabled(false);
 
-        pcChart.getLegend().setEnabled(false);
-        mobChart.getLegend().setEnabled(false);
+        pcChart.getLegend().setEnabled(true);
+        mobChart.getLegend().setEnabled(true);
 
         pcChart.setData(manager.setting());
         mobChart.setData(manager.setting());
@@ -76,7 +76,7 @@ public class StaticsOrderH extends Activity {
                 if (mode == false) {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
-                    //pcChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
+                    pcChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     mobChart.setVisibility(View.GONE);
                 }
             }
@@ -88,15 +88,11 @@ public class StaticsOrderH extends Activity {
                 if (mode == false) {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                    mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     pcChart.setVisibility(View.GONE);
                 }
             }
         });
-    }
-
-    private void getXValues() {
-        StaticsOrderHManager manager = new StaticsOrderHManager();
-        xVal = manager.generateXValues();
     }
 
     @Override

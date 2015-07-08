@@ -1,12 +1,37 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="handong.cconma.cconmaadmin.Statics.StaticsOrderH">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <TextView android:text="order_trade" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:id="@+id/trade_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-</RelativeLayout>
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/trade_hourly_combineChart"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/trade_daily_barChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/trade_weekly_lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/trade_monthly_lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />
+    </LinearLayout>
+</ScrollView>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="statics_color_green">#50B432</color>
-    <color name="statics_color_red">#ED561B</color>
-    <color name="statics_color_orange">#EE8B1A</color>
-    <color name="statics_color_yellow">#CCCF00</color>
-    <color name="statics_color_blue">#058DC7</color>
-    <color name="statics_color_gray">#AAAAAA</color>
+    <color name="statics_red">#ED561B</color>
+    <color name="statics_green">#50B432</color>
+    <color name="statics_yellow">#CCCF00</color>
+    <color name="statics_orange">#EE8B1A</color>
+    <color name="statics_gray">#AAAAAA</color>
+    <color name="statics_blue">#058DC7</color>
+    <color name="statics_black">#000000</color>
 </resources>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -45,9 +46,11 @@ public class StaticsMember extends Activity {
 
         XAxis xAxisW = weeklyChart.getXAxis();
         xAxisW.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxisW.setDrawGridLines(false);
 
         XAxis xAxisM = monthlyChart.getXAxis();
         xAxisM.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxisM.setDrawGridLines(false);
 
         YAxis rightAxisD = dailyChart.getAxisRight();
         rightAxisD.setEnabled(false);
@@ -55,16 +58,17 @@ public class StaticsMember extends Activity {
         YAxis leftAxisD = dailyChart.getAxisLeft();
         leftAxisD.setDrawGridLines(false);
 
-        YAxis leftAxisW = weeklyChart.getAxisLeft();
-        leftAxisW.setDrawGridLines(false);
-
         YAxis rightAxisW = weeklyChart.getAxisRight();
         rightAxisW.setEnabled(false);
 
-        YAxis leftAxisM = monthlyChart.getAxisLeft();
+        YAxis leftAxisW = weeklyChart.getAxisLeft();
+    //    leftAxisW.setDrawGridLines(false);
 
         YAxis rightAxisM = monthlyChart.getAxisRight();
         rightAxisM.setEnabled(false);
+
+        YAxis leftAxisM = monthlyChart.getAxisLeft();
+      //  leftAxisM.setDrawGridLines(false);
 
         dailyChart.setData(manager.dailyChartSetting());
         dailyChart.invalidate();
@@ -73,6 +77,44 @@ public class StaticsMember extends Activity {
         monthlyChart.setData(manager.monthlyChartSetting());
         leftAxisM.addLimitLine(manager.monthlyAVG());
 
+        dailyChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mode == false) {
+                    mode = true;
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                    dailyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    weeklyChart.setVisibility(View.GONE);
+                    monthlyChart.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        weeklyChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mode == false) {
+                    mode = true;
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                    weeklyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    dailyChart.setVisibility(View.GONE);
+                    monthlyChart.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        monthlyChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mode == false) {
+                    mode = true;
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                    monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    dailyChart.setVisibility(View.GONE);
+                    weeklyChart.setVisibility(View.GONE);
+                }
+            }
+        });
 
     }
 

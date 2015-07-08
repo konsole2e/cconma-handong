@@ -1,5 +1,6 @@
 package handong.cconma.cconmaadmin.Statics;
 
+import android.content.Context;
 import android.graphics.Color;
 
 import com.github.mikephil.charting.data.Entry;
@@ -9,46 +10,52 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
-public class StaticsOrderRecManager {
-    String dSet1 = "test";
-    String dSet2;
-    String dSet3;
-    String dSet4;
-    ArrayList<LineDataSet> sets = new ArrayList<>();
-    int cnt = 0;
+import handong.cconma.cconmaadmin.R;
 
-    public LineData setting(){
-        sets.clear();
-        for(int i = 0; i < 1; i++){
-            generateDataLine();
-        }
-        return new LineData(generateXValues(), sets);
+public class StaticsOrderRecManager {
+    Context con;
+
+    public StaticsOrderRecManager(Context con) {
+        this.con = con;
     }
 
-    public ArrayList<String> generateXValues() {
+    public LineData setting(String str){
+
+        LineData d = new LineData(generateXValues(31), generateDataLine(str));
+
+        return d;
+    }
+
+    public ArrayList<String> generateXValues(int numX) {
         ArrayList<String> xVal = new ArrayList<>();
-        for (int i = 0; i < 31; i++) {
+        for (int i = 0; i < numX; i++) {
             xVal.add(i + "");
         }
         return xVal;
     }
 
-    private void generateDataLine() {
+    private ArrayList<LineDataSet> generateDataLine(String str) {
 
         ArrayList<Entry> e1 = new ArrayList<>();
+        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
 
         for (int i = 0; i < 31; i++) {
             e1.add(new Entry((int) (Math.random() * 50), i));
         }
 
-        LineDataSet d1 = new LineDataSet(e1, dSet1 + cnt++);
+        LineDataSet d1 = new LineDataSet(e1, "Line DataSet " + str.toUpperCase());
         d1.setLineWidth(2.5f);
         d1.setCircleSize(3.5f);
-        d1.setHighLightColor(Color.rgb(244, 117, 117));
-        d1.setColor(ColorTemplate.VORDIPLOM_COLORS[cnt % 5]);
-        d1.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[cnt % 5]);
-        d1.setDrawValues(true);
+        if(str.equals("pc")){
+            d1.setCircleColor(con.getResources().getColor(R.color.statics_red));
+            d1.setColor(con.getResources().getColor(R.color.statics_red));
+        }else{
+            d1.setCircleColor(con.getResources().getColor(R.color.statics_green));
+            d1.setColor(con.getResources().getColor(R.color.statics_green));
+        }
 
-        sets.add(d1);
+        dataSets.add(d1);
+
+        return dataSets;
     }
 }
