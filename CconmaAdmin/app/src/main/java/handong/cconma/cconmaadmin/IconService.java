@@ -23,34 +23,6 @@ public class IconService extends Service {
     private float mTouchX, mTouchY;
     private int mViewX, mViewY;
 
-    private View.OnTouchListener mViewTouchListener = new View.OnTouchListener(){
-
-        public boolean onTouch(View v, MotionEvent event){
-            switch(event.getAction()){
-                case MotionEvent.ACTION_DOWN:
-                    mTouchX = event.getRawX();
-                    mTouchY = event.getRawY();
-                    mViewX = params.x;
-                    mViewY = params.y;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    int x = (int)(event.getRawX() - mTouchX);
-                    int y = (int)(event.getRawY() - mTouchY);
-                    params.x = mViewX + x;
-                    params.y = mViewY + y;
-                    windowManager.updateViewLayout(chatHead, params);
-                    break;
-                case MotionEvent.ACTION_HOVER_ENTER:
-                    Toast.makeText(getApplicationContext(), "unread message : 5", Toast.LENGTH_SHORT).show();
-                    break;
-                case MotionEvent.ACTION_HOVER_EXIT:
-
-                    break;
-            }
-            return true;
-        }
-    };
-
     @Override public IBinder onBind(Intent intent) {
         // Not used
         return null;
@@ -69,9 +41,40 @@ public class IconService extends Service {
 
         chatHead = new ImageView(this);
         chatHead.setImageResource(R.drawable.cconma);
-        chatHead.setOnTouchListener(mViewTouchListener);
 
-        params.gravity = Gravity.TOP | Gravity.LEFT;
+        chatHead.setClickable(true);
+        chatHead.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            }
+        });
+
+        chatHead.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mTouchX = event.getRawX();
+                        mTouchY = event.getRawY();
+                        mViewX = params.x;
+                        mViewY = params.y;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        int x = (int) (event.getRawX() - mTouchX);
+                        int y = (int) (event.getRawY() - mTouchY);
+                        params.x = mViewX + x;
+                        params.y = mViewY + y;
+                        windowManager.updateViewLayout(chatHead, params);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if(Math.abs((int)(event.getRawX() - mTouchX)) <= 5 && Math.abs((int)(event.getRawY() - mTouchY)) <= 5)
+                            Toast.makeText(getApplicationContext(), "unread message : 5", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        params.gravity = Gravity.CENTER;
         params.x = 0;
         params.y = 100;
 
@@ -81,6 +84,7 @@ public class IconService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (chatHead != null) windowManager.removeView(chatHead);
+        if(chatHead != null)
+            windowManager.removeView(chatHead);
     }
 }
