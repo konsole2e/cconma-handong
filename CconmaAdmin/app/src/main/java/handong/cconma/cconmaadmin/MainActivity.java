@@ -42,9 +42,7 @@ public class MainActivity extends ActionBarActivity {
 
             public void onClick(View v) {
 
-                Intent intent = new Intent(MainActivity.this, BoardModify.class);
-                intent.putExtra("number", "7128");
-
+                Intent intent = new Intent(MainActivity.this, BoardMarked.class);
                 startActivity(intent);
 
             }

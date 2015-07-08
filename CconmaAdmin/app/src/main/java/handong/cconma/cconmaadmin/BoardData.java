@@ -11,5 +11,6 @@ public class BoardData {
     public String board_writer;
     public int board_comment_num;
     public boolean board_marked;
+    public boolean board_file;
 
 }

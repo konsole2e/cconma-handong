@@ -21,6 +21,7 @@
             android:name=".BoardModify"/>            
         <activity android:name=".BoardCconma"></activity>
         <activity android:name=".BoardView"></activity>
+        <activity android:name=".BoardMarked"></activity>
     </application>
 
 </manifest>

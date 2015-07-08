@@ -30,7 +30,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="modify"
+        android:text="Marked Board"
         android:id="@+id/modify_button"
         android:layout_below="@+id/write_button"
         android:layout_alignParentLeft="true"

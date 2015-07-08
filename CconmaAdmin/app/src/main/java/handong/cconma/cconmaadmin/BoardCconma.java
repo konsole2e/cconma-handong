@@ -3,6 +3,7 @@ package handong.cconma.cconmaadmin;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -39,6 +41,8 @@ public class BoardCconma extends Activity{
 
     ListView list_board;
     BoardAdapter adapter_board;
+
+    ImageButton btn_board_write;
 
     InputMethodManager input_manager;
     @Override
@@ -88,20 +92,29 @@ public class BoardCconma extends Activity{
         list_board = (ListView)findViewById(R.id.list_board);
         adapter_board = new BoardAdapter(this);
         list_board.setAdapter(adapter_board);
-        adapter_board.addItem("제목", "김은지", "전체알림", "2015/07/07", 3, true);
-        adapter_board.addItem("제목", "김은지", "전체알림", "2015/07/07", 2, false);
-        adapter_board.addItem("제목", "김은지", "전체알림", "2015/07/07", 1, true);
-        adapter_board.addItem("제목", "김은지", "전체알림", "2015/07/07", 9, true);
-        adapter_board.addItem("제목", "김은지", "전체알림", "2015/07/07", 3, false);
-        adapter_board.addItem("제목", "김은지", "전체알림", "2015/07/07", 7, true);
-        adapter_board.addItem("제목", "김은지", "전체알림", "2015/07/07", 3, true);
-        adapter_board.addItem("제목", "김은지", "전체알림", "2015/07/07", 3, true);
-        adapter_board.addItem("제목", "김은지", "전체알림", "2015/07/07", 3, true);
-        adapter_board.addItem("제목", "김은지", "전체알림", "2015/07/07", 3, true);
-        adapter_board.addItem("제목", "김은지", "전체알림", "2015/07/07", 3, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, false);
 
         list_board.setFocusable(false);
         list_board.setOnItemClickListener(itemclick);
+
+        //글쓰기 버튼
+        btn_board_write = (ImageButton)findViewById(R.id.btn_board_write);
+        btn_board_write.setOnClickListener(buttonListener);
 
     }
 
@@ -158,6 +171,10 @@ public class BoardCconma extends Activity{
                     input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
                     layout_board_search.setVisibility(View.GONE);
                     btn_board_search_view.setChecked(false);
+                    break;
+                case R.id.btn_board_write:
+                    Intent i = new Intent(BoardCconma.this, BoardWrite.class);
+                    startActivity(i);
                     break;
             }
         }

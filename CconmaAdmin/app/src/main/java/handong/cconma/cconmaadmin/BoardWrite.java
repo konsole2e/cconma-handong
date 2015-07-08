@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * Created by √÷º≠¿≤ on 2015-07-06.
+ * Created by on 2015-07-06.
  */
 public class BoardWrite extends Activity {
 
@@ -65,7 +65,7 @@ public class BoardWrite extends Activity {
                 * INSERT notice, title, content, file INTO board_database
                 * */
                 Toast.makeText(getApplicationContext(), "confirmed", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(BoardWrite.this, MainActivity.class);
+                Intent intent = new Intent(BoardWrite.this, BoardView.class);
                 startActivity(intent);
                 finish();
             }
@@ -77,9 +77,7 @@ public class BoardWrite extends Activity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "canceled", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(BoardWrite.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                onBackPressed();
             }
         });
     }
