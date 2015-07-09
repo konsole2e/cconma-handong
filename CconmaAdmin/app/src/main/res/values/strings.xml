@@ -1,6 +1,10 @@
-<resources>
+﻿<resources>
     <string name="app_name">Cconma Admin</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_statics_detail">StaticsDetail</string>
+    <string-array name="board_search">
+        <item>제목</item>
+        <item>내용</item>
+        <item>작성자</item>
+    </string-array>
 </resources>

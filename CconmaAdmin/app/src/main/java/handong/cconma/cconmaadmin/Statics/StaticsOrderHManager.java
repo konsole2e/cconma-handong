@@ -1,15 +1,10 @@
 package handong.cconma.cconmaadmin.Statics;
 
 import android.content.Context;
-import android.graphics.Color;
-
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-
 import java.util.ArrayList;
-
 import handong.cconma.cconmaadmin.R;
 
 public class StaticsOrderHManager {
@@ -52,32 +47,32 @@ public class StaticsOrderHManager {
         }
 
         LineDataSet d1 = new LineDataSet(e1, "Line DataSet 1");
-        d1.setLineWidth(2.5f);
-        d1.setCircleSize(3.5f);
+        d1.setLineWidth(1.5f);
+        d1.setCircleSize(2f);
         d1.setCircleColor(con.getResources().getColor(R.color.statics_orange));
         d1.setColor(con.getResources().getColor(R.color.statics_orange));
         d1.setDrawValues(false);
   //      d1.setLabel("7월 2일(목)(1446)");
 
         LineDataSet d2 = new LineDataSet(e2, "Line DataSet 2");
-        d2.setLineWidth(2.5f);
-        d2.setCircleSize(3.5f);
+        d2.setLineWidth(1.5f);
+        d2.setCircleSize(2f);
         d2.setCircleColor(con.getResources().getColor(R.color.statics_yellow));
         d2.setColor(con.getResources().getColor(R.color.statics_yellow));
         d2.setDrawValues(false);
 //        d2.setLabel("7월 7일(화)(1850)");
 
         LineDataSet d3 = new LineDataSet(e3, "Line DataSet 3");
-        d3.setLineWidth(2.5f);
-        d3.setCircleSize(3.5f);
+        d3.setLineWidth(1.5f);
+        d3.setCircleSize(2f);
         d3.setCircleColor(con.getResources().getColor(R.color.statics_green));
         d3.setColor(con.getResources().getColor(R.color.statics_green));
         d3.setDrawValues(false);
 //        d3.setLabel("7월 8일(수)(1643)");
 
         LineDataSet d4 = new LineDataSet(e4, "Line DataSet 4");
-        d4.setLineWidth(2.5f);
-        d4.setCircleSize(3.5f);
+        d4.setLineWidth(2f);
+        d4.setCircleSize(3f);
         d4.setCircleColor(con.getResources().getColor(R.color.statics_red));
         d4.setColor(con.getResources().getColor(R.color.statics_red));
         d4.setDrawValues(true);

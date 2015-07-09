@@ -17,47 +17,53 @@ public class StaticsOrderRecent extends Activity {
     private boolean mode = false;
     private LineChart pcChart;
     private LineChart mobChart;
+    private StaticsCommonSetting setting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statics_order_recent);
         backPressCloseHandler = new BackPressCloseHandler(this);
+        setting = new StaticsCommonSetting();
 
         StaticsOrderRecManager manager = new StaticsOrderRecManager(this);
 
         pcChart = (LineChart) findViewById(R.id.order_recent_pc_chart);
         mobChart = (LineChart) findViewById(R.id.order_recent_mobile_chart);
 
-        pcChart.setDescription("");
-        mobChart.setDescription("");
+        setting.commonSetting(pcChart);
+        setting.commonSetting(mobChart);
+
+//        pcChart.setDescription("");
+ //       mobChart.setDescription("");
 
         // scaling can now only be done on x- and y-axis separately
-        pcChart.setPinchZoom(false);
-        mobChart.setPinchZoom(false);
+//        pcChart.setPinchZoom(false);
+ //       mobChart.setPinchZoom(false);
 
-        pcChart.setDrawGridBackground(false);
-        mobChart.setDrawGridBackground(false);
+//        pcChart.setDrawGridBackground(false);
+ //       mobChart.setDrawGridBackground(false);
 
-        XAxis xAxis = pcChart.getXAxis();
+   /*     XAxis xAxis = pcChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
 
         XAxis xAxis2 = mobChart.getXAxis();
         xAxis2.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis2.setDrawGridLines(false);
-
+*/
         //pcChart.getAxisLeft().setDrawGridLines(false);
         //mobChart.getAxisLeft().setDrawGridLines(false);
 
-        pcChart.getAxisRight().setEnabled(false);
-        mobChart.getAxisRight().setEnabled(false);
+//        pcChart.getAxisRight().setEnabled(false);
+ //       mobChart.getAxisRight().setEnabled(false);
+
+
+//        pcChart.setDoubleTapToZoomEnabled(false);
+//        mobChart.setDoubleTapToZoomEnabled(false);
 
         pcChart.setData(manager.setting("pc"));
         mobChart.setData(manager.setting("mobile"));
-
-        pcChart.setDoubleTapToZoomEnabled(false);
-        mobChart.setDoubleTapToZoomEnabled(false);
 
         (findViewById(R.id.order_recent_pc_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +71,8 @@ public class StaticsOrderRecent extends Activity {
                 if (mode == false) {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
-                    pcChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    setting.zoomSetting(pcChart);
+                    //pcChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     mobChart.setVisibility(View.GONE);
                     (findViewById(R.id.order_recent_pc_rl)).setVisibility(View.GONE);
                     (findViewById(R.id.order_recent_mobile_rl)).setVisibility(View.GONE);
@@ -79,7 +86,8 @@ public class StaticsOrderRecent extends Activity {
                 if (mode == false) {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
-                    mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    setting.zoomSetting(mobChart);
+                    //mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     pcChart.setVisibility(View.GONE);
                     (findViewById(R.id.order_recent_pc_rl)).setVisibility(View.GONE);
                     (findViewById(R.id.order_recent_mobile_rl)).setVisibility(View.GONE);

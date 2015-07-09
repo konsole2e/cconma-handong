@@ -25,6 +25,7 @@ public class StaticsMember extends Activity {
     private LineChart monthlyChart;
     private boolean mode = false;
     private BackPressCloseHandler backPressCloseHandler;
+    private StaticsCommonSetting setting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,8 @@ public class StaticsMember extends Activity {
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 
+        setting = new StaticsCommonSetting();
+
         StaticsMemberManager manager = new StaticsMemberManager(this);
 
 //        dailyChart = (CombinedChart) findViewById(R.id.member_daily_combineChart);
@@ -40,9 +43,13 @@ public class StaticsMember extends Activity {
         weeklyChart = (LineChart) findViewById(R.id.member_weekly_lineChart);
         monthlyChart = (LineChart) findViewById(R.id.member_monthly_lineChart);
 
+        setting.commonSetting(dailyChart);
+        setting.commonSetting(weeklyChart);
+        setting.commonSetting(monthlyChart);
+
 //        dailyChart.setDrawOrder(new DrawOrder[]{  DrawOrder.LINE, DrawOrder.BAR});
 
-        dailyChart.setDescription("");
+     /*   dailyChart.setDescription("");
         dailyChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
 
         weeklyChart.setDescription("");
@@ -76,14 +83,14 @@ public class StaticsMember extends Activity {
         rightAxisM.setEnabled(false);
 
         YAxis leftAxisM = monthlyChart.getAxisLeft();
-      //  leftAxisM.setDrawGridLines(false);
+      //  leftAxisM.setDrawGridLines(false);*/
 
         dailyChart.setData(manager.dailyChartSetting());
         dailyChart.invalidate();
         weeklyChart.setData(manager.weeklyChartSetting());
-        leftAxisW.addLimitLine(manager.weeklkyAVG());
+        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG());
         monthlyChart.setData(manager.monthlyChartSetting());
-        leftAxisM.addLimitLine(manager.monthlyAVG());
+        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG());
 
         (findViewById(R.id.member_daily_zoom)).setOnClickListener(new View.OnClickListener() {
              @Override
@@ -91,7 +98,8 @@ public class StaticsMember extends Activity {
                  if (mode == false) {
                      mode = true;
                      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
-                     dailyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    // dailyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                     setting.zoomSetting(dailyChart);
                      weeklyChart.setVisibility(View.GONE);
                      monthlyChart.setVisibility(View.GONE);
                      (findViewById(R.id.member_daily_rl)).setVisibility(View.GONE);
@@ -107,7 +115,8 @@ public class StaticsMember extends Activity {
                 if (mode == false) {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
-                    weeklyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    //weeklyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    setting.zoomSetting(weeklyChart);
                     dailyChart.setVisibility(View.GONE);
                     monthlyChart.setVisibility(View.GONE);
                     (findViewById(R.id.member_daily_rl)).setVisibility(View.GONE);
@@ -123,7 +132,8 @@ public class StaticsMember extends Activity {
                 if (mode == false) {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
-                    monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    //monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    setting.zoomSetting(monthlyChart);
                     dailyChart.setVisibility(View.GONE);
                     weeklyChart.setVisibility(View.GONE);
                     (findViewById(R.id.member_daily_rl)).setVisibility(View.GONE);

@@ -1,10 +1,15 @@
 package handong.cconma.cconmaadmin;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
+import handong.cconma.cconmaadmin.Board.BoardCconma;
+import handong.cconma.cconmaadmin.Board.BoardMarked;
+import handong.cconma.cconmaadmin.Board.BoardWrite;
+import handong.cconma.cconmaadmin.Statics.StaticsMain;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -12,27 +17,52 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+        startService(new Intent("iconservice"));
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        Button boardMainButton = (Button)findViewById(R.id.board_main_button);
+        Button writeButton = (Button)findViewById(R.id.write_button);
+        Button modifyButton = (Button)findViewById(R.id.modify_button);
+        Button staticsButton = (Button)findViewById(R.id.statics_btn);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        boardMainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        return super.onOptionsItemSelected(item);
+                Intent intent = new Intent(MainActivity.this, BoardCconma.class);
+
+                startActivity(intent);
+            }
+        });
+        writeButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, BoardWrite.class);
+
+                startActivity(intent);
+
+            }
+
+        });
+
+        modifyButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, BoardMarked.class);
+                startActivity(intent);
+
+            }
+
+        });
+
+        staticsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, StaticsMain.class));
+            }
+        });
+
     }
 }

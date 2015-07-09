@@ -17,19 +17,24 @@ public class StaticsMemberRecent extends Activity {
     private boolean mode = false;
     private LineChart pcChart;
     private LineChart mobChart;
+    private StaticsCommonSetting setting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statics_member_recent);
         backPressCloseHandler = new BackPressCloseHandler(this);
+        setting = new StaticsCommonSetting();
 
         StaticsMemberRecManager manager = new StaticsMemberRecManager(this);
 
         pcChart = (LineChart) findViewById(R.id.member_recent_pc_chart);
         mobChart = (LineChart) findViewById(R.id.member_recent_mobile_chart);
 
-        pcChart.setDescription("");
+        setting.commonSetting(pcChart);
+        setting.commonSetting(mobChart);
+
+    /*    pcChart.setDescription("");
         mobChart.setDescription("");
 
         // scaling can now only be done on x- and y-axis separately
@@ -47,17 +52,18 @@ public class StaticsMemberRecent extends Activity {
         xAxis2.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis2.setDrawGridLines(false);
 
-    /*    pcChart.getAxisLeft().setDrawGridLines(false);
-        mobChart.getAxisLeft().setDrawGridLines(false);*/
+    *//*    pcChart.getAxisLeft().setDrawGridLines(false);
+        mobChart.getAxisLeft().setDrawGridLines(false);*//*
 
         pcChart.getAxisRight().setEnabled(false);
-        mobChart.getAxisRight().setEnabled(false);
+        mobChart.getAxisRight().setEnabled(false);*/
+
+/*
+        pcChart.setDoubleTapToZoomEnabled(false);
+        mobChart.setDoubleTapToZoomEnabled(false)*/;
 
         pcChart.setData(manager.setting("pc"));
         mobChart.setData(manager.setting("mobile"));
-
-        pcChart.setDoubleTapToZoomEnabled(false);
-        mobChart.setDoubleTapToZoomEnabled(false);
 
         (findViewById(R.id.member_recent_pc_zoom)).setOnClickListener(new View.OnClickListener() {
              @Override
@@ -65,7 +71,8 @@ public class StaticsMemberRecent extends Activity {
                  if (mode == false) {
                      mode = true;
                      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
-                     pcChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    // pcChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                     setting.zoomSetting(pcChart);
                      mobChart.setVisibility(View.GONE);
                      (findViewById(R.id.member_recent_pc_rl)).setVisibility(View.GONE);
                      (findViewById(R.id.member_recent_mobile_rl)).setVisibility(View.GONE);
@@ -79,7 +86,8 @@ public class StaticsMemberRecent extends Activity {
                   if (mode == false) {
                       mode = true;
                       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
-                      mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                      //mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                      setting.zoomSetting(mobChart);
                       pcChart.setVisibility(View.GONE);
                       (findViewById(R.id.member_recent_pc_rl)).setVisibility(View.GONE);
                       (findViewById(R.id.member_recent_mobile_rl)).setVisibility(View.GONE);
