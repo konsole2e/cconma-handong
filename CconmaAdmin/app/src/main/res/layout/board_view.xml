@@ -14,7 +14,7 @@
             android:layout_marginBottom="50dp"
             android:divider="#FF5252"
             android:dividerHeight="1dp"
-            android:background="#ffebee"/>
+            android:background="#ffffff"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/layout_board_view_comment"

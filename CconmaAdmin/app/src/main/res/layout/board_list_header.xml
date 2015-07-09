@@ -54,7 +54,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:hint="마을지기 여러분 안녕하세요?\n'모담' 이라는 브랜드의 탈모방지 및 두피 트러블방지 헤어제품을 테스트해줄 마을지기 두 분을 뽑습니다. \n꽤 고가상품이기 때문에, \n테스트를 통해 인턴가게 입점여부를 결정하려고 합니다. \n첫 번째 상품은 메디클리닉 샴푸액+헤어토닉액 set \nhttp://www.modamkorea.com/product/detail.html?product_no=148cate_no=1display_group=4"/>
+        android:hint=" \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

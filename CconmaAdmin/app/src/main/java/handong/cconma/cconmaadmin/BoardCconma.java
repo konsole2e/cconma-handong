@@ -44,6 +44,9 @@ public class BoardCconma extends Activity{
 
     ImageButton btn_board_write;
 
+    Button btn_board_list_prev;
+    Button btn_board_list_next;
+
     InputMethodManager input_manager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +92,9 @@ public class BoardCconma extends Activity{
 
 
         //게시판 목록
+        View footer = getLayoutInflater().inflate(R.layout.board_list_footer, null, false);
         list_board = (ListView)findViewById(R.id.list_board);
+        list_board.addFooterView(footer);
         adapter_board = new BoardAdapter(this);
         list_board.setAdapter(adapter_board);
         adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
@@ -111,6 +116,10 @@ public class BoardCconma extends Activity{
 
         list_board.setFocusable(false);
         list_board.setOnItemClickListener(itemclick);
+
+        //page button
+        btn_board_list_next = (Button)findViewById(R.id.btn_board_list_next);
+        btn_board_list_prev = (Button)findViewById(R.id.btn_board_list_prev);
 
         //글쓰기 버튼
         btn_board_write = (ImageButton)findViewById(R.id.btn_board_write);
