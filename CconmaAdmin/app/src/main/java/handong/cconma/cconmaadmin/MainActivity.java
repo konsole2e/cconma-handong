@@ -13,11 +13,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startService(new Intent("iconservice"));
+        //startService(new Intent("iconservice"));
 
         Button boardMainButton = (Button)findViewById(R.id.board_main_button);
         Button writeButton = (Button)findViewById(R.id.write_button);
         Button modifyButton = (Button)findViewById(R.id.modify_button);
+        Button pagingButton = (Button)findViewById(R.id.paging_button);
 
         writeButton.setOnClickListener(new View.OnClickListener() {
 
@@ -37,6 +38,18 @@ public class MainActivity extends ActionBarActivity {
 
                 Intent intent = new Intent(MainActivity.this, BoardModify.class);
                 intent.putExtra("number", "7128");
+
+                startActivity(intent);
+
+            }
+
+        });
+
+        pagingButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, paging.class);
 
                 startActivity(intent);
 

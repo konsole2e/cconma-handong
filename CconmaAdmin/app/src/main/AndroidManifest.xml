@@ -19,6 +19,8 @@
             android:name=".BoardWrite"/>
         <activity
             android:name=".BoardModify"/>
+        <activity
+            android:name=".paging"/>
         <service
             android:name=".IconService">
             <intent-filter>

@@ -24,10 +24,6 @@ public class BoardWrite extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.write);
 
-        // notice chips
-
-
-
         // notice spinner
         String[] conditions = getResources().getStringArray(R.array.write_notice);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, conditions);
