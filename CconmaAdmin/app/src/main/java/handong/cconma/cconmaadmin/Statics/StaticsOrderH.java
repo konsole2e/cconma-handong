@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 
 import java.util.ArrayList;
@@ -35,8 +36,13 @@ public class StaticsOrderH extends Activity {
         pcChart = (LineChart) findViewById(R.id.order_hourly_pc_chart);
         mobChart = (LineChart) findViewById(R.id.order_hourly_mobile_chart);
 
-        pcChart.setDescription("pc");
-        mobChart.setDescription("mobile");
+        pcChart.setDescription("");
+        mobChart.setDescription("");
+
+        pcChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        pcChart.getLegend().setTextSize(7f);
+        mobChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        mobChart.getLegend().setTextSize(7f);
 
         // scaling can now only be done on x- and y-axis separately
         pcChart.setPinchZoom(false);

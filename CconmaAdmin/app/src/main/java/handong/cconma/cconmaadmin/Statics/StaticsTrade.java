@@ -11,6 +11,7 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.CombinedChart.DrawOrder;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 
@@ -38,12 +39,23 @@ public class StaticsTrade extends Activity {
         weeklyChart = (LineChart) findViewById(R.id.trade_weekly_lineChart);
         monthlyChart = (LineChart) findViewById(R.id.trade_monthly_lineChart);
 
-        hourlyChart.setDrawOrder(new DrawOrder[]{DrawOrder.BAR,DrawOrder.LINE});
+        hourlyChart.setDescription("");
+        dailyChart.setDescription("");
+        weeklyChart.setDescription("");
+        monthlyChart.setDescription("");
 
+        hourlyChart.setDrawOrder(new DrawOrder[]{DrawOrder.BAR, DrawOrder.LINE});
+        hourlyChart.getLegend().setFormSize(5f);
+        hourlyChart.getLegend().setFormToTextSpace(2);
+        hourlyChart.getLegend().setTextSize(7f);
+        hourlyChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+
+        dailyChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
 
         XAxis xAxisH = hourlyChart.getXAxis();
         xAxisH.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxisH.setDrawGridLines(false);
+        xAxisH.setLabelsToSkip(0);
 
         XAxis xAxisD = dailyChart.getXAxis();
         xAxisD.setPosition(XAxis.XAxisPosition.BOTTOM);

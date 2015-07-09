@@ -57,6 +57,7 @@ public class StaticsOrderHManager {
         d1.setCircleColor(con.getResources().getColor(R.color.statics_orange));
         d1.setColor(con.getResources().getColor(R.color.statics_orange));
         d1.setDrawValues(false);
+  //      d1.setLabel("7월 2일(목)(1446)");
 
         LineDataSet d2 = new LineDataSet(e2, "Line DataSet 2");
         d2.setLineWidth(2.5f);
@@ -64,6 +65,7 @@ public class StaticsOrderHManager {
         d2.setCircleColor(con.getResources().getColor(R.color.statics_yellow));
         d2.setColor(con.getResources().getColor(R.color.statics_yellow));
         d2.setDrawValues(false);
+//        d2.setLabel("7월 7일(화)(1850)");
 
         LineDataSet d3 = new LineDataSet(e3, "Line DataSet 3");
         d3.setLineWidth(2.5f);
@@ -71,6 +73,7 @@ public class StaticsOrderHManager {
         d3.setCircleColor(con.getResources().getColor(R.color.statics_green));
         d3.setColor(con.getResources().getColor(R.color.statics_green));
         d3.setDrawValues(false);
+//        d3.setLabel("7월 8일(수)(1643)");
 
         LineDataSet d4 = new LineDataSet(e4, "Line DataSet 4");
         d4.setLineWidth(2.5f);
@@ -78,6 +81,7 @@ public class StaticsOrderHManager {
         d4.setCircleColor(con.getResources().getColor(R.color.statics_red));
         d4.setColor(con.getResources().getColor(R.color.statics_red));
         d4.setDrawValues(true);
+//        d4.setLabel("7월 9일(목)(239)");
 
         dataSets.add(d1);
         dataSets.add(d2);

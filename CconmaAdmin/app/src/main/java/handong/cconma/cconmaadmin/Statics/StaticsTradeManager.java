@@ -32,7 +32,7 @@ public class StaticsTradeManager {
     }
 
     public BarData dailyChartSetting() {
-        BarData data = new BarData(generateXVals(7), generateDailyBarData());
+        BarData data = new BarData(generateDailyXVals(), generateDailyBarData());
         //data.setData(generateDailyLineData());
         data.setGroupSpace(80f);
 
@@ -46,8 +46,11 @@ public class StaticsTradeManager {
             e.add(new Entry((float) Math.random() * 20, i));
         }
 
-        LineDataSet set = new LineDataSet(e, "Weekly DataSet");
+        LineDataSet set = new LineDataSet(e, "거래액(주간)");
         set.setColor(con.getResources().getColor(R.color.statics_red));
+        set.setCircleColor(set.getColor());
+        set.setLineWidth(2.5f);
+        set.setCircleSize(3.5f);
 
         LineData data = new LineData(generateXVals(10), set);
 
@@ -61,8 +64,12 @@ public class StaticsTradeManager {
             e.add(new Entry((float) Math.random() * 800, i));
         }
 
-        LineDataSet set = new LineDataSet(e, "Monthly DataSet");
+        LineDataSet set = new LineDataSet(e, "거래액(월간)");
         set.setColor(con.getResources().getColor(R.color.statics_red));
+        set.setCircleColor(set.getColor());
+        set.setLineWidth(2.5f);
+        set.setCircleSize(3.5f);
+
 
         LineData data = new LineData(generateXVals(13), set);
 
@@ -74,6 +81,7 @@ public class StaticsTradeManager {
         ll.setLineWidth(4f);
         ll.enableDashedLine(10f, 10f, 0f);
         ll.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
+        ll.setLineColor(con.getResources().getColor(R.color.statics_green));
         ll.setTextSize(10f);
 
         return ll;
@@ -84,6 +92,7 @@ public class StaticsTradeManager {
         ll.setLineWidth(4f);
         ll.enableDashedLine(10f, 10f, 0f);
         ll.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
+        ll.setLineColor(con.getResources().getColor(R.color.statics_green));
         ll.setTextSize(10f);
 
         return ll;
@@ -107,34 +116,35 @@ public class StaticsTradeManager {
             e5.add(new Entry((float) Math.random() * 50, i));
         }
 
-        LineDataSet set1 = new LineDataSet(e1, "Line DataSet1");
+        LineDataSet set1 = new LineDataSet(e1, "90일 평균");
         LineDataSet set2 = new LineDataSet(e2, "Line DataSet2");
         LineDataSet set3 = new LineDataSet(e3, "Line DataSet3");
         LineDataSet set4 = new LineDataSet(e4, "Line DataSet4");
         LineDataSet set5 = new LineDataSet(e5, "Line DataSet5");
 
-        set1.setLineWidth(2f);
+        set1.setLineWidth(1.5f);
+        set1.enableDashedLine(5f, 5f, 0);
         set1.setColor(con.getResources().getColor(R.color.statics_black));
         set1.setCircleColor(con.getResources().getColor(R.color.statics_black));
-        set1.setCircleSize(3f);
+        set1.setCircleSize(2f);
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);
 
-        set2.setLineWidth(2f);
+        set2.setLineWidth(1.5f);
         set2.setColor(con.getResources().getColor(R.color.statics_orange));
         set2.setCircleColor(con.getResources().getColor(R.color.statics_orange));
-        set2.setCircleSize(3f);
+        set2.setCircleSize(2f);
         set2.setAxisDependency(YAxis.AxisDependency.LEFT);
 
-        set3.setLineWidth(2f);
+        set3.setLineWidth(1.5f);
         set3.setColor(con.getResources().getColor(R.color.statics_yellow));
         set3.setCircleColor(con.getResources().getColor(R.color.statics_yellow));
-        set3.setCircleSize(3f);
+        set3.setCircleSize(2f);
         set3.setAxisDependency(YAxis.AxisDependency.LEFT);
 
-        set4.setLineWidth(2f);
+        set4.setLineWidth(1.5f);
         set4.setColor(con.getResources().getColor(R.color.statics_green));
         set4.setCircleColor(con.getResources().getColor(R.color.statics_green));
-        set4.setCircleSize(3f);
+        set4.setCircleSize(2f);
         set4.setAxisDependency(YAxis.AxisDependency.LEFT);
 
         set5.setLineWidth(2f);
@@ -163,7 +173,7 @@ public class StaticsTradeManager {
 
         e1.set(10, new BarEntry(10, 10));
 
-        BarDataSet set1 = new BarDataSet(e1, "Bar DataSet1");
+        BarDataSet set1 = new BarDataSet(e1, "현재 시각");
         set1.setColor(con.getResources().getColor(R.color.statics_blue));
         set1.setDrawValues(false);
 
@@ -180,6 +190,12 @@ public class StaticsTradeManager {
         d.addDataSet(set1);
 
         return d;
+    }
+
+    private String[] generateDailyXVals() {
+        String[] xVals = {"일", "월", "화", "수", "목", "금", "토"};
+
+        return xVals;
     }
 
     private ArrayList<String> generateXVals(int numX) {
@@ -212,7 +228,7 @@ public class StaticsTradeManager {
         BarDataSet set3 = new BarDataSet(e3, "Bar DataSet3");
         set3.setColor(con.getResources().getColor(R.color.statics_red));
 
-        BarDataSet set4 = new BarDataSet(e4, "Bar DataSet4");
+        BarDataSet set4 = new BarDataSet(e4, "요일 평균");
         set4.setColor(con.getResources().getColor(R.color.statics_gray));
 
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();

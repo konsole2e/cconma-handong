@@ -11,6 +11,7 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.CombinedChart.DrawOrder;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.CombinedData;
@@ -41,6 +42,12 @@ public class StaticsMember extends Activity {
 
 //        dailyChart.setDrawOrder(new DrawOrder[]{  DrawOrder.LINE, DrawOrder.BAR});
 
+        dailyChart.setDescription("");
+        dailyChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+
+        weeklyChart.setDescription("");
+        monthlyChart.setDescription("");
+
         XAxis xAxisD = dailyChart.getXAxis();
         xAxisD.setPosition(XAxis.XAxisPosition.BOTTOM);
 
@@ -51,6 +58,7 @@ public class StaticsMember extends Activity {
         XAxis xAxisM = monthlyChart.getXAxis();
         xAxisM.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxisM.setDrawGridLines(false);
+        xAxisM.setLabelsToSkip(0);
 
         YAxis rightAxisD = dailyChart.getAxisRight();
         rightAxisD.setEnabled(false);

@@ -20,17 +20,13 @@ import handong.cconma.cconmaadmin.R;
 
 public class StaticsMemberManager {
     Context con;
-    String dSet1 = "test";
-    String dSet2;
-    String dSet3;
-    String dSet4;
 
     public StaticsMemberManager(Context context) {
         con = context;
     }
 
     public BarData dailyChartSetting() {
-        BarData data = new BarData(generateXVals(7), generateDailyBarData());
+        BarData data = new BarData(generateDailyXVals(), generateDailyBarData());
         //data.setData(generateDailyLineData());
         data.setGroupSpace(80f);
 
@@ -44,8 +40,11 @@ public class StaticsMemberManager {
             e.add(new Entry((float) Math.random() * 20, i));
         }
 
-        LineDataSet set = new LineDataSet(e, "Weekly DataSet");
+        LineDataSet set = new LineDataSet(e , "주민되기(주간)");
         set.setColor(con.getResources().getColor(R.color.statics_red));
+        set.setLineWidth(2.5f);
+        set.setCircleSize(3.5f);
+        set.setCircleColor(set.getColor());
 
         LineData data = new LineData(generateXVals(10), set);
 
@@ -59,8 +58,11 @@ public class StaticsMemberManager {
             e.add(new Entry((float) Math.random() * 800, i));
         }
 
-        LineDataSet set = new LineDataSet(e, "Monthly DataSet");
+        LineDataSet set = new LineDataSet(e, "주민되기(월간)");
         set.setColor(con.getResources().getColor(R.color.statics_red));
+        set.setLineWidth(2.5f);
+        set.setCircleSize(3.5f);
+        set.setCircleColor(set.getColor());
 
         LineData data = new LineData(generateXVals(13), set);
 
@@ -73,6 +75,7 @@ public class StaticsMemberManager {
         ll.enableDashedLine(10f, 10f, 0f);
         ll.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
         ll.setTextSize(10f);
+        ll.setLineColor(con.getResources().getColor(R.color.statics_green));
 
         return ll;
     }
@@ -83,7 +86,7 @@ public class StaticsMemberManager {
         ll.enableDashedLine(10f, 10f, 0f);
         ll.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
         ll.setTextSize(10f);
-
+        ll.setLineColor(con.getResources().getColor(R.color.statics_green));
         return ll;
     }
 
@@ -128,6 +131,11 @@ public class StaticsMemberManager {
         return d;
     }*/
 
+    private String[] generateDailyXVals() {
+        String [] xVals = {"일", "월", "화", "수", "목", "금", "토"};
+
+        return xVals;
+    }
     private ArrayList<String> generateXVals(int numX) {
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < numX; i++) {
@@ -159,7 +167,7 @@ public class StaticsMemberManager {
         BarDataSet set3 = new BarDataSet(e3, "Bar DataSet3");
         set3.setColor(con.getResources().getColor(R.color.statics_red));
 
-        BarDataSet set4 = new BarDataSet(e4, "Bar DataSet4");
+        BarDataSet set4 = new BarDataSet(e4, "요일 평균");
         set4.setColor(con.getResources().getColor(R.color.statics_gray));
 
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();

@@ -21,12 +21,12 @@ public class StaticsMemberRecManager {
 
     public LineData setting(String str){
 
-        LineData d = new LineData(generateXValues(31), generateDataLine(str));
+        LineData d = new LineData(generateXVals(31), generateDataLine(str));
 
         return d;
     }
 
-    public ArrayList<String> generateXValues(int numX) {
+    public ArrayList<String> generateXVals(int numX) {
         ArrayList<String> xVal = new ArrayList<>();
         for (int i = 0; i < numX; i++) {
             xVal.add(i + "");
@@ -47,11 +47,11 @@ public class StaticsMemberRecManager {
         d1.setLineWidth(2.5f);
         d1.setCircleSize(3.5f);
         if(str.equals("pc")){
-            d1.setCircleColor(con.getResources().getColor(R.color.statics_red));
-            d1.setColor(con.getResources().getColor(R.color.statics_red));
-        }else{
             d1.setCircleColor(con.getResources().getColor(R.color.statics_green));
             d1.setColor(con.getResources().getColor(R.color.statics_green));
+        }else{
+            d1.setCircleColor(con.getResources().getColor(R.color.statics_red));
+            d1.setColor(con.getResources().getColor(R.color.statics_red));
         }
 
         dataSets.add(d1);

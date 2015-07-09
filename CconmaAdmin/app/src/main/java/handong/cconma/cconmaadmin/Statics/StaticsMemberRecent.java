@@ -29,8 +29,8 @@ public class StaticsMemberRecent extends Activity {
         pcChart = (LineChart) findViewById(R.id.member_recent_pc_chart);
         mobChart = (LineChart) findViewById(R.id.member_recent_mobile_chart);
 
-        pcChart.setDescription("pc");
-        mobChart.setDescription("mobile");
+        pcChart.setDescription("");
+        mobChart.setDescription("");
 
         // scaling can now only be done on x- and y-axis separately
         pcChart.setPinchZoom(false);
@@ -41,12 +41,10 @@ public class StaticsMemberRecent extends Activity {
 
         XAxis xAxis = pcChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setLabelsToSkip(0);
         xAxis.setDrawGridLines(false);
 
         XAxis xAxis2 = mobChart.getXAxis();
         xAxis2.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis2.setLabelsToSkip(0);
         xAxis2.setDrawGridLines(false);
 
     /*    pcChart.getAxisLeft().setDrawGridLines(false);
