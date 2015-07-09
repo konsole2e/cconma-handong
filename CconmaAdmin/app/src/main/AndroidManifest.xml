@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="handong.cconma.cconmaadmin" >
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
@@ -23,6 +25,8 @@
         <activity android:name=".BoardView"></activity>
         <activity android:name=".BoardMarked"></activity>
 
+        <activity android:name=".Inquiry.InquryMember"/>
+        <activity android:name=".Inquiry.InquryOrder"/>
         <service
             android:name=".IconService">
             <intent-filter>
@@ -31,6 +35,5 @@
         </service>
     </application>
 
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
 </manifest>

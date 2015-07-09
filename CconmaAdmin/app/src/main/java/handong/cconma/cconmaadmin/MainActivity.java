@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import handong.cconma.cconmaadmin.Inquiry.InquryMember;
+
 public class MainActivity extends ActionBarActivity {
 
     @Override
@@ -32,7 +34,7 @@ public class MainActivity extends ActionBarActivity {
 
             public void onClick(View v) {
 
-                Intent intent = new Intent(MainActivity.this, BoardWrite.class);
+                Intent intent = new Intent(MainActivity.this, InquryMember.class);
 
                 startActivity(intent);
 

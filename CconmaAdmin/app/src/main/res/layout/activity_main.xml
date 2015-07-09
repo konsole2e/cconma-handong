@@ -21,7 +21,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="write"
+        android:text="inquiry"
         android:id="@+id/write_button"
         android:layout_below="@+id/board_main_button"
         android:layout_alignParentLeft="true"
