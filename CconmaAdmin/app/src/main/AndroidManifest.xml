@@ -28,6 +28,7 @@
         <activity android:name=".Inquiry.InquryMember"/>
         <activity android:name=".Inquiry.InquryOrder"/>
         <activity android:name=".OneToOne"/>
+        <activity android:name=".Push.PushView"/>
         <service
             android:name=".IconService">
             <intent-filter>
