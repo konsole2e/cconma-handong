@@ -180,7 +180,7 @@ public class BoardView extends Activity{
                 neg_message = "NO";
                 break;
             case 2:
-                alert_message = "댓글?";
+                alert_message = "댓글";
                 pos_message = "삭제";
                 neg_message = "수정";
                 break;

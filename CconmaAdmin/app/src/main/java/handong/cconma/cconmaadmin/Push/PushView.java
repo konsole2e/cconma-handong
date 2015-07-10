@@ -2,7 +2,10 @@ package handong.cconma.cconmaadmin.Push;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import handong.cconma.cconmaadmin.R;
 
@@ -33,7 +36,10 @@ public class PushView extends Activity{
         adapter_push.addBoardItem(0, "김영빈", "[전체알림]", "속도가 너무 느리네요", "저도 느리네요", "2014/07/02 12:34:23");
         adapter_push.addItem(2);
 
-
-
+        list_push.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        });
     }
 }
