@@ -64,7 +64,7 @@
         <activity android:name=".Inquiry.InquryMember"/>
         <activity android:name=".Inquiry.InquryOrder"/>
         <activity android:name=".Push.PushView"/>
-        
+
         <service
             android:name="etc.IconService">
             <intent-filter>
