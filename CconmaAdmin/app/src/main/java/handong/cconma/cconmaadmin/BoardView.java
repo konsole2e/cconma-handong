@@ -9,13 +9,17 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -57,6 +61,7 @@ public class BoardView extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_view);
 
+
         View header =getLayoutInflater().inflate(R.layout.board_list_header, null, false);
 
         list_board_view_comment = (ListView)findViewById(R.id.list_board_view_comment);
@@ -64,6 +69,9 @@ public class BoardView extends Activity{
         adapter_comment = new BoardCommentAdapter(this);
         list_board_view_comment.setAdapter(adapter_comment);
         //list_board_view_comment.setOnScrollListener(scrollListener);
+        list_board_view_comment.setOnItemLongClickListener(itemClickListner);
+
+        list_board_view_comment.setFocusable(false);
 
         layout_board_view_comment = (LinearLayout)findViewById(R.id.layout_board_view_comment);
         edit_board_view_comment = (EditText)findViewById(R.id.edit_board_view_comment);
@@ -84,7 +92,18 @@ public class BoardView extends Activity{
         btn_board_view_delete = (Button)header.findViewById(R.id.btn_board_view_delete);
         btn_board_view_delete.setOnClickListener(clickListener);
 
+
     }
+
+
+    AbsListView.OnItemLongClickListener itemClickListner = new AbsListView.OnItemLongClickListener(){
+
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            dialog(2, position);
+            return false;
+        }
+    };
 
     View.OnClickListener clickListener = new View.OnClickListener(){
 
@@ -119,10 +138,10 @@ public class BoardView extends Activity{
                     }
                     break;
                 case R.id.btn_board_view_modify:
-                    dialog(0);
+                    dialog(0, 0);
                     break;
                 case R.id.btn_board_view_delete:
-                    dialog(1);
+                    dialog(1, 0);
                     break;
             }
 
@@ -144,40 +163,57 @@ public class BoardView extends Activity{
         }
     };*/
 
-    public void dialog(final int index){
+    public void dialog(final int index, final int position){
         String alert_message = "";
+        String pos_message = "";
+        String neg_message = "";
         AlertDialog.Builder alert_build = new AlertDialog.Builder(this);
         switch(index){
             case 0:
                 alert_message = "게시글을 수정하시겠습니까?";
+                pos_message = "YES";
+                neg_message = "NO";
                 break;
             case 1:
                 alert_message = "게시글을 삭제하시겠습니까?";
+                pos_message = "YES";
+                neg_message = "NO";
+                break;
+            case 2:
+                alert_message = "댓글?";
+                pos_message = "삭제";
+                neg_message = "수정";
                 break;
         }
 
         alert_build.setMessage(alert_message).setCancelable(false)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(pos_message, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //수정하거나 삭제하는 코드.
-                        if(index == 0){
+                        if (index == 0) {
                             Intent intent = new Intent(BoardView.this, BoardModify.class);
                             intent.putExtra("number", "7128");
                             startActivity(intent);
-                        }else{
+                        } else if(index == 1){
                             //게시글 삭제하는 코드.
+                        } else{
+                            adapter_comment.dialog(1, position - 1);
                         }
 
                     }
-                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
+                }).setNegativeButton(neg_message, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (index == 2)
+                    adapter_comment.dialog(0, position - 1);
+                else
+                    dialog.cancel();
+            }
         });
 
         AlertDialog alert = alert_build.create();
+        alert.setCanceledOnTouchOutside(true);
         alert.show();
     }
 
@@ -218,15 +254,6 @@ public class BoardView extends Activity{
                 holder.text_board_view_comment_writer = (TextView)convertView.findViewById(R.id.text_board_view_comment_writer);
                 holder.text_board_view_comment = (TextView)convertView.findViewById(R.id.text_board_view_comment);
                 holder.text_board_view_comment_date = (TextView)convertView.findViewById(R.id.text_board_view_comment_date);
-                holder.btn_board_view_comment_menu = (ImageButton)convertView.findViewById(R.id.btn_board_view_comment_menu);
-
-                holder.layout_board_view_comment_menu = (LinearLayout)convertView.findViewById(R.id.layout_board_view_comment_menu);
-                holder.btn_board_view_comment_modify = (Button)convertView.findViewById(R.id.btn_board_view_comment_modify);
-                holder.btn_board_view_comment_delete = (Button)convertView.findViewById(R.id.btn_board_view_comment_delete);
-
-                holder.layout_board_view_comment_modify = (LinearLayout)convertView.findViewById(R.id.layout_board_view_comment_modify);
-                holder.btn_board_view_comment_complete = (Button)convertView.findViewById(R.id.btn_board_view_comment_complete);
-                holder.edit_board_view_comment_modify = (EditText)convertView.findViewById(R.id.edit_board_view_comment_modify);
 
                 convertView.setTag(holder);
             }else{
@@ -237,42 +264,6 @@ public class BoardView extends Activity{
             holder.text_board_view_comment_writer.setText(data.commnet_writer);
             holder.text_board_view_comment.setText(data.comment);
             holder.text_board_view_comment_date.setText(data.comment_date);
-            holder.btn_board_view_comment_menu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.layout_board_view_comment_menu.setVisibility(View.VISIBLE);
-                }
-            });
-            holder.btn_board_view_comment_modify.setTag(position);
-            holder.btn_board_view_comment_modify.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.layout_board_view_comment_menu.setVisibility(View.GONE);
-                    dialog(0, (Integer) v.getTag(), holder);
-                }
-            });
-            holder.btn_board_view_comment_delete.setTag(position);
-            holder.btn_board_view_comment_delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.layout_board_view_comment_menu.setVisibility(View.GONE);
-                    dialog(1, (Integer) v.getTag(), holder);
-                }
-            });
-            holder.btn_board_view_comment_complete.setTag(position);
-            holder.btn_board_view_comment_complete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    board_comment_list_data.get((Integer) v.getTag()).setComment(edit_board_view_comment.getText().toString());
-                    holder.text_board_view_comment.setText(board_comment_list_data.get((Integer) v.getTag()).comment);
-                    adapter_comment.notifyDataSetChanged();
-                    edit_board_view_comment.setText("");
-                    //holder.layout_board_view_comment_modify.setVisibility(View.GONE);
-                    //input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    //input_manager.hideSoftInputFromWindow(holder.edit_board_view_comment_modify.getWindowToken(), 0);
-                    //layout_board_view_comment.setVisibility(View.VISIBLE);
-                }
-            });
 
             return convertView;
         }
@@ -291,22 +282,17 @@ public class BoardView extends Activity{
             board_comment_list_data.get(position).setComment(content);
         }
 
+        public void closeMenu(){
+
+        }
+
         public class ViewHolder{
             public TextView text_board_view_comment_writer;
             public TextView text_board_view_comment;
             public TextView text_board_view_comment_date;
-            public ImageButton btn_board_view_comment_menu;
-
-            public Button btn_board_view_comment_modify;
-            public Button btn_board_view_comment_delete;
-            public LinearLayout layout_board_view_comment_menu;
-
-            public Button btn_board_view_comment_complete;
-            public EditText edit_board_view_comment_modify;
-            public LinearLayout layout_board_view_comment_modify;
         }
 
-        public void dialog(final int index, final int position, final ViewHolder holder){
+        public void dialog(final int index, final int position){
             String alert_message = "";
             AlertDialog.Builder alert_build = new AlertDialog.Builder(context);
             switch(index){
@@ -324,18 +310,12 @@ public class BoardView extends Activity{
                         public void onClick(DialogInterface dialog, int which) {
                             //수정하거나 삭제하는 코드.
                             if(index == 0){
-                                //holder.layout_board_view_comment_modify.setVisibility(View.VISIBLE);
-                                //holder.edit_board_view_comment_modify.setText((board_comment_list_data.get(position).comment).toString());
-                                //layout_board_view_comment.setVisibility(View.GONE);
                                 edit_board_view_comment.setText((board_comment_list_data.get(position).comment).toString());
                                 edit_board_view_comment.setTag(position);
                                 //커서 위치 문자열 뒤쪽에 위치하도록.
                                 Editable edt = edit_board_view_comment.getText();
                                 Selection.setSelection(edt, edt.length());
 
-                                /*input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                input_manager.showSoftInput(edit_board_view_comment, 0);
-                                list_board_view_comment.setSelection(position);*/
                                 list_board_view_comment.setSelectionFromTop(position, 0);
                             }
                             else {
@@ -354,6 +334,7 @@ public class BoardView extends Activity{
             alert.show();
         }
     }
+
 
 
 }
