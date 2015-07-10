@@ -31,10 +31,15 @@ public class StaticsOrderH extends Activity {
         backPressCloseHandler = new BackPressCloseHandler(this);
         setting = new StaticsCommonSetting();
 
+        StaticsMarkerView mvPc = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
+        StaticsMarkerView mvMob = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
         StaticsOrderHManager manager = new StaticsOrderHManager(this);
 
         pcChart = (LineChart) findViewById(R.id.order_hourly_pc_chart);
         mobChart = (LineChart) findViewById(R.id.order_hourly_mobile_chart);
+
+        mvPc.attachChart(pcChart, "건");
+        mvMob.attachChart(mobChart, "건");
 
         setting.commonSetting(pcChart);
         setting.commonSetting(mobChart);
@@ -45,6 +50,9 @@ public class StaticsOrderH extends Activity {
         pcChart.getLegend().setTextSize(7f);
         mobChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
         mobChart.getLegend().setTextSize(7f);
+
+        pcChart.setMarkerView(mvPc);
+        mobChart.setMarkerView(mvMob);
 
         // scaling can now only be done on x- and y-axis separately
  //       pcChart.setPinchZoom(false);

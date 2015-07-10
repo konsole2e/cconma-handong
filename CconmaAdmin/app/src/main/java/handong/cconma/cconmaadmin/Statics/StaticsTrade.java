@@ -35,6 +35,10 @@ public class StaticsTrade extends Activity {
         setting = new StaticsCommonSetting();
 
         StaticsTradeManager manager = new StaticsTradeManager(this);
+        StaticsMarkerView mvH = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
+        StaticsMarkerView mvD = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
+        StaticsMarkerView mvW = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
+        StaticsMarkerView mvM = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
 
         hourlyChart = (CombinedChart) findViewById(R.id.trade_hourly_combineChart);
         dailyChart = (BarChart)findViewById(R.id.trade_daily_barChart);
@@ -45,6 +49,16 @@ public class StaticsTrade extends Activity {
         setting.commonSetting(dailyChart);
         setting.commonSetting(weeklyChart);
         setting.commonSetting(monthlyChart);
+
+        mvH.attachChart(hourlyChart, "원");
+        mvD.attachChart(dailyChart, "원");
+        mvW.attachChart(weeklyChart, "원");
+        mvM.attachChart(monthlyChart, "원");
+
+        hourlyChart.setMarkerView(mvH);
+        dailyChart.setMarkerView(mvD);
+        weeklyChart.setMarkerView(mvW);
+        monthlyChart.setMarkerView(mvM);
 
 //        hourlyChart.setDescription("");
  //       dailyChart.setDescription("");

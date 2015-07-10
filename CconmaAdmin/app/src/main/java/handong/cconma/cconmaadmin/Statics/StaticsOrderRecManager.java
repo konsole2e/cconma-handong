@@ -17,6 +17,7 @@ public class StaticsOrderRecManager {
     public LineData setting(String str){
 
         LineData d = new LineData(generateXVals(31), generateDataLine(str));
+        d.setValueFormatter(new StaticsValueFormatter());
 
         return d;
     }

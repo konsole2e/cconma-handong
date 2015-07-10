@@ -27,7 +27,7 @@ public class StaticsTradeManager {
         CombinedData data = new CombinedData(generateXVals(24));
         data.setData(generateHourlyLineData());
         data.setData(generateHourlyBarData());
-
+        data.setValueFormatter(new StaticsValueFormatter());
         return data;
     }
 
@@ -35,7 +35,7 @@ public class StaticsTradeManager {
         BarData data = new BarData(generateDailyXVals(), generateDailyBarData());
         //data.setData(generateDailyLineData());
         data.setGroupSpace(80f);
-
+        data.setValueFormatter(new StaticsValueFormatter());
         return data;
     }
 
@@ -53,7 +53,7 @@ public class StaticsTradeManager {
         set.setCircleSize(3.5f);
 
         LineData data = new LineData(generateXVals(10), set);
-
+        data.setValueFormatter(new StaticsValueFormatter());
         return data;
     }
 
@@ -72,7 +72,7 @@ public class StaticsTradeManager {
 
 
         LineData data = new LineData(generateXVals(13), set);
-
+        data.setValueFormatter(new StaticsValueFormatter());
         return data;
     }
 
@@ -124,8 +124,8 @@ public class StaticsTradeManager {
 
         set1.setLineWidth(1.5f);
         set1.enableDashedLine(5f, 5f, 0);
-        set1.setColor(con.getResources().getColor(R.color.statics_black));
-        set1.setCircleColor(con.getResources().getColor(R.color.statics_black));
+        set1.setColor(con.getResources().getColor(R.color.black));
+        set1.setCircleColor(con.getResources().getColor(R.color.black));
         set1.setCircleSize(2f);
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);
 
@@ -159,8 +159,8 @@ public class StaticsTradeManager {
         dataSets.add(set4);
         dataSets.add(set5);
 
-        LineData d = new LineData(generateXVals(24) ,dataSets);
-
+        LineData d = new LineData(generateXVals(24), dataSets);
+        d.setValueFormatter(new StaticsValueFormatter());
         return d;
     }
 
@@ -188,7 +188,7 @@ public class StaticsTradeManager {
 
         BarData d = new BarData();
         d.addDataSet(set1);
-
+        d.setValueFormatter(new StaticsValueFormatter());
         return d;
     }
 

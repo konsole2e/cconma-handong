@@ -25,6 +25,7 @@ public class StaticsLikeManager {
         BarData data = new BarData(generateDailyXVals(), generateDailyBarData());
         //data.setData(generateDailyLineData());
         data.setGroupSpace(80f);
+        data.setValueFormatter(new StaticsValueFormatter());
 
         return data;
     }
@@ -43,6 +44,7 @@ public class StaticsLikeManager {
         set.setCircleColor(set.getColor());
 
         LineData data = new LineData(generateXVals(10), set);
+        data.setValueFormatter(new StaticsValueFormatter());
 
         return data;
     }
@@ -51,7 +53,7 @@ public class StaticsLikeManager {
         ArrayList<Entry> e = new ArrayList<Entry>();
 
         for (int i = 0; i < 13; i++) {
-            e.add(new Entry((float) Math.random() * 800, i));
+            e.add(new Entry((float) Math.random() * 10000000, i));
         }
 
         LineDataSet set = new LineDataSet(e, "단골등록(월간)");
@@ -61,6 +63,7 @@ public class StaticsLikeManager {
         set.setCircleColor(set.getColor());
 
         LineData data = new LineData(generateXVals(13), set);
+        data.setValueFormatter(new StaticsValueFormatter());
 
         return data;
     }

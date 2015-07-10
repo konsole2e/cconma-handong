@@ -29,6 +29,7 @@ public class StaticsMemberManager {
         BarData data = new BarData(generateDailyXVals(), generateDailyBarData());
         //data.setData(generateDailyLineData());
         data.setGroupSpace(80f);
+        data.setValueFormatter(new StaticsValueFormatter());
 
         return data;
     }
@@ -47,6 +48,7 @@ public class StaticsMemberManager {
         set.setCircleColor(set.getColor());
 
         LineData data = new LineData(generateXVals(10), set);
+        data.setValueFormatter(new StaticsValueFormatter());
 
         return data;
     }
@@ -65,6 +67,7 @@ public class StaticsMemberManager {
         set.setCircleColor(set.getColor());
 
         LineData data = new LineData(generateXVals(13), set);
+        data.setValueFormatter(new StaticsValueFormatter());
 
         return data;
     }

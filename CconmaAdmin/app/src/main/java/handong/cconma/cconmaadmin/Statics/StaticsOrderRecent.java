@@ -27,12 +27,20 @@ public class StaticsOrderRecent extends Activity {
         setting = new StaticsCommonSetting();
 
         StaticsOrderRecManager manager = new StaticsOrderRecManager(this);
+        StaticsMarkerViewRecent mvPc = new StaticsMarkerViewRecent(this, R.layout.statics_marker_view_layout);
+        StaticsMarkerViewRecent mvMob = new StaticsMarkerViewRecent(this, R.layout.statics_marker_view_layout);
 
         pcChart = (LineChart) findViewById(R.id.order_recent_pc_chart);
         mobChart = (LineChart) findViewById(R.id.order_recent_mobile_chart);
 
         setting.commonSetting(pcChart);
         setting.commonSetting(mobChart);
+
+        mvPc.attachChart(pcChart, "건");
+        mvMob.attachChart(mobChart, "건");
+
+        pcChart.setMarkerView(mvPc);
+        mobChart.setMarkerView(mvMob);
 
 //        pcChart.setDescription("");
  //       mobChart.setDescription("");

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="marker_white">#aaffffff</color>
     <color name="statics_red">#ED561B</color>
     <color name="statics_green">#50B432</color>
     <color name="statics_yellow">#CCCF00</color>
     <color name="statics_orange">#EE8B1A</color>
     <color name="statics_gray">#AAAAAA</color>
     <color name="statics_blue">#058DC7</color>
-    <color name="statics_black">#000000</color>
+    <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
 </resources>

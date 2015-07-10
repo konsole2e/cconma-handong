@@ -38,6 +38,10 @@ public class StaticsMember extends Activity {
 
         StaticsMemberManager manager = new StaticsMemberManager(this);
 
+        StaticsMarkerView mvD = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
+        StaticsMarkerView mvW = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
+        StaticsMarkerView mvM = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
+
 //        dailyChart = (CombinedChart) findViewById(R.id.member_daily_combineChart);
         dailyChart = (BarChart)findViewById(R.id.member_daily_barChart);
         weeklyChart = (LineChart) findViewById(R.id.member_weekly_lineChart);
@@ -46,6 +50,18 @@ public class StaticsMember extends Activity {
         setting.commonSetting(dailyChart);
         setting.commonSetting(weeklyChart);
         setting.commonSetting(monthlyChart);
+
+        setting.commonSetting(dailyChart);
+        setting.commonSetting(weeklyChart);
+        setting.commonSetting(monthlyChart);
+
+        mvD.attachChart(dailyChart, "명");
+        mvW.attachChart(weeklyChart, "명");
+        mvM.attachChart(monthlyChart, "명");
+
+        dailyChart.setMarkerView(mvD);
+        weeklyChart.setMarkerView(mvW);
+        monthlyChart.setMarkerView(mvM);
 
 //        dailyChart.setDrawOrder(new DrawOrder[]{  DrawOrder.LINE, DrawOrder.BAR});
 
