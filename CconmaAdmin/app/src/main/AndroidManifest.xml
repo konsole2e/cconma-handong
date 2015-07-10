@@ -44,7 +44,7 @@
         </activity>
 
         <activity
-<<<<<<< HEAD
+
             android:name=".Activity.BoardModifyActivity"
             android:parentActivityName=".Activity.BoardViewActivity">
             <meta-data
@@ -64,18 +64,7 @@
         <activity android:name=".Inquiry.InquryMember"/>
         <activity android:name=".Inquiry.InquryOrder"/>
         <activity android:name=".Push.PushView"/>
-=======
-            android:name=".BoardModify"/>            
-        <activity android:name=".BoardCconma"></activity>
-        <activity android:name=".BoardView"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity android:name=".BoardMarked"></activity>
->>>>>>> 8e4bf0ca61ab900242bd5f41e112ccaed7011b9d
-
-        <activity android:name=".Inquiry.InquryMember"/>
-        <activity android:name=".Inquiry.InquryOrder"/>
-        <activity android:name=".OneToOne"/>
-        <activity android:name=".Push.PushView"/>
+        
         <service
             android:name="etc.IconService">
             <intent-filter>
