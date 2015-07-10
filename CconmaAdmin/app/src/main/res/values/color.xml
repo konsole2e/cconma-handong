@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ColorPrimary">#f44336</color>
+    <color name="ColorPrimaryDark">#f44336</color>
+    <color name="ColorPanel">#F5F5F5</color>
+    <color name="text_color">#000000</color>
+    <color name="swipe_color1">#ff92ff2f</color>
+    <color name="swipe_color2">#ffffbc00</color>
+    <color name="swipe_color3">#ff12ffa0</color>
+    <color name="swipe_color4">#ffff6724</color>
+</resources>

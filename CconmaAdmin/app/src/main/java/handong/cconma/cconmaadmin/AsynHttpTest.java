@@ -21,7 +21,7 @@ public class AsynHttpTest {
         test.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                
+
 
             }
 

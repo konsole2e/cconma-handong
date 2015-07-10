@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" android:background="@color/ColorPanel">
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:orientation="vertical">
+
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/tool_bar">
+        </include>
 
         <ListView
             android:id="@+id/list_board_view_comment"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginBottom="50dp"
-            android:divider="#FF5252"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="56dp"
+            android:divider="#C5C5C5"
             android:dividerHeight="1dp"
             android:background="#ffffff"/>
     </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#f44336"/>
+
     <LinearLayout
         android:id="@+id/layout_board_view_comment"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
         android:layout_gravity="bottom"
@@ -30,13 +41,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
+            android:paddingLeft="16dp"
+            style="@style/MediumBlack"
             android:text="댓글"/>
         <EditText
             android:id="@+id/edit_board_view_comment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
+            android:textColorHint="#C5C5C5"
+            android:textColor="#000000"
             android:hint="댓글을 입력하세요"/>
         <Button
             android:id="@+id/btn_board_view_comment"

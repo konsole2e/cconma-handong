@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ffffff">
+    android:background="@color/ColorPanel">
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -18,12 +19,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="2"
+                android:textColorHint="#000000"
                 android:hint="제목"/>
             <TextView
                 android:id="@+id/text_board_view_notice"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:textColorHint="#000000"
                 android:hint="알림"/>
         </LinearLayout>
         <LinearLayout
@@ -36,25 +39,30 @@
                 android:id="@+id/check_board_view_complete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#000000"
                 android:text="완료하기"/>
             <TextView
                 android:id="@+id/text_board_view_writer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColorHint="#000000"
                 android:hint="김은지"/>
             <TextView
                 android:id="@+id/text_board_view_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColorHint="#000000"
                 android:hint="2015/07/06"/>
         </LinearLayout>
     </LinearLayout>
+
     <TextView
         android:id="@+id/text_board_view_content"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:hint=" \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"/>
+        android:textColorHint="#000000"
+        android:hint=" 글이다"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

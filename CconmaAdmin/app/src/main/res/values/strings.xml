@@ -1,10 +1,9 @@
-﻿<resources>
-    <string name="app_name">Cconma Admin</string>
-    <string name="hello_world">Hello world!</string>
+<resources>
+    <string name="app_name">cconma-admin-test</string>
+    <string name="company_name">꽃피는 아침마을</string>
     <string name="action_settings">Settings</string>
-    <string-array name="board_search">
-        <item>제목</item>
-        <item>내용</item>
-        <item>작성자</item>
-    </string-array>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="board" textColor="#000000">게시판</string>
+    <string name="gcm_defaultSenderId">1042368924197</string>
 </resources>
