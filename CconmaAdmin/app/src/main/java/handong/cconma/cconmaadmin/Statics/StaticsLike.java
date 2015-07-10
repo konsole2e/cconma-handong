@@ -36,6 +36,11 @@ public class StaticsLike extends Activity {
 
         StaticsLikeManager manager = new StaticsLikeManager(this);
 
+        StaticsMarkerView mvD = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
+        StaticsMarkerView mvW = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
+        StaticsMarkerView mvM = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
+
+
 //        dailyChart = (CombinedChart) findViewById(R.id.member_daily_combineChart);
         dailyChart = (BarChart)findViewById(R.id.like_daily_barChart);
         weeklyChart = (LineChart) findViewById(R.id.like_weekly_lineChart);
@@ -46,6 +51,14 @@ public class StaticsLike extends Activity {
         setting.commonSetting(dailyChart);
         setting.commonSetting(weeklyChart);
         setting.commonSetting(monthlyChart);
+
+        mvD.attachChart(dailyChart, "명");
+        mvW.attachChart(weeklyChart, "명");
+        mvM.attachChart(monthlyChart, "명");
+
+        dailyChart.setMarkerView(mvD);
+        weeklyChart.setMarkerView(mvW);
+        monthlyChart.setMarkerView(mvM);
 
 /*       dailyChart.setDescription("");
         dailyChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
