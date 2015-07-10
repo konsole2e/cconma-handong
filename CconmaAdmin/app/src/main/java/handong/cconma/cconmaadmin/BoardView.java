@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +30,8 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
 /**
@@ -75,6 +78,7 @@ public class BoardView extends Activity{
 
         layout_board_view_comment = (LinearLayout)findViewById(R.id.layout_board_view_comment);
         edit_board_view_comment = (EditText)findViewById(R.id.edit_board_view_comment);
+        edit_board_view_comment.setOnClickListener(clickListener);
         btn_board_view_comment = (Button)findViewById(R.id.btn_board_view_comment);
         btn_board_view_comment.setOnClickListener(clickListener);
 
@@ -93,6 +97,7 @@ public class BoardView extends Activity{
         btn_board_view_delete.setOnClickListener(clickListener);
 
 
+        list_board_view_comment.setSelectionFromTop(adapter_comment.getCount(), 0);
     }
 
 
@@ -109,6 +114,7 @@ public class BoardView extends Activity{
 
         @Override
         public void onClick(View v) {
+
             switch(v.getId()){
                 case R.id.check_board_view_complete:
                     if(check_board_view_complete.isChecked())
@@ -129,11 +135,15 @@ public class BoardView extends Activity{
                             adapter_comment.notifyDataSetChanged();
                             edit_board_view_comment.setTag(null);
                         }else{
+                            Log.d("board", "commnet add");
                             adapter_comment.addItem("김은지", strNow, edit_board_view_comment.getText().toString());
+                            adapter_comment.notifyDataSetChanged();
                         }
                         edit_board_view_comment.setText("");
                         input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         input_manager.hideSoftInputFromWindow(edit_board_view_comment.getWindowToken(), 0);
+
+
 
                     }
                     break;
@@ -142,6 +152,9 @@ public class BoardView extends Activity{
                     break;
                 case R.id.btn_board_view_delete:
                     dialog(1, 0);
+                    break;
+                case R.id.edit_board_view_comment:
+                    list_board_view_comment.setSelectionFromTop(adapter_comment.getCount() -1, 0);
                     break;
             }
 
@@ -260,8 +273,17 @@ public class BoardView extends Activity{
                 holder = (ViewHolder)convertView.getTag();
             }
 
-            BoardCommentData data = board_comment_list_data.get(position);
+            final BoardCommentData data = board_comment_list_data.get(position);
             holder.text_board_view_comment_writer.setText(data.commnet_writer);
+            holder.text_board_view_comment_writer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String currentComment = edit_board_view_comment.getText().toString();
+                    edit_board_view_comment.setText(currentComment + "@" + data.commnet_writer);
+                    Editable edt = edit_board_view_comment.getText();
+                    Selection.setSelection(edt, edt.length());
+                }
+            });
             holder.text_board_view_comment.setText(data.comment);
             holder.text_board_view_comment_date.setText(data.comment_date);
 
@@ -280,10 +302,6 @@ public class BoardView extends Activity{
 
         public void updateComment(int position, String content){
             board_comment_list_data.get(position).setComment(content);
-        }
-
-        public void closeMenu(){
-
         }
 
         public class ViewHolder{

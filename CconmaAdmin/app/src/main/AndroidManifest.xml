@@ -22,7 +22,8 @@
         <activity
             android:name=".BoardModify"/>            
         <activity android:name=".BoardCconma"></activity>
-        <activity android:name=".BoardView"></activity>
+        <activity android:name=".BoardView"
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity android:name=".BoardMarked"></activity>
 
         <activity android:name=".Inquiry.InquryMember"/>
