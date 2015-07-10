@@ -35,6 +35,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import handong.cconma.cconmaadmin.Adapter.RecyclerViewAdapter;
 import handong.cconma.cconmaadmin.Adapter.ViewPagerAdapter;
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.Statics.StaticsMain;
 import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 import handong.cconma.cconmaadmin.fragment.SwipeToRefresh;
 import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
@@ -143,6 +144,7 @@ public class MainActivity extends AppCompatActivity{
                             break;
                         case 2:
                             //statistics
+                            startActivity(new Intent(getApplicationContext(), StaticsMain.class));
                             break;
                         case 3:
                             intent.putExtra("URL", "http://www.cconma.com/CconmaAdmin/member.fmv?cmd=list");

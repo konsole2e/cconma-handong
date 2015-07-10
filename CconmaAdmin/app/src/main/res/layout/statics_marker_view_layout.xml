@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/marker_view"
+    android:padding="3dp">
+
+    <TextView
+        android:id="@+id/marker_tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:ellipsize="end"
+        android:text="첫번째 줄"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="9dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/marker_tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/marker_tv1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="1dp"
+        android:ellipsize="end"
+        android:text="두번째 줄"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="9dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/marker_tv3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/marker_tv2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="1dp"
+        android:ellipsize="end"
+        android:text="세번째 줄"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="9dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/marker_tv4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/marker_tv3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="1dp"
+        android:ellipsize="end"
+        android:text="네번째 줄"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="9dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/marker_tv5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/marker_tv4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="1dp"
+        android:ellipsize="end"
+        android:text="다섯번째 줄"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="9dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/marker_tv6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/marker_tv5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="1dp"
+        android:ellipsize="end"
+        android:text="Empty TextView"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="9dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

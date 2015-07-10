@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="handong.cconma.cconmaadmin" >
+    package="handong.cconma.cconmaadmin">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <!-- uses-permissions for GCM -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <permission android:name="com.example.gcm.permission.C2D_MESSAGE"
+    <permission
+        android:name="com.example.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
     <!-- -->
 
-    <application android:allowBackup="true" android:label="@string/company_name"
-        android:icon="@drawable/ic_logo" android:theme="@style/AppTheme">
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_logo"
+        android:label="@string/company_name"
+        android:theme="@style/AppTheme">
         <activity
             android:name=".Activity.MainActivity"
-            android:label="@string/company_name" >
+            android:label="@string/company_name">
             <intent-filter>
-                <action android:name="handong.cconma.cconmaadmin.MainActivity" />
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -61,14 +64,32 @@
                 android:value=".Activity.MainActivity" />
         </activity>
 
-        <activity android:name=".Inquiry.InquryMember"/>
-        <activity android:name=".Inquiry.InquryOrder"/>
-        <activity android:name=".Push.PushView"/>
+        <activity android:name=".Inquiry.InquryMember" />
+        <activity android:name=".Inquiry.InquryOrder" />
+        <activity android:name=".Push.PushView" />
+        <activity android:name=".Statics.StaticsMain"></activity>
+        <activity
+            android:name=".Statics.StaticsOrderH"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".Statics.StaticsLike"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".Statics.StaticsOrderRecent"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".Statics.StaticsTrade"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".Statics.StaticsMember"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".Statics.StaticsMemberRecent"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
 
-        <service
-            android:name="etc.IconService">
+        <service android:name="etc.IconService">
             <intent-filter>
-                <action android:name="iconservice"/>
+                <action android:name="iconservice" />
             </intent-filter>
         </service>
     </application>
