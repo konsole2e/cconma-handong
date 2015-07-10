@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -20,8 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,9 +26,6 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
-import java.util.logging.SimpleFormatter;
 
 /**
  * 게시판 목록에서 하나 선택하여 글 내용을 보여주는 화면
@@ -124,10 +117,8 @@ public class BoardView extends Activity{
                     break;
                 case R.id.btn_board_view_comment:
                     if(!(edit_board_view_comment.getText().toString()).equals("")) {
-                        long now = System.currentTimeMillis();
-                        Date date = new Date(now);
                         SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd\nHH:mm:ss");
-                        String strNow = sdfNow.format(date);
+                        String strNow = sdfNow.format(new Date(System.currentTimeMillis()));
 
                         if(edit_board_view_comment.getTag() != null){
                             adapter_comment.updateComment((Integer) edit_board_view_comment.getTag(),
@@ -135,16 +126,12 @@ public class BoardView extends Activity{
                             adapter_comment.notifyDataSetChanged();
                             edit_board_view_comment.setTag(null);
                         }else{
-                            Log.d("board", "commnet add");
                             adapter_comment.addItem("김은지", strNow, edit_board_view_comment.getText().toString());
                             adapter_comment.notifyDataSetChanged();
                         }
                         edit_board_view_comment.setText("");
                         input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         input_manager.hideSoftInputFromWindow(edit_board_view_comment.getWindowToken(), 0);
-
-
-
                     }
                     break;
                 case R.id.btn_board_view_modify:
