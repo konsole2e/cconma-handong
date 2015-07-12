@@ -49,10 +49,7 @@ public class MyWebView extends AppCompatActivity {
         });
 
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
-        webview.getSettings().setSupportZoom(true);
-        webview.getSettings().getBuiltInZoomControls();
-        webview.getSettings().setDisplayZoomControls(true);
-        webview.canGoBackOrForward(5);
+        webview.getSettings().setBuiltInZoomControls(true);
         webview.loadUrl(url);
         webview.setWebViewClient(new WebClient());
     }

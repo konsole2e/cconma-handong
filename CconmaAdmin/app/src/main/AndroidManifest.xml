@@ -67,7 +67,7 @@
         <activity android:name=".Inquiry.InquryMember" />
         <activity android:name=".Inquiry.InquryOrder" />
         <activity android:name=".Push.PushView" />
-        <activity android:name=".Statics.StaticsMain"></activity>
+        <activity android:name=".Statics.StaticsMain"/>
         <activity
             android:name=".Statics.StaticsOrderH"
             android:configChanges="keyboardHidden|orientation|screenSize" />
@@ -92,6 +92,7 @@
                 <action android:name="iconservice" />
             </intent-filter>
         </service>
+
     </application>
 
 

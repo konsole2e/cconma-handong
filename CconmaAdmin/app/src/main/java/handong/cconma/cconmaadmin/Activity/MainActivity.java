@@ -162,7 +162,6 @@ public class MainActivity extends AppCompatActivity{
                             Snackbar.make(snackbar, recyclerView.getChildPosition(child) + " pressed", Snackbar.LENGTH_SHORT).show();
                     }
                     child.setPressed(false);
-                    mDrawerLayout.closeDrawers();
 
                     return true;
                 }
@@ -241,10 +240,12 @@ public class MainActivity extends AppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if(id == R.id.my_favorite){
-            Toast.makeText(getApplicationContext(), "my favorite", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, handong.cconma.cconmaadmin.Activity.BoardMarkedActivity.class);
+            startActivity(intent);
         }
         else if(id == R.id.notification){
-            Toast.makeText(getApplicationContext(), "notification", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, handong.cconma.cconmaadmin.Push.PushView.class);
+            startActivity(intent);
         }
 
             return super.onOptionsItemSelected(item);
