@@ -97,6 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:text="내용"
+                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="16dp"
                     android:id="@+id/textView3"
                     style="@style/SmallBlack" />
@@ -106,7 +107,6 @@
                     android:layout_height="fill_parent"
                     android:layout_marginRight="16dp"
                     android:gravity="top"
-                    android:hint="Ddd"
                     android:id="@+id/content"
                     style="@style/SmallBlack"/>
             </LinearLayout>
