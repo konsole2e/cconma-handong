@@ -7,8 +7,9 @@ import android.view.View;
 import android.widget.Button;
 
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.mainpage.BaseActivity;
 
-public class StaticsMain extends Activity implements View.OnClickListener{
+public class StaticsMain extends BaseActivity implements View.OnClickListener{
     private Button orderH;
     private Button orderRcnt;
     private Button trade;
@@ -20,6 +21,8 @@ public class StaticsMain extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statics_main);
+
+        setDrawer();
 
         orderH = (Button)findViewById(R.id.order_hourly_btn);
         orderH.setOnClickListener(this);

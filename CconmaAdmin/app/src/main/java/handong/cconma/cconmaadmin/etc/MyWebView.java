@@ -13,11 +13,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.mainpage.BaseActivity;
 
 /**
  * Created by Young Bin Kim on 2015-07-06.
  */
-public class MyWebView extends AppCompatActivity {
+public class MyWebView extends BaseActivity {
     Toolbar toolbar;
     android.webkit.WebView webview;
 
@@ -27,10 +28,7 @@ public class MyWebView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview);
 
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setDrawer();
 
         webview = (WebView) findViewById(R.id.webView);
 

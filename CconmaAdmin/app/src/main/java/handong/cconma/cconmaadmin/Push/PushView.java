@@ -2,6 +2,9 @@ package handong.cconma.cconmaadmin.push;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -11,7 +14,8 @@ import handong.cconma.cconmaadmin.R;
 /**
  * Created by eundi on 15. 7. 9..
  */
-public class PushView extends Activity{
+public class PushView extends AppCompatActivity{
+    private Toolbar toolbar;
 
     ListView list_push;
     PushAdapter adapter_push;
@@ -19,6 +23,11 @@ public class PushView extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_push);
+
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         adapter_push = new PushAdapter(this);
         list_push = (ListView)findViewById(R.id.list_push);

@@ -1,73 +1,108 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:fitsSystemWindows="true"
     android:background="@color/ColorPanel"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/order_hourly_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="시간별 주문수" />
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/snackbarPosition"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/ColorPanel">
 
-        <Button
-            android:id="@+id/order_recent_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="최근 30일 주문수" />
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/order_hourly_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="시간별 주문수" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+                <Button
+                    android:id="@+id/order_recent_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="최근 30일 주문수" />
 
-        <Button
-            android:id="@+id/trade_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="거래액" />
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/like_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="단골등록" />
-    </LinearLayout>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+                <Button
+                    android:id="@+id/trade_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="거래액" />
 
-        <Button
-            android:id="@+id/member_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="주민되기" />
+                <Button
+                    android:id="@+id/like_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="단골등록" />
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/member_recent_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="최근 30일 주민수" />
-    </LinearLayout>
-</LinearLayout>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/member_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="주민되기" />
+
+                <Button
+                    android:id="@+id/member_recent_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="최근 30일 주민수" />
+            </LinearLayout>
+
+            <!-- The main content view -->
+            <android.support.design.widget.AppBarLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+
+                <include
+                    android:id="@+id/tool_bar"
+                    layout="@layout/tool_bar">
+                </include>
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:scrollbars="horizontal"
+                    android:layout_below="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"/>
+            </android.support.design.widget.AppBarLayout>
+        </android.support.design.widget.CoordinatorLayout>
+    </FrameLayout>
+</android.support.v4.widget.DrawerLayout>
