@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity{
     String regid;
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         //checkPlayServices();
     }
@@ -103,7 +103,7 @@ public class MainActivity extends BaseActivity{
         tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
 
-        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,16 +134,15 @@ public class MainActivity extends BaseActivity{
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if(id == R.id.my_favorite){
+        if (id == R.id.my_favorite) {
             Intent intent = new Intent(this, BoardMarkedActivity.class);
             startActivity(intent);
-        }
-        else if(id == R.id.notification){
+        } else if (id == R.id.notification) {
             Intent intent = new Intent(this, PushView.class);
             startActivity(intent);
         }
 
-            return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -154,11 +153,10 @@ public class MainActivity extends BaseActivity{
                     Toast.makeText(getApplicationContext(), "menu button clicked", Toast.LENGTH_SHORT).show();
                     return true;
                 case KeyEvent.KEYCODE_BACK:
-                    if(returned == 0) {
+                    if (returned == 0) {
                         Toast.makeText(getApplicationContext(), "종료하려면 한번 더 탭하세요", Toast.LENGTH_SHORT).show();
                         returned = 1;
-                    }
-                    else{
+                    } else {
                         finish();
                         returned = 0;
                     }
@@ -168,13 +166,13 @@ public class MainActivity extends BaseActivity{
         return super.dispatchKeyEvent(event);
     }
 
-    private void setSwipeToRefresh(){
-            //set SwipeToRefresh on the activity
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            SwipeToRefresh swipe = new SwipeToRefresh();
-            transaction.add(R.id.board_container, swipe);
-            transaction.commit();
-        }
+    private void setSwipeToRefresh() {
+        //set SwipeToRefresh on the activity
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        SwipeToRefresh swipe = new SwipeToRefresh();
+        transaction.add(R.id.board_container, swipe);
+        transaction.commit();
+    }
 
     public void getInstanceIdToken() {
         if (checkPlayServices()) {
@@ -199,6 +197,7 @@ public class MainActivity extends BaseActivity{
         }
         return true;
     }
+
     private static int getAppVersion(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager()
