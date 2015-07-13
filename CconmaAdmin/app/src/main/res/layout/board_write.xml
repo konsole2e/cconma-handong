@@ -1,171 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="wrap_content"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:columnCount="2"
     android:rowCount="7"
     android:background="@color/ColorPanel"
     android:id="@+id/write">
 
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/tool_bar">
-    </include>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/tool_bar">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="알림"
-            android:id="@+id/textView"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            style="@style/SmallBlack" />
-
-        <HorizontalScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/notice"
-            android:id="@+id/horizontalScrollView"
-            style="@style/SmallBlack">
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/selectedList">
-            </LinearLayout>
-
-        </HorizontalScrollView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="제목"
-            android:id="@+id/textView2"
-            android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_alignTop="@+id/title"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView"
-            android:layout_toRightOf="@+id/title"
-            style="@style/SmallBlack" />
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/title"
-            android:layout_below="@+id/horizontalScrollView"
-            android:layout_alignRight="@+id/checkNotice"
-            android:layout_alignEnd="@+id/checkNotice"
-            android:layout_alignLeft="@+id/notice"
-            android:layout_alignStart="@+id/notice"
-            style="@style/SmallBlack" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="내용"
-            android:layout_marginLeft="16dp"
-            android:id="@+id/textView3"
-            android:layout_gravity="center"
-            android:layout_alignTop="@+id/content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView2"
-            style="@style/SmallBlack" />
-
-        <EditText
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/tool_bar">
+        </include>
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:inputType="textMultiLine"
-            android:layout_marginRight="16dp"
-            android:id="@+id/content"
-            android:layout_alignLeft="@+id/title"
-            android:layout_alignStart="@+id/title"
-            android:layout_below="@+id/title"
-            android:layout_above="@+id/file"
-            style="@style/SmallBlack"/>
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_marginLeft="16dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="알림"
+                    style="@style/SmallBlack" />
+                <Spinner
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:id="@+id/notice"
+                    style="@style/SmallBlack" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"/>
+                <CheckBox
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="16dp"
+                    android:text="공지사항"
+                    android:id="@+id/checkNotice"
+                    style="@style/SmallBlack"
+                    android:buttonTint="#000000"/>
+            </LinearLayout>
+            <HorizontalScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.7"
+                android:layout_below="@+id/notice"
+                android:id="@+id/horizontalScrollView"
+                style="@style/SmallBlack">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="첨부파일"
-            android:layout_marginLeft="16dp"
-            android:id="@+id/textView4"
-            android:layout_gravity="center"
-            android:layout_alignTop="@+id/btn_board_write_file"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            style="@style/SmallBlack" />
-        <TextView
-            android:id="@+id/text_selected_file"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/textView4"
-            android:layout_toRightOf="@id/textView4"
-            android:layout_marginLeft="10dp"
-            android:hint = "파일경로"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="파일 첨부"
-            android:layout_marginRight="16dp"
-            android:id="@+id/btn_board_write_file"
-            android:layout_above="@+id/confirm"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignLeft="@+id/confirm"
-            android:layout_alignStart="@+id/confirm" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/selectedList">
+                </LinearLayout>
 
-        <Spinner
-            android:layout_width="145dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/notice"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/textView4"
-            android:layout_toEndOf="@+id/textView4"
-            style="@style/SmallBlack" />
+            </HorizontalScrollView>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="제목"
+                    android:id="@+id/textView2"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    style="@style/SmallBlack" />
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="공지사항"
-            android:id="@+id/checkNotice"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="16dp"
-            style="@style/SmallBlack"
-            android:buttonTint="#000000"/>
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/title"
+                    android:layout_marginRight="16dp"
+                    style="@style/SmallBlack" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:text="내용"
+                    android:layout_marginLeft="16dp"
+                    android:id="@+id/textView3"
+                    style="@style/SmallBlack" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="취소"
-            android:id="@+id/cancel"
-            android:layout_below="@+id/btn_board_write_file"
-            android:layout_toLeftOf="@+id/btn_board_write_file"
-            android:layout_toStartOf="@+id/btn_board_write_file" />
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginRight="16dp"
+                    android:gravity="top"
+                    android:hint="Ddd"
+                    android:id="@+id/content"
+                    style="@style/SmallBlack"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="첨부파일"
+                    android:layout_marginLeft="16dp"
+                    android:id="@+id/textView4"
+                    style="@style/SmallBlack" />
+                <TextView
+                    android:id="@+id/text_selected_file"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.8"
+                    android:hint = "파일경로"/>
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:text="파일 첨부"
+                    android:layout_marginRight="16dp"
+                    android:id="@+id/btn_board_write_file" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="right">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="취소"
+                    android:id="@+id/cancel" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="등록"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/confirm"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true" />
-    </RelativeLayout>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="등록"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:id="@+id/confirm" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/layout_board_write_file"
         android:layout_width="wrap_content"
@@ -192,4 +187,4 @@
         </LinearLayout>
 
     </FrameLayout>
-</RelativeLayout>
+</FrameLayout>

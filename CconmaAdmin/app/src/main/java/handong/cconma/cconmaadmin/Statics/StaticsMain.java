@@ -17,16 +17,13 @@ import android.view.View;
 import android.widget.Button;
 
 import handong.cconma.cconmaadmin.R;
-<<<<<<< Updated upstream
 import handong.cconma.cconmaadmin.mainpage.BaseActivity;
 
-public class StaticsMain extends BaseActivity implements View.OnClickListener{
-=======
 import handong.cconma.cconmaadmin.etc.MyWebView;
 import handong.cconma.cconmaadmin.mainpage.RecyclerViewAdapter;
 
 public class StaticsMain extends AppCompatActivity implements View.OnClickListener{
->>>>>>> Stashed changes
+
     private Button orderH;
     private Button orderRcnt;
     private Button trade;
@@ -54,9 +51,6 @@ public class StaticsMain extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statics_main);
 
-<<<<<<< Updated upstream
-        setDrawer();
-=======
         // Attaching the layout to the toolbar object
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -158,7 +152,7 @@ public class StaticsMain extends AppCompatActivity implements View.OnClickListen
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
->>>>>>> Stashed changes
+
 
         orderH = (Button)findViewById(R.id.order_hourly_btn);
         orderH.setOnClickListener(this);
