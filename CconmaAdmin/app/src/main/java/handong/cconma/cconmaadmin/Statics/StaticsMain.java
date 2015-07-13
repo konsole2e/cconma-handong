@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 
 import handong.cconma.cconmaadmin.R;
+<<<<<<< HEAD
 import handong.cconma.cconmaadmin.mainpage.BaseActivity;
 
 import handong.cconma.cconmaadmin.etc.MyWebView;
@@ -24,6 +25,12 @@ import handong.cconma.cconmaadmin.mainpage.RecyclerViewAdapter;
 
 public class StaticsMain extends AppCompatActivity implements View.OnClickListener{
 
+=======
+
+import handong.cconma.cconmaadmin.mainpage.BaseActivity;
+
+public class StaticsMain extends BaseActivity implements View.OnClickListener{
+>>>>>>> a7dfe2b55809b20e5e566ece00016eb4558a9222
     private Button orderH;
     private Button orderRcnt;
     private Button trade;
@@ -31,26 +38,12 @@ public class StaticsMain extends AppCompatActivity implements View.OnClickListen
     private Button member;
     private Button memberRcnt;
 
-    private Toolbar toolbar;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView.Adapter recyclerAdapter;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    private String TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "마을지기 홈페이지"};
-    private int ICONS[] = {R.drawable.ic_board_selector, R.drawable.ic_chart_selector, R.drawable.ic_question_selector, R.drawable.ic_search_grey600_48dp, R.drawable.ic_home_selector };
-    private int returned = 0;
-    private int status = 0;
-
-    private String TITLESUSER[] = {"설정", "로그아웃"};
-    private int ICONSUSER[] = {R.drawable.ic_setting_selector, R.drawable.ic_logout_selector};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statics_main);
 
+<<<<<<< HEAD
         // Attaching the layout to the toolbar object
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -153,6 +146,9 @@ public class StaticsMain extends AppCompatActivity implements View.OnClickListen
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
+=======
+        setDrawer();
+>>>>>>> a7dfe2b55809b20e5e566ece00016eb4558a9222
 
         orderH = (Button)findViewById(R.id.order_hourly_btn);
         orderH.setOnClickListener(this);
@@ -191,5 +187,4 @@ public class StaticsMain extends AppCompatActivity implements View.OnClickListen
                 break;
         }
     }
-
 }
