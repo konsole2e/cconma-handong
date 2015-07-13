@@ -30,13 +30,8 @@
         </activity>
 
         <activity
-            android:name=".etc.MyWebView"
-            android:parentActivityName=".mainpage.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".mainpage.MainActivity" />
+            android:name=".etc.MyWebView">
         </activity>
-        <activity android:name=".board.BoardMarkedActivity" />
 
         <activity
             android:name=".board.BoardWriteActivity"
@@ -49,7 +44,6 @@
 
 
         <activity
-
             android:name=".board.BoardModifyActivity"
             android:parentActivityName=".board.BoardViewActivity">
             <meta-data
@@ -61,6 +55,15 @@
             android:name=".board.BoardViewActivity"
             android:parentActivityName=".mainpage.MainActivity"
             android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mainpage.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".board.BoardMarkedActivity"
+            android:parentActivityName=".mainpage.MainActivity">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".mainpage.MainActivity" />

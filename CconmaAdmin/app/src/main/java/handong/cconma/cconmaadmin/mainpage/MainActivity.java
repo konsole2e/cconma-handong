@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.drive.internal.SetDrivePreferencesRequest;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import handong.cconma.cconmaadmin.R;
@@ -46,7 +47,7 @@ import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
  * Created by YoungBinKim on 2015-07-06.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity{
     private Toolbar toolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -61,16 +62,14 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout mSwipeRefresh;
 
-
-    private String TITLES[] = {"게시판", "통계", "1:1문의", "회원정보 조회", "마을지기 홈페이지"};
-    private int ICONS[] = {R.drawable.ic_board_selector, R.drawable.ic_chart_selector, R.drawable.ic_question_selector, R.drawable.ic_search_grey600_48dp, R.drawable.ic_home_selector};
-
-    private int returned = 0;
     private int status = 0;
 
     private String TITLESUSER[] = {"설정", "로그아웃"};
     private int ICONSUSER[] = {R.drawable.ic_setting_selector,
             R.drawable.ic_logout_selector};
+
+    private int returned = 0;
+
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -92,92 +91,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        setUser("IT개발");
+        setDrawer();
         context = getApplicationContext();
 
         getInstanceIdToken(); //get regId for GCM
-
-        // Attaching the layout to the toolbar object
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
-
-        recyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
-        recyclerView.setHasFixedSize(true);
-
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        recyclerAdapter = new RecyclerViewAdapter(TITLES, ICONS, "IT개발팀", 0);
-
-        final GestureDetector mGestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
-            /*@Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                Log.d(TAG, "singleTapconfirmed");
-                return true;
-            }*/
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return true;
-            }
-        });
-
-        final View snackbar = findViewById(R.id.snackbarPosition);
-
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-                View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
-
-                Log.d(TAG, String.valueOf(mGestureDetector.onTouchEvent(motionEvent)));
-                if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
-                    Intent intent = new Intent(MainActivity.this, MyWebView.class);
-                    Log.d(TAG, String.valueOf(recyclerView.getChildPosition(child)));
-                    switch (recyclerView.getChildPosition(child)) {
-                        case 0: // 맨 윗 부분
-                            if (status == 0) {
-                                recyclerAdapter = new RecyclerViewAdapter(TITLESUSER, ICONSUSER, "IT개발팀", 1);
-                                recyclerView.setAdapter(recyclerAdapter);
-                                status = 1;
-                            } else if (status == 1) {
-                                recyclerAdapter = new RecyclerViewAdapter(TITLES, ICONS, "IT개발팀", 0);
-                                recyclerView.setAdapter(recyclerAdapter);
-                                status = 0;
-                            }
-                            break;
-                        case 1: // 게시판
-                            //go to board
-                            break;
-                        case 2: // 통계
-                            startActivity(new Intent(getApplicationContext(), StaticsMain.class));
-                            break;
-                        case 3: // 1:1문의
-                            intent.putExtra("URL", "http://www.cconma.com/admin/help_board/help_board_list.pmv");
-                            startActivity(intent);
-                            break;
-                        case 4: // 회원정보
-                            intent.putExtra("URL", "http://www.cconma.com/CconmaAdmin/member.fmv?cmd=list");
-                            startActivity(intent);
-                            break;
-                        case 5: // 마을지기 홈페이지
-                            intent.putExtra("URL", "http://www.cconma.com/CconmaAdmin/login.fmv?cmd=loginForm&path=%2FCconmaAdmin%2Fmain.fmv");
-                            startActivity(intent);
-                            break;
-                        default:
-                            Snackbar.make(snackbar, recyclerView.getChildPosition(child) + " pressed", Snackbar.LENGTH_SHORT).show();
-                    }
-                    child.setPressed(false);
-
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-            }
-        });
-
-        recyclerView.setAdapter(recyclerAdapter);
 
         // View Page Adapter
         viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -200,27 +118,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-
-            //Called when a drawer has settled in a completely closed state.
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                invalidateOptionsMenu();
-            }
-
-            // Called when a drawer has settled in a completely open state.
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
-            }
-        };
-
-        // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
     }
 
     @Override
@@ -276,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         return super.dispatchKeyEvent(event);
     }
 
-    private void setSwipeToRefresh() {
+    private void setSwipeToRefresh(){
         //set SwipeToRefresh on the activity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SwipeToRefresh swipe = new SwipeToRefresh();
