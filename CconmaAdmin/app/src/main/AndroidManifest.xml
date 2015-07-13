@@ -14,8 +14,6 @@
         android:name="com.example.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
-    <!-- -->
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
@@ -67,7 +65,7 @@
         <activity android:name=".inquiry.InquryMember" />
         <activity android:name=".inquiry.InquryOrder" />
         <activity android:name=".push.PushView" />
-        <activity android:name=".statics.StaticsMain"></activity>
+        <activity android:name=".statics.StaticsMain" />
         <activity
             android:name=".statics.StaticsOrderH"
             android:configChanges="keyboardHidden|orientation|screenSize" />
@@ -92,7 +90,6 @@
                 <action android:name="iconservice" />
             </intent-filter>
         </service>
+
     </application>
-
-
 </manifest>

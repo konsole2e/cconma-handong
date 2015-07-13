@@ -25,7 +25,7 @@ public class MyWebView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_webview);
+        setContentView(R.layout.webview);
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -47,10 +47,7 @@ public class MyWebView extends AppCompatActivity {
         });
 
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
-        webview.getSettings().setSupportZoom(true);
-        webview.getSettings().getBuiltInZoomControls();
-        webview.getSettings().setDisplayZoomControls(true);
-        webview.canGoBackOrForward(5);
+        webview.getSettings().setBuiltInZoomControls(true);
         webview.loadUrl(url);
         webview.setWebViewClient(new WebClient());
     }

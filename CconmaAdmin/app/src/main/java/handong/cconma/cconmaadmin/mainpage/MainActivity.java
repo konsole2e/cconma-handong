@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -162,7 +163,6 @@ public class MainActivity extends AppCompatActivity{
                             Snackbar.make(snackbar, recyclerView.getChildPosition(child) + " pressed", Snackbar.LENGTH_SHORT).show();
                     }
                     child.setPressed(false);
-                    mDrawerLayout.closeDrawers();
 
                     return true;
                 }
@@ -186,6 +186,7 @@ public class MainActivity extends AppCompatActivity{
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
 
         floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
@@ -241,10 +242,12 @@ public class MainActivity extends AppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if(id == R.id.my_favorite){
-            Toast.makeText(getApplicationContext(), "my favorite", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, handong.cconma.cconmaadmin.Activity.BoardMarkedActivity.class);
+            startActivity(intent);
         }
         else if(id == R.id.notification){
-            Toast.makeText(getApplicationContext(), "notification", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, handong.cconma.cconmaadmin.Push.PushView.class);
+            startActivity(intent);
         }
 
             return super.onOptionsItemSelected(item);
