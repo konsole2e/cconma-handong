@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Push;
+package handong.cconma.cconmaadmin.push;
 
 import handong.cconma.cconmaadmin.BoardView;
 import handong.cconma.cconmaadmin.R;

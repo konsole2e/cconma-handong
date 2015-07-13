@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import handong.cconma.cconmaadmin.Inquiry.InquryMember;
-import handong.cconma.cconmaadmin.Push.PushView;
+import handong.cconma.cconmaadmin.inquiry.InquryMember;
+import handong.cconma.cconmaadmin.push.PushView;
 
 public class MainActivity extends ActionBarActivity {
 

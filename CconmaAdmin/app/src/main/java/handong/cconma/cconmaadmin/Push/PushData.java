@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Push;
+package handong.cconma.cconmaadmin.push;
 
 /**
  * Created by eundi on 15. 7. 9..

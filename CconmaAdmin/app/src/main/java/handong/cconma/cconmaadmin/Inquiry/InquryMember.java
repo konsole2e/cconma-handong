@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Inquiry;
+package handong.cconma.cconmaadmin.inquiry;
 import handong.cconma.cconmaadmin.R;
 
 import android.app.Activity;
