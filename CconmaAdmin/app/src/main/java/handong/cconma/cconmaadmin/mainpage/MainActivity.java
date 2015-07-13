@@ -33,10 +33,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
-import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
-import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.push.PushView;
 import handong.cconma.cconmaadmin.statics.StaticsMain;
 import handong.cconma.cconmaadmin.etc.MyWebView;
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity{
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private RelativeLayout drawerHeader;
-    private IntegratedSharedPreferences pref;
+    private handong.cconma.cconmaadmin.data.IntegratedSharedPreferences pref;
     private FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout mSwipeRefresh;
 
@@ -255,7 +254,7 @@ public class MainActivity extends AppCompatActivity{
         else if(id == R.id.notification){
             Intent intent = new Intent(this, PushView.class);
             startActivity(intent);
-        }
+    }
 
             return super.onOptionsItemSelected(item);
     }

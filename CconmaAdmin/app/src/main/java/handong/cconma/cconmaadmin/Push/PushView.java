@@ -1,12 +1,14 @@
 package handong.cconma.cconmaadmin.push;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.board.BoardViewActivity;
 
 /**
  * Created by eundi on 15. 7. 9..
@@ -38,6 +40,13 @@ public class PushView extends Activity{
         list_push.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int type = ((PushData)adapter_push.getItem(position)).type;
+                if(type == 0){
+                    Intent intent = new Intent(PushView.this, BoardViewActivity.class);
+                    startActivity(intent);
+                }else if(type == 2){
+                    //1:1 문의 게시판으로 이동.
+                }
 
             }
         });

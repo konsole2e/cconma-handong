@@ -299,10 +299,6 @@ public class BoardViewActivity extends AppCompatActivity{
             board_comment_list_data.get(position).setComment(content);
         }
 
-        public void closeMenu(){
-
-        }
-
         public class ViewHolder{
             public TextView text_board_view_comment_writer;
             public TextView text_board_view_comment;

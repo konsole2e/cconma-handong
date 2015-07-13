@@ -47,13 +47,10 @@ public class MyWebView extends AppCompatActivity {
         });
 
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
-<<<<<<< HEAD:CconmaAdmin/app/src/main/java/handong/cconma/cconmaadmin/Activity/MyWebView.java
         webview.getSettings().setSupportZoom(true);
         webview.getSettings().setBuiltInZoomControls(true);
         webview.canGoBackOrForward(5);
-=======
         webview.getSettings().setBuiltInZoomControls(true);
->>>>>>> e8b43f9a60a03e6b445d3935a3498cca6babb95d:CconmaAdmin/app/src/main/java/handong/cconma/cconmaadmin/etc/MyWebView.java
         webview.loadUrl(url);
         webview.setWebViewClient(new WebClient());
     }
