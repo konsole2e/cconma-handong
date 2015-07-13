@@ -46,7 +46,7 @@ import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
  * Created by YoungBinKim on 2015-07-06.
  */
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -61,12 +61,10 @@ public class MainActivity extends AppCompatActivity{
     private FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout mSwipeRefresh;
 
-    private String TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "마을지기 홈페이지"};
-    private int ICONS[] = {R.drawable.ic_board_selector,
-            R.drawable.ic_chart_selector,
-            R.drawable.ic_question_selector,
-            R.drawable.ic_search_grey600_48dp,
-            R.drawable.ic_home_selector };
+
+    private String TITLES[] = {"게시판", "통계", "1:1문의", "회원정보 조회", "마을지기 홈페이지"};
+    private int ICONS[] = {R.drawable.ic_board_selector, R.drawable.ic_chart_selector, R.drawable.ic_question_selector, R.drawable.ic_search_grey600_48dp, R.drawable.ic_home_selector};
+
     private int returned = 0;
     private int status = 0;
 
@@ -85,7 +83,7 @@ public class MainActivity extends AppCompatActivity{
     String regid;
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         //checkPlayServices();
     }
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity{
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
-        recyclerView = (RecyclerView)findViewById(R.id.RecyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(this);
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }*/
             @Override
-            public boolean onSingleTapUp(MotionEvent e){
+            public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
         });
@@ -134,8 +132,8 @@ public class MainActivity extends AppCompatActivity{
                 if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
                     Intent intent = new Intent(MainActivity.this, MyWebView.class);
                     Log.d(TAG, String.valueOf(recyclerView.getChildPosition(child)));
-                    switch(recyclerView.getChildPosition(child)){
-                        case 0:
+                    switch (recyclerView.getChildPosition(child)) {
+                        case 0: // 맨 윗 부분
                             if (status == 0) {
                                 recyclerAdapter = new RecyclerViewAdapter(TITLESUSER, ICONSUSER, "IT개발팀", 1);
                                 recyclerView.setAdapter(recyclerAdapter);
@@ -146,22 +144,21 @@ public class MainActivity extends AppCompatActivity{
                                 status = 0;
                             }
                             break;
-                        case 1:
+                        case 1: // 게시판
                             //go to board
                             break;
-                        case 2:
-                            //statistics
+                        case 2: // 통계
                             startActivity(new Intent(getApplicationContext(), StaticsMain.class));
                             break;
-                        case 3:
-                            intent.putExtra("URL", "http://www.cconma.com/CconmaAdmin/member.fmv?cmd=list");
-                            startActivity(intent);
-                            break;
-                        case 4:
+                        case 3: // 1:1문의
                             intent.putExtra("URL", "http://www.cconma.com/admin/help_board/help_board_list.pmv");
                             startActivity(intent);
                             break;
-                        case 5:
+                        case 4: // 회원정보
+                            intent.putExtra("URL", "http://www.cconma.com/CconmaAdmin/member.fmv?cmd=list");
+                            startActivity(intent);
+                            break;
+                        case 5: // 마을지기 홈페이지
                             intent.putExtra("URL", "http://www.cconma.com/CconmaAdmin/login.fmv?cmd=loginForm&path=%2FCconmaAdmin%2Fmain.fmv");
                             startActivity(intent);
                             break;
@@ -195,7 +192,7 @@ public class MainActivity extends AppCompatActivity{
         tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
 
-        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -247,16 +244,15 @@ public class MainActivity extends AppCompatActivity{
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if(id == R.id.my_favorite){
+        if (id == R.id.my_favorite) {
             Intent intent = new Intent(this, BoardMarkedActivity.class);
             startActivity(intent);
-        }
-        else if(id == R.id.notification){
+        } else if (id == R.id.notification) {
             Intent intent = new Intent(this, PushView.class);
             startActivity(intent);
     }
 
-            return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -267,11 +263,10 @@ public class MainActivity extends AppCompatActivity{
                     Toast.makeText(getApplicationContext(), "menu button clicked", Toast.LENGTH_SHORT).show();
                     return true;
                 case KeyEvent.KEYCODE_BACK:
-                    if(returned == 0) {
+                    if (returned == 0) {
                         Toast.makeText(getApplicationContext(), "종료하려면 한번 더 탭하세요", Toast.LENGTH_SHORT).show();
                         returned = 1;
-                    }
-                    else{
+                    } else {
                         finish();
                         returned = 0;
                     }
@@ -281,13 +276,13 @@ public class MainActivity extends AppCompatActivity{
         return super.dispatchKeyEvent(event);
     }
 
-    private void setSwipeToRefresh(){
-            //set SwipeToRefresh on the activity
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            SwipeToRefresh swipe = new SwipeToRefresh();
-            transaction.add(R.id.board_container, swipe);
-            transaction.commit();
-        }
+    private void setSwipeToRefresh() {
+        //set SwipeToRefresh on the activity
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        SwipeToRefresh swipe = new SwipeToRefresh();
+        transaction.add(R.id.board_container, swipe);
+        transaction.commit();
+    }
 
     public void getInstanceIdToken() {
         if (checkPlayServices()) {
@@ -312,6 +307,7 @@ public class MainActivity extends AppCompatActivity{
         }
         return true;
     }
+
     private static int getAppVersion(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager()
