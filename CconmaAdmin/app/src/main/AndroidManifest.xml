@@ -57,9 +57,10 @@
                 android:value=".mainpage.MainActivity" />
         </activity>
 
-        <activity android:name=".board.BoardMarkedActivity"
-            android:parentActivityName=".mainpage.MainActivity"
-            android:windowSoftInputMode="adjustResize">
+        <activity
+            android:name=".board.BoardMarkedActivity"
+            android:parentActivityName=".mainpage.MainActivity">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".mainpage.MainActivity" />

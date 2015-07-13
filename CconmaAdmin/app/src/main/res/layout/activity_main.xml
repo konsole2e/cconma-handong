@@ -76,7 +76,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="left"
         android:background="@color/ColorPanel"
-        android:scrollbars="vertical">
+        android:scrollbars="vertical"
+        android:clickable="true">
     </android.support.v7.widget.RecyclerView>
 
 </android.support.v4.widget.DrawerLayout>

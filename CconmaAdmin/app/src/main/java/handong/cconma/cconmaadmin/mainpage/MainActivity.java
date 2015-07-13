@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.drive.internal.SetDrivePreferencesRequest;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
@@ -42,6 +43,7 @@ import handong.cconma.cconmaadmin.statics.StaticsMain;
 import handong.cconma.cconmaadmin.etc.MyWebView;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
 import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
+import util.SetDrawer;
 
 /**
  * Created by YoungBinKim on 2015-07-06.
@@ -166,7 +168,7 @@ public class MainActivity extends BaseActivity{
         return super.dispatchKeyEvent(event);
     }
 
-    private void setSwipeToRefresh() {
+    private void setSwipeToRefresh(){
         //set SwipeToRefresh on the activity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SwipeToRefresh swipe = new SwipeToRefresh();
