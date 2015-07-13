@@ -5,91 +5,101 @@
     android:id="@+id/drawer_layout"
     android:background="@color/ColorPanel">
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/snackbarPosition"
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/ColorPanel">
+        android:layout_height="match_parent">
 
-        <!-- The main content view -->
-        <android.support.design.widget.AppBarLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
-
-        <include
-            android:id="@+id/tool_bar"
-            layout="@layout/tool_bar">
-        </include>
-        </android.support.design.widget.AppBarLayout>
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/snackbarPosition"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:background="@color/ColorPanel">
 
-            <Button
-                android:id="@+id/order_hourly_btn"
-                android:layout_width="0dp"
+            <!-- The main content view -->
+            <android.support.design.widget.AppBarLayout
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="시간별 주문수" />
+                android:layout_width="match_parent">
 
-            <Button
-                android:id="@+id/order_recent_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="최근 30일 주문수" />
+                <include
+                    android:id="@+id/tool_bar"
+                    layout="@layout/tool_bar">
+                </include>
 
-        </LinearLayout>
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:background="@color/ColorPanel">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/order_hourly_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="시간별 주문수" />
 
-            <Button
-                android:id="@+id/trade_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="거래액" />
+                    <Button
+                        android:id="@+id/order_recent_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="최근 30일 주문수" />
 
-            <Button
-                android:id="@+id/like_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="단골등록" />
-        </LinearLayout>
+                </LinearLayout>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:background="@color/ColorPanel">
 
-            <Button
-                android:id="@+id/member_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="주민되기" />
+                    <Button
+                        android:id="@+id/trade_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="거래액" />
 
-            <Button
-                android:id="@+id/member_recent_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="최근 30일 주민수" />
-        </LinearLayout>
+                    <Button
+                        android:id="@+id/like_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="단골등록" />
+                </LinearLayout>
 
-    </android.support.design.widget.CoordinatorLayout>
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:background="@color/ColorPanel">
+
+                    <Button
+                        android:id="@+id/member_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="주민되기" />
+
+                    <Button
+                        android:id="@+id/member_recent_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="최근 30일 주민수" />
+                </LinearLayout>
+
+            </android.support.design.widget.AppBarLayout>
+
+        </android.support.design.widget.CoordinatorLayout>
+    </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/RecyclerView"
