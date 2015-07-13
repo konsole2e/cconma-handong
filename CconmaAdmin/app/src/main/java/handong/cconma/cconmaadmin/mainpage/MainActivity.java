@@ -1,9 +1,10 @@
-package handong.cconma.cconmaadmin.Activity;
+package handong.cconma.cconmaadmin.mainpage;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -32,11 +33,14 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import handong.cconma.cconmaadmin.Adapter.RecyclerViewAdapter;
-import handong.cconma.cconmaadmin.Adapter.ViewPagerAdapter;
-import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
+import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
-import handong.cconma.cconmaadmin.fragment.SwipeToRefresh;
+import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.push.PushView;
+import handong.cconma.cconmaadmin.statics.StaticsMain;
+import handong.cconma.cconmaadmin.etc.MyWebView;
+import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
 import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
 
 /**
@@ -148,6 +152,7 @@ public class MainActivity extends AppCompatActivity{
                             break;
                         case 2:
                             //statistics
+                            startActivity(new Intent(getApplicationContext(), StaticsMain.class));
                             break;
                         case 3:
                             intent.putExtra("URL", "http://www.cconma.com/CconmaAdmin/member.fmv?cmd=list");
@@ -165,7 +170,6 @@ public class MainActivity extends AppCompatActivity{
                             Snackbar.make(snackbar, recyclerView.getChildPosition(child) + " pressed", Snackbar.LENGTH_SHORT).show();
                     }
                     child.setPressed(false);
-                    mDrawerLayout.closeDrawers();
 
                     return true;
                 }
@@ -189,6 +193,7 @@ public class MainActivity extends AppCompatActivity{
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
 
         floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
@@ -244,10 +249,12 @@ public class MainActivity extends AppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if(id == R.id.my_favorite){
-            Toast.makeText(getApplicationContext(), "my favorite", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, BoardMarkedActivity.class);
+            startActivity(intent);
         }
         else if(id == R.id.notification){
-            Toast.makeText(getApplicationContext(), "notification", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, PushView.class);
+            startActivity(intent);
         }
 
             return super.onOptionsItemSelected(item);

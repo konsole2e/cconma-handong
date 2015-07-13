@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Adapter;
+package handong.cconma.cconmaadmin.mainpage;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

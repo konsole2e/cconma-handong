@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Adapter;
+package handong.cconma.cconmaadmin.mainpage;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;

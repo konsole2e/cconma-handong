@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.data;
+package handong.cconma.cconmaadmin.board;
 /**
  * Created by eundi on 15. 7. 6..
  */

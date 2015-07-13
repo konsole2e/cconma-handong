@@ -1,6 +1,5 @@
-package handong.cconma.cconmaadmin.Activity;
+package handong.cconma.cconmaadmin.board;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -17,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import handong.cconma.cconmaadmin.mainpage.MainActivity;
 import handong.cconma.cconmaadmin.R;
 
 

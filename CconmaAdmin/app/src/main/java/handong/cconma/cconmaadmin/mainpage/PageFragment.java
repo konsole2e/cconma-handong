@@ -1,18 +1,16 @@
-package handong.cconma.cconmaadmin.Adapter;
+package handong.cconma.cconmaadmin.mainpage;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
-import handong.cconma.cconmaadmin.Activity.BoardViewActivity;
+import handong.cconma.cconmaadmin.board.BoardAdapter;
+import handong.cconma.cconmaadmin.board.BoardViewActivity;
 import handong.cconma.cconmaadmin.R;
 
 /**

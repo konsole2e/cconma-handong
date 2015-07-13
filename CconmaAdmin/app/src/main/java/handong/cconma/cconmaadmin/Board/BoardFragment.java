@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.fragment;
+package handong.cconma.cconmaadmin.board;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
