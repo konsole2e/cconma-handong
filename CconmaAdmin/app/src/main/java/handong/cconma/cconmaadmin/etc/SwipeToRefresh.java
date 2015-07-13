@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.fragment;
+package handong.cconma.cconmaadmin.etc;
 
 import android.content.Intent;
 import android.os.Bundle;

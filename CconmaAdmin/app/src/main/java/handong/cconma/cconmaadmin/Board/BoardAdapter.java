@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Adapter;
+package handong.cconma.cconmaadmin.board;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,7 +13,6 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 
 import handong.cconma.cconmaadmin.R;
-import handong.cconma.cconmaadmin.data.BoardData;
 
 
 /**

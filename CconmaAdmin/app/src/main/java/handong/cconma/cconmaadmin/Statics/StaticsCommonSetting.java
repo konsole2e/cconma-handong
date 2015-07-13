@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Statics;
+package handong.cconma.cconmaadmin.statics;
 
 import android.widget.LinearLayout;
 
@@ -7,7 +7,6 @@ import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 
 /**
  * Created by JS on 2015-07-09.

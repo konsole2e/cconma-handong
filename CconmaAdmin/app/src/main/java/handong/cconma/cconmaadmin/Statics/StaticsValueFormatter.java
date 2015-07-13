@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Statics;
+package handong.cconma.cconmaadmin.statics;
 
 import com.github.mikephil.charting.utils.ValueFormatter;
 

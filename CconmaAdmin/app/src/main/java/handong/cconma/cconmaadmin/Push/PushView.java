@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Push;
+package handong.cconma.cconmaadmin.push;
 
 import android.app.Activity;
 import android.os.Bundle;

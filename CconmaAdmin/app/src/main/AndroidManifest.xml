@@ -22,69 +22,69 @@
         android:label="@string/company_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activity.MainActivity"
+            android:name=".mainpage.MainActivity"
             android:label="@string/company_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".Activity.MyWebView"
-            android:parentActivityName=".Activity.MainActivity">
+            android:name=".etc.MyWebView"
+            android:parentActivityName=".mainpage.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activity.MainActivity" />
+                android:value=".mainpage.MainActivity" />
         </activity>
 
         <activity
-            android:name=".Activity.BoardWriteActivity"
-            android:parentActivityName=".Activity.MainActivity">
+            android:name=".board.BoardWriteActivity"
+            android:parentActivityName=".mainpage.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activity.MainActivity" />
+                android:value=".mainpage.MainActivity" />
         </activity>
 
         <activity
 
-            android:name=".Activity.BoardModifyActivity"
-            android:parentActivityName=".Activity.BoardViewActivity">
+            android:name=".board.BoardModifyActivity"
+            android:parentActivityName=".board.BoardViewActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activity.BoardViewActivity" />
+                android:value=".board.BoardViewActivity" />
         </activity>
 
         <activity
-            android:name=".Activity.BoardViewActivity"
-            android:parentActivityName=".Activity.MainActivity"
+            android:name=".board.BoardViewActivity"
+            android:parentActivityName=".mainpage.MainActivity"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activity.MainActivity" />
+                android:value=".mainpage.MainActivity" />
         </activity>
 
-        <activity android:name=".Inquiry.InquryMember" />
-        <activity android:name=".Inquiry.InquryOrder" />
-        <activity android:name=".Push.PushView" />
-        <activity android:name=".Statics.StaticsMain"></activity>
+        <activity android:name=".inquiry.InquryMember" />
+        <activity android:name=".inquiry.InquryOrder" />
+        <activity android:name=".push.PushView" />
+        <activity android:name=".statics.StaticsMain"></activity>
         <activity
-            android:name=".Statics.StaticsOrderH"
+            android:name=".statics.StaticsOrderH"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name=".Statics.StaticsLike"
+            android:name=".statics.StaticsLike"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name=".Statics.StaticsOrderRecent"
+            android:name=".statics.StaticsOrderRecent"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name=".Statics.StaticsTrade"
+            android:name=".statics.StaticsTrade"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name=".Statics.StaticsMember"
+            android:name=".statics.StaticsMember"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name=".Statics.StaticsMemberRecent"
+            android:name=".statics.StaticsMemberRecent"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <service android:name="etc.IconService">

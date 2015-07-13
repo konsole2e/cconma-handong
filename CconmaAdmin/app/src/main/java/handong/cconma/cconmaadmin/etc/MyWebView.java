@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Activity;
+package handong.cconma.cconmaadmin.etc;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,10 +7,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.Window;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -34,7 +32,7 @@ public class MyWebView extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        webview = (WebView)findViewById(R.id.webView);
+        webview = (WebView) findViewById(R.id.webView);
 
         Intent data = getIntent();
         String url = data.getStringExtra("URL");
@@ -59,13 +57,12 @@ public class MyWebView extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(event.getAction() == KeyEvent.ACTION_DOWN){
-            switch(keyCode)
-            {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (keyCode) {
                 case KeyEvent.KEYCODE_BACK:
-                    if(webview.canGoBack()){
+                    if (webview.canGoBack()) {
                         webview.goBack();
-                    }else{
+                    } else {
                         finish();
                     }
                     return true;
@@ -74,11 +71,10 @@ public class MyWebView extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-}
-
-class WebClient extends WebViewClient {
-    public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
-        view.loadUrl(url);
-        return true;
+    class WebClient extends WebViewClient {
+        public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
     }
 }

@@ -1,12 +1,10 @@
-package handong.cconma.cconmaadmin.Statics;
+package handong.cconma.cconmaadmin.statics;
 
 import android.content.Context;
-import android.graphics.Color;
 
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 

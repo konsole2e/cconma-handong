@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Activity;
+package handong.cconma.cconmaadmin.board;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import handong.cconma.cconmaadmin.mainpage.MainActivity;
 import handong.cconma.cconmaadmin.R;
 
 /**

@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Activity;
+package handong.cconma.cconmaadmin.mainpage;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,12 +32,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import handong.cconma.cconmaadmin.Adapter.RecyclerViewAdapter;
-import handong.cconma.cconmaadmin.Adapter.ViewPagerAdapter;
-import handong.cconma.cconmaadmin.R;
-import handong.cconma.cconmaadmin.Statics.StaticsMain;
+import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
-import handong.cconma.cconmaadmin.fragment.SwipeToRefresh;
+import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.statics.StaticsMain;
+import handong.cconma.cconmaadmin.etc.MyWebView;
+import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
 import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
 
 /**

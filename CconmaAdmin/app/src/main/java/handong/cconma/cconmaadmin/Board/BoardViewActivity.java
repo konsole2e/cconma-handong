@@ -1,4 +1,4 @@
-package handong.cconma.cconmaadmin.Activity;
+package handong.cconma.cconmaadmin.board;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -20,7 +20,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import handong.cconma.cconmaadmin.R;
-import handong.cconma.cconmaadmin.data.BoardCommentData;
 
 /**
  * 게시판 목록에서 하나 선택하여 글 내용을 보여주는 화면

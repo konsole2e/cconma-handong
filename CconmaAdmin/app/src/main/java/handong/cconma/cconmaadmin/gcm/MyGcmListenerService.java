@@ -12,7 +12,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
-import handong.cconma.cconmaadmin.Activity.MainActivity;
+import handong.cconma.cconmaadmin.mainpage.MainActivity;
 import handong.cconma.cconmaadmin.R;
 
 /**

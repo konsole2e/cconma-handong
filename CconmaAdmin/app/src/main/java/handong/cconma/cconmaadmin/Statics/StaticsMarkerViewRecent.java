@@ -1,16 +1,11 @@
-package handong.cconma.cconmaadmin.Statics;
+package handong.cconma.cconmaadmin.statics;
 
 import android.content.Context;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import handong.cconma.cconmaadmin.R;
 
