@@ -33,9 +33,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.push.PushView;
 import handong.cconma.cconmaadmin.statics.StaticsMain;
 import handong.cconma.cconmaadmin.etc.MyWebView;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
@@ -242,11 +244,11 @@ public class MainActivity extends AppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if(id == R.id.my_favorite){
-            Intent intent = new Intent(this, handong.cconma.cconmaadmin.Activity.BoardMarkedActivity.class);
+            Intent intent = new Intent(this, BoardMarkedActivity.class);
             startActivity(intent);
         }
         else if(id == R.id.notification){
-            Intent intent = new Intent(this, handong.cconma.cconmaadmin.Push.PushView.class);
+            Intent intent = new Intent(this, PushView.class);
             startActivity(intent);
         }
 
