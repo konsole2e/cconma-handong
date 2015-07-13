@@ -43,7 +43,6 @@ import handong.cconma.cconmaadmin.statics.StaticsMain;
 import handong.cconma.cconmaadmin.etc.MyWebView;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
 import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
-import util.SetDrawer;
 
 /**
  * Created by YoungBinKim on 2015-07-06.
