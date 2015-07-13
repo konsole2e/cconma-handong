@@ -9,55 +9,64 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 /**
- * Created by �ּ��� on 2015-07-07.
+ * Created by Seoyul on 2015-07-07.
  */
 public class IconService extends Service {
 
     private WindowManager.LayoutParams params;
     private WindowManager windowManager;
-    private ImageView chatHead;
-
+    private ImageView cconmaIcon;
     private float mTouchX, mTouchY;
     private int mViewX, mViewY;
 
-    private View.OnTouchListener mViewTouchListener = new View.OnTouchListener(){
-
-        public boolean onTouch(View v, MotionEvent event){
-            switch(event.getAction()){
-                case MotionEvent.ACTION_DOWN:
-                    mTouchX = event.getRawX();
-                    mTouchY = event.getRawY();
-                    mViewX = params.x;
-                    mViewY = params.y;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    int x = (int)(event.getRawX() - mTouchX);
-                    int y = (int)(event.getRawY() - mTouchY);
-                    params.x = mViewX + x;
-                    params.y = mViewY + y;
-                    windowManager.updateViewLayout(chatHead, params);
-                    break;
-                case MotionEvent.ACTION_HOVER_ENTER:
-                    Toast.makeText(getApplicationContext(), "unread message : 5", Toast.LENGTH_SHORT).show();
-                    break;
-                case MotionEvent.ACTION_HOVER_EXIT:
-
-                    break;
-            }
-            return true;
-        }
-    };
-
-    @Override public IBinder onBind(Intent intent) {
-        // Not used
+    @Override
+    public IBinder onBind(Intent intent) {
         return null;
     }
 
-    @Override public void onCreate() {
+    @Override
+    public void onCreate() {
+
         super.onCreate();
+
+        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+        cconmaIcon = new ImageView(this);
+        cconmaIcon.setImageResource(R.drawable.testimage);
+        cconmaIcon.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mTouchX = event.getRawX();
+                        mTouchY = event.getRawY();
+                        mViewX = params.x;
+                        mViewY = params.y;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        int x = (int) (event.getRawX() - mTouchX);
+                        int y = (int) (event.getRawY() - mTouchY);
+                        params.x = mViewX + x;
+                        params.y = mViewY + y;
+                        windowManager.updateViewLayout(cconmaIcon, params);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (Math.abs((int) (event.getRawX() - mTouchX)) <= 5 && Math.abs((int) (event.getRawY() - mTouchY)) <= 5){
+
+                            new Test().sendData();
+
+                        }
+
+                            //Toast.makeText(getApplicationContext(), "unread message : 5", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return true;
+            }
+        });
 
         params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -65,22 +74,19 @@ public class IconService extends Service {
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-        chatHead = new ImageView(this);
-        chatHead.setImageResource(R.drawable.cconma);
-        chatHead.setOnTouchListener(mViewTouchListener);
-
-        params.gravity = Gravity.TOP | Gravity.LEFT;
+        params.gravity = Gravity.CENTER;
         params.x = 0;
         params.y = 100;
 
-        //windowManager.addView(chatHead, params);
+        windowManager.addView(cconmaIcon, params);
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (chatHead != null) windowManager.removeView(chatHead);
+        if(cconmaIcon != null)
+            windowManager.removeView(cconmaIcon);
     }
+
 }
