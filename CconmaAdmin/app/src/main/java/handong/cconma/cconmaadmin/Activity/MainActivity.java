@@ -59,12 +59,17 @@ public class MainActivity extends AppCompatActivity{
     private SwipeRefreshLayout mSwipeRefresh;
 
     private String TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "마을지기 홈페이지"};
-    private int ICONS[] = {R.drawable.ic_board_selector, R.drawable.ic_chart_selector, R.drawable.ic_question_selector, R.drawable.ic_search_grey600_48dp, R.drawable.ic_home_selector };
+    private int ICONS[] = {R.drawable.ic_board_selector,
+            R.drawable.ic_chart_selector,
+            R.drawable.ic_question_selector,
+            R.drawable.ic_search_grey600_48dp,
+            R.drawable.ic_home_selector };
     private int returned = 0;
     private int status = 0;
 
     private String TITLESUSER[] = {"설정", "로그아웃"};
-    private int ICONSUSER[] = {R.drawable.ic_setting_selector, R.drawable.ic_logout_selector};
+    private int ICONSUSER[] = {R.drawable.ic_setting_selector,
+            R.drawable.ic_logout_selector};
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
