@@ -34,7 +34,6 @@ public class StaticsLike extends Activity {
         StaticsMarkerView mvW = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
         StaticsMarkerView mvM = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
 
-
 //        dailyChart = (CombinedChart) findViewById(R.id.member_daily_combineChart);
         dailyChart = (BarChart)findViewById(R.id.like_daily_barChart);
         weeklyChart = (LineChart) findViewById(R.id.like_weekly_lineChart);
@@ -96,8 +95,7 @@ public class StaticsLike extends Activity {
         weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG());
         monthlyChart.setData(manager.monthlyChartSetting());
         monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG());
-
-
+        
         (findViewById(R.id.like_daily_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
