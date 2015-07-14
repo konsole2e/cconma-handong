@@ -1,155 +1,87 @@
 package handong.cconma.cconmaadmin;
 
-import android.app.Activity;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Seoyul on 2015-07-10.
  */
-public class Test extends Activity {
+public class Test extends AsyncTask<String, Void, String> {
 
-    private class DownloadJson extends AsyncTask<String, String, String> {
+    private URL url;
+    private XmlPullParserFactory factory;
+    private XmlPullParser xpp;
+    private int eventType;
+    private String tag;
+    private String result = null;
 
-        protected String doInBackground(String... arg0) {
+    protected String doInBackground(String... strings) {
 
-            Log.d("JSON Data", "doInBackground() is called");
-
-            try {
-
-                return (String) getData((String) arg0[0]);
-
-            } catch (Exception e) {
-
-                return "download fail";
-
-            }
-
-        }
-
-        protected void onPostExecute(String result) {
-
-            Log.d("JSON Data", "onPostExecute() is called");
-
-            try{
-
-                JSONArray jArray = new JSONArray(result);
-
-                String[] jsonName = {"tm", "ts", "x", "y"};
-                String[][] parsedData = new String[jArray.length()][jsonName.length];
-                JSONObject json = null;
-
-                for(int i = 0; i < jArray.length(); i++){
-
-                    json = jArray.getJSONObject(i);
-
-                    if(json != null){
-
-                        for(int j = 0; j < jsonName.length; j++){
-
-                            parsedData[i][j] = json.getString(jsonName[j]);
-                            Log.d("JSON Data", "data : " + parsedData[i][j] + "**************");
-
-                        }
-
-                    }
-
-                }
-
-                for(int i = 0; i < parsedData.length; i++){
-
-                    Toast.makeText(getApplicationContext(), "jasonName[i] : " + jsonName[i], Toast.LENGTH_LONG).show();
-
-                }
-
-            }catch(JSONException e){
-
-                e.printStackTrace();
-
-            }
-
-        }
-
-        private String getData(String strUrl) {
-
-            Log.d("JSON Data", "getData() is called");
-
-            StringBuilder sb = new StringBuilder();
-
-            try {
-
-                BufferedInputStream bis = null;
-                URL url = new URL(strUrl);
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                int responseCode;
-
-                con.setConnectTimeout(3000);
-                con.setReadTimeout(3000);
-
-                responseCode = con.getResponseCode();
-
-                if (responseCode == 300) {
-
-                    bis = new BufferedInputStream(con.getInputStream());
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(bis, "UTF-8"));
-                    String line = null;
-
-                    while ((line = reader.readLine()) != null)
-                        sb.append(line);
-
-                    bis.close();
-
-                }
-
-            } catch (Exception e) {
-
-                e.printStackTrace();
-
-            }
-
-            return sb.toString();
-
-        }
-
-    }
-
-    public void sendData(){
-
-        Log.d("JSON Data", "sendData() is called");
-
-        String url = "http://www.kma.go.kr/wid/queryDFS.jsp?gridx=73&gridy=116";
+        Random rand = new Random(16);
+        ArrayList<String> hour = new ArrayList<String>();
+        ArrayList<String> temp = new ArrayList<String>();
+        ArrayList<String> wfKor = new ArrayList<String>();
 
         try{
 
-            ConnectivityManager conManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-            Log.d("JSON Data", "ConnectivityManager conManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);");
-            NetworkInfo netInfo = conManager.getActiveNetworkInfo();
-            Log.d("JSON Data", "NetworkInfo netInfo = conManager.getActiveNetworkInfo();");
+            url = new URL("http://www.kma.go.kr/wid/queryDFS.jsp?gridx=73&gridy=116");
 
-            if(netInfo != null && netInfo.isConnected())
-                new DownloadJson().execute(url);
-            else
-                Toast.makeText(getApplicationContext(), "Network is disconnected", Toast.LENGTH_LONG).show();
+            factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            xpp = factory.newPullParser();
+            xpp.setInput(url.openStream(), "utf-8");
 
-        }catch(Exception e){
+            eventType = xpp.getEventType();
+
+            while(eventType != XmlPullParser.END_DOCUMENT){
+
+                if(eventType == XmlPullParser.START_TAG){
+
+                    tag = xpp.getName();
+
+                }else if(eventType == XmlPullParser.TEXT){
+
+                    if(tag.equals("hour"))
+                        hour.add(xpp.getText());
+                    else if(tag.equals("temp"))
+                        temp.add(xpp.getText());
+                    else if(tag.equals("wfKor"))
+                        wfKor.add(xpp.getText());
+
+                }else if(eventType == XmlPullParser.END_TAG){
+
+                    tag = "";
+
+                }
+
+                eventType = xpp.next();
+
+            }
+
+        }catch (Exception e) {
 
             e.printStackTrace();
 
         }
+
+        //int pick = rand.nextInt();
+        result = "hour : " + hour.get(1) + " temp : " + temp.get(1) + " wfKor : " + wfKor.get(1);
+
+        return result;
+
+    }
+
+    public String getWeather(){
+
+        this.execute();
+
+        while(result == null);
+
+        return result;
 
     }
 

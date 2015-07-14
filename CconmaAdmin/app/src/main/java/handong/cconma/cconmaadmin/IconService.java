@@ -4,12 +4,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 /**
@@ -53,15 +53,18 @@ public class IconService extends Service {
                         params.x = mViewX + x;
                         params.y = mViewY + y;
                         windowManager.updateViewLayout(cconmaIcon, params);
+                        if(event.getRawY() > 900 && cconmaIcon != null)
+                            cconmaIcon.setVisibility(View.INVISIBLE);
                         break;
                     case MotionEvent.ACTION_UP:
                         if (Math.abs((int) (event.getRawX() - mTouchX)) <= 5 && Math.abs((int) (event.getRawY() - mTouchY)) <= 5){
 
-                            new Test().sendData();
+                           String weather = new Test().getWeather();
+
+                           Toast.makeText(getApplicationContext(), weather, Toast.LENGTH_SHORT).show();
+                            Log.e("location", "x : " + event.getRawX() + " y : " + event.getRawY());
 
                         }
-
-                            //Toast.makeText(getApplicationContext(), "unread message : 5", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 return true;
