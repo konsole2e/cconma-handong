@@ -24,12 +24,14 @@
         <activity
             android:name=".BoardModify"/>            
         <activity android:name=".BoardCconma"></activity>
-        <activity android:name=".BoardView"></activity>
+        <activity android:name=".BoardView"
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity android:name=".BoardMarked"></activity>
 
         <activity android:name=".Inquiry.InquryMember"/>
         <activity android:name=".Inquiry.InquryOrder"/>
         <activity android:name=".OneToOne"/>
+        <activity android:name=".Push.PushView"/>
         <service
             android:name=".IconService">
             <intent-filter>

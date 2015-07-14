@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import handong.cconma.cconmaadmin.Inquiry.InquryMember;
+import handong.cconma.cconmaadmin.Push.PushView;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -34,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
 
             public void onClick(View v) {
 
-                Intent intent = new Intent(MainActivity.this, InquryMember.class);
+                Intent intent = new Intent(MainActivity.this, PushView.class);
 
                 startActivity(intent);
 
