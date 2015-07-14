@@ -1,13 +1,22 @@
 package handong.cconma.cconmaadmin.mainpage;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import handong.cconma.cconmaadmin.board.BoardAdapter;
 import handong.cconma.cconmaadmin.board.BoardViewActivity;
@@ -20,6 +29,14 @@ public class PageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     private static int layoutName;
     private int mPage;
+
+    ToggleButton btn_board_search_view;
+    FrameLayout layout_board_search;
+    Spinner spinner_board_condition;
+    EditText edit_board_search;
+    Button btn_board_search;
+
+    InputMethodManager input_manager;
 
     public static PageFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -40,6 +57,46 @@ public class PageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.board_fragment, container, false);
+
+        //검색창 열기/닫기 버튼
+        btn_board_search_view = (ToggleButton)view.findViewById(R.id.btn_board_search_view);
+        btn_board_search_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(btn_board_search_view.isChecked()){
+                    layout_board_search.setVisibility(View.VISIBLE);
+                }else{
+                    layout_board_search.setVisibility(View.GONE);
+                }
+            }
+        });
+        //검색창 Frame Layout
+        layout_board_search = (FrameLayout)view.findViewById(R.id.layout_board_search);
+        //검색 조건 spinner
+        spinner_board_condition = (Spinner)view.findViewById(R.id.spinner_board_condition);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
+                R.array.board_condition,
+                android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_board_condition.setAdapter(spinnerAdapter);
+        spinner_board_condition.setSelection(0);
+        //검색 입력
+        edit_board_search = (EditText)view.findViewById(R.id.edit_board_search);
+        //검색하기 버튼
+        btn_board_search = (Button)view.findViewById(R.id.btn_board_search);
+        btn_board_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity().getApplicationContext(), spinner_board_condition.getSelectedItem().toString()
+                        + " " + edit_board_search.getText(), Toast.LENGTH_SHORT).show();
+                edit_board_search.setText("");
+                input_manager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
+                layout_board_search.setVisibility(View.GONE);
+                btn_board_search_view.setChecked(false);
+            }
+        });
+
 
         ListView list_board = (ListView)view.findViewById(R.id.board_list);
         BoardAdapter adapter_board = new BoardAdapter(view.getContext());
