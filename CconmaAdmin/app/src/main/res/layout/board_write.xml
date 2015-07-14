@@ -128,7 +128,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.8"
-                    android:hint = "파일경로"/>
+                    android:hint = "첨부 파일이 없습니다."/>
                 <Button
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -163,28 +163,67 @@
 
     <FrameLayout
         android:id="@+id/layout_board_write_file"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="60dp"
         android:background="#ffffff"
         android:visibility="gone">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
-                android:textColor="#000000"
-                android:text="파일 첨부"/>
-            <ListView
-                android:id="@+id/list_board_write_file"
-                android:layout_width="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:background="#FFD400"
+                    android:textColor="#ffffff"
+                    android:text="파일 첨부"/>
+                <ListView
+                    android:id="@+id/list_board_write_file"
+                    android:layout_width="fill_parent"
+                    android:layout_height="340dp"
+                    android:textColor="#000000"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textSize="10sp"/>
+                android:background="#000000">
+                <TextView
+                    android:id="@+id/text_selecte_file"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:background="#ffffff"
+                    android:textSize="15sp"
+                    android:paddingLeft="5dp"
+                    android:hint="선택한 파일"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
+                <Button
+                    android:id="@+id/btn_board_write_file_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="취소" />
+                <Button
+                    android:id="@+id/btn_board_write_file_upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="완료"/>
+            </LinearLayout>
         </LinearLayout>
+
 
     </FrameLayout>
 </FrameLayout>

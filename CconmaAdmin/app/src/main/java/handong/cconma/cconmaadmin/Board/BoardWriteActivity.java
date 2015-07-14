@@ -1,12 +1,17 @@
 package handong.cconma.cconmaadmin.board;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.Selection;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -45,8 +50,12 @@ public class BoardWriteActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     Button btn_board_write_file;
+    Button btn_board_write_file_cancel;
+    Button btn_board_write_file_upload;
     TextView text_selected_file;
-
+    TextView text_select_file;
+    File file;
+    ArrayAdapter<String> fileList;
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_write);
@@ -60,13 +69,13 @@ public class BoardWriteActivity extends AppCompatActivity {
 
         layout_board_write_file = (FrameLayout)findViewById(R.id.layout_board_write_file);
         text_selected_file = (TextView)findViewById(R.id.text_selected_file);
-        btn_board_write_file = (Button)findViewById(R.id.btn_board_write_file);
+        text_select_file = (TextView)findViewById(R.id.text_selecte_file);
         list_board_write_file = (ListView)findViewById(R.id.list_board_write_file);
         getDirectory(root);
         list_board_write_file.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                File file = new File(path.get(position));
+                file = new File(path.get(position));
 
                 if (file.isDirectory()) {
                     if (file.canRead()) {
@@ -77,16 +86,81 @@ public class BoardWriteActivity extends AppCompatActivity {
                 } else {
                     fileName = file.getName();
                     filePath = file.getPath();
+                    text_select_file.setText(fileName);
+                }
+            }
+        });
+
+        btn_board_write_file_cancel = (Button)findViewById(R.id.btn_board_write_file_cancel);
+        btn_board_write_file_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (text_selected_file.getText().toString().equals("")) {
+                    filePath = "";
+                    fileName = "";
+                    text_select_file.setText(fileName);
+                }
+                layout_board_write_file.setVisibility(View.GONE);
+            }
+        });
+        btn_board_write_file_upload = (Button)findViewById(R.id.btn_board_write_file_upload);
+        btn_board_write_file_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(text_select_file.getText().toString().equals("")){
+                    AlertDialog.Builder alert_build = new AlertDialog.Builder(context);
+
+                    alert_build.setMessage("파일이 선택되지 않았습니다.").setCancelable(false)
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert = alert_build.create();
+                    alert.show();
+                }
+                else {
+                    fileName = file.getName();
+                    filePath = file.getPath();
                     text_selected_file.setText(fileName);
                     layout_board_write_file.setVisibility(View.GONE);
                 }
             }
         });
 
+        btn_board_write_file = (Button)findViewById(R.id.btn_board_write_file);
         btn_board_write_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layout_board_write_file.setVisibility(View.VISIBLE);
+                if(text_selected_file.getText().toString().equals("")) {
+                    layout_board_write_file.setVisibility(View.VISIBLE);
+                }
+                else{
+                    AlertDialog.Builder alert_build = new AlertDialog.Builder(context);
+
+                    alert_build.setMessage("1. 현재 파일 삭제\n2. 다른 파일 첨부").setCancelable(false)
+                            .setPositiveButton("2", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    text_select_file.setText("");
+                                    layout_board_write_file.setVisibility(View.VISIBLE);
+                                }
+                            }).setNegativeButton("1", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            fileName = "";
+                            filePath = "";
+                            text_selected_file.setText(fileName);
+                            text_select_file.setText(fileName);
+                        }
+                    });
+
+                    AlertDialog alert = alert_build.create();
+                    alert.show();
+                }
             }
         });
 
@@ -130,8 +204,9 @@ public class BoardWriteActivity extends AppCompatActivity {
                 /*
                 * INSERT notice, title, content, file INTO board_database
                 * */
-                Log.d("board", filePath);
-                Toast.makeText(getApplicationContext(), "confirmed", Toast.LENGTH_SHORT).show();
+
+                if(!filePath.equals(""))
+                    Toast.makeText(context, filePath, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(BoardWriteActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -172,7 +247,9 @@ public class BoardWriteActivity extends AppCompatActivity {
                 item.add(ff.getName());
 
         }
-        ArrayAdapter<String> fileList = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,item);
+        fileList = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,item);
         list_board_write_file.setAdapter(fileList);
     }
+
+
 }
