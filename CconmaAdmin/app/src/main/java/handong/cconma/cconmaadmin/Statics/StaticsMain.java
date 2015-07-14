@@ -33,6 +33,7 @@ public class StaticsMain extends Activity implements View.OnClickListener{
         member.setOnClickListener(this);
         memberRcnt = (Button)findViewById(R.id.member_recent_btn);
         memberRcnt.setOnClickListener(this);
+
     }
 
     @Override

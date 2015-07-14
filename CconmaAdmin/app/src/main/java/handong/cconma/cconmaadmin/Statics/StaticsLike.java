@@ -1,8 +1,11 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 
@@ -19,6 +22,7 @@ public class StaticsLike extends Activity {
     private boolean mode = false;
     private BackPressCloseHandler backPressCloseHandler;
     private StaticsCommonSetting setting;
+    private StaticsLikeManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +31,14 @@ public class StaticsLike extends Activity {
 
         backPressCloseHandler = new BackPressCloseHandler(this);
         setting = new StaticsCommonSetting();
-
-        StaticsLikeManager manager = new StaticsLikeManager(this);
+        manager = new StaticsLikeManager(this);
 
         StaticsMarkerView mvD = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
         StaticsMarkerView mvW = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
         StaticsMarkerView mvM = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
 
-
 //        dailyChart = (CombinedChart) findViewById(R.id.member_daily_combineChart);
-        dailyChart = (BarChart)findViewById(R.id.like_daily_barChart);
+        dailyChart = (BarChart) findViewById(R.id.like_daily_barChart);
         weeklyChart = (LineChart) findViewById(R.id.like_weekly_lineChart);
         monthlyChart = (LineChart) findViewById(R.id.like_monthly_lineChart);
 
@@ -46,6 +48,9 @@ public class StaticsLike extends Activity {
         setting.commonSetting(weeklyChart);
         setting.commonSetting(monthlyChart);
 
+        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG());
+        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG());
+
         mvD.attachChart(dailyChart, "명");
         mvW.attachChart(weeklyChart, "명");
         mvM.attachChart(monthlyChart, "명");
@@ -53,6 +58,9 @@ public class StaticsLike extends Activity {
         dailyChart.setMarkerView(mvD);
         weeklyChart.setMarkerView(mvW);
         monthlyChart.setMarkerView(mvM);
+
+        new ConnectToUrl().execute("서버 주소 1", "서버 주소 2", "서버 주소 3");
+
 
 /*       dailyChart.setDescription("");
         dailyChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
@@ -90,13 +98,6 @@ public class StaticsLike extends Activity {
         YAxis leftAxisM = monthlyChart.getAxisLeft();
         //  leftAxisM.setDrawGridLines(false);*/
 
-        dailyChart.setData(manager.dailyChartSetting());
-        dailyChart.invalidate();
-        weeklyChart.setData(manager.weeklyChartSetting());
-        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG());
-        monthlyChart.setData(manager.monthlyChartSetting());
-        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG());
-
 
         (findViewById(R.id.like_daily_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,38 +117,38 @@ public class StaticsLike extends Activity {
         });
 
         (findViewById(R.id.like_weekly_zoom)).setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 if (mode == false) {
-                     mode = true;
-                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+            @Override
+            public void onClick(View v) {
+                if (mode == false) {
+                    mode = true;
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     // weeklyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                     setting.zoomSetting(weeklyChart);
-                     dailyChart.setVisibility(View.GONE);
-                     monthlyChart.setVisibility(View.GONE);
-                     (findViewById(R.id.like_daily_rl)).setVisibility(View.GONE);
-                     (findViewById(R.id.like_weekly_rl)).setVisibility(View.GONE);
-                     (findViewById(R.id.like_monthly_rl)).setVisibility(View.GONE);
-                 }
-             }
-         });
+                    setting.zoomSetting(weeklyChart);
+                    dailyChart.setVisibility(View.GONE);
+                    monthlyChart.setVisibility(View.GONE);
+                    (findViewById(R.id.like_daily_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.like_weekly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.like_monthly_rl)).setVisibility(View.GONE);
+                }
+            }
+        });
 
         (findViewById(R.id.like_monthly_zoom)).setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 if (mode == false) {
-                     mode = true;
-                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
-                     //monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                     setting.zoomSetting(monthlyChart);
-                     dailyChart.setVisibility(View.GONE);
-                     weeklyChart.setVisibility(View.GONE);
-                     (findViewById(R.id.like_daily_rl)).setVisibility(View.GONE);
-                     (findViewById(R.id.like_weekly_rl)).setVisibility(View.GONE);
-                     (findViewById(R.id.like_monthly_rl)).setVisibility(View.GONE);
-                 }
-             }
-         });
+            @Override
+            public void onClick(View v) {
+                if (mode == false) {
+                    mode = true;
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                    //monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    setting.zoomSetting(monthlyChart);
+                    dailyChart.setVisibility(View.GONE);
+                    weeklyChart.setVisibility(View.GONE);
+                    (findViewById(R.id.like_daily_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.like_weekly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.like_monthly_rl)).setVisibility(View.GONE);
+                }
+            }
+        });
 
     }
 
@@ -175,6 +176,43 @@ public class StaticsLike extends Activity {
                 activity.recreate();
             } else {
                 activity.finish();
+            }
+        }
+    }
+
+    class ConnectToUrl extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... str) {
+            if (manager.getData(str)) {
+                return "success";
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null) {
+                dailyChart.setData(manager.dailyChartSetting());
+                weeklyChart.setData(manager.weeklyChartSetting());
+                monthlyChart.setData(manager.monthlyChartSetting());
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                builder.setTitle("네트워크 오류");
+                builder.setMessage("데이터를 읽어 올 수 없습니다.")
+                        .setCancelable(false)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        }).show();
             }
         }
     }

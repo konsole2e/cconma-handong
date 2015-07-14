@@ -10,12 +10,19 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import handong.cconma.cconmaadmin.R;
 
 public class StaticsLikeManager {
     Context con;
+    ArrayList<String> result;
 
     public StaticsLikeManager(Context context) {
         con = context;
@@ -183,5 +190,100 @@ public class StaticsLikeManager {
         d.addDataSet(set3);*/
 
         return dataSets;
+    }
+
+
+  /*  class ConnectToUrl extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... str) {
+            return getData(str[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null) {
+                result = s;
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(con);
+                builder.setTitle("네트워크 오류");
+                builder.setMessage("데이터를 읽어 올 수 없습니다.")
+                        .setCancelable(false)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+            }
+        }
+
+        public boolean getData(String url) {
+            try {
+                String line = null;
+                HttpURLConnection con = (HttpURLConnection) (new URL(url)).openConnection();
+                con.setRequestMethod("GET");
+                //con.setDoOutput(true);
+                con.setDoInput(true);
+                BufferedInputStream is;
+                //BufferedOutputStream os;
+
+                if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    //os = new BufferedInputStream(con.getOutputStream());
+                    is = new BufferedInputStream(con.getInputStream());
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    while ((line = reader.readLine()) != null) {
+                        line = line + line;
+                    }
+                    //  os.close();
+                    is.close();
+                    reader.close();
+                } else {
+                    return false;
+                }
+                return line;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+    }*/
+
+    public boolean getData(String[] str) {
+        for (String url : str) {
+            try {
+                String line = null;
+                HttpURLConnection con = (HttpURLConnection) (new URL(url)).openConnection();
+                con.setRequestMethod("GET");
+                //con.setDoOutput(true);
+                con.setDoInput(true);
+                BufferedInputStream is;
+                //BufferedOutputStream os;
+
+                if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    //os = new BufferedInputStream(con.getOutputStream());
+                    is = new BufferedInputStream(con.getInputStream());
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    while ((line = reader.readLine()) != null) {
+                        line = line + line;
+                    }
+                    //  os.close();
+                    is.close();
+                    reader.close();
+                } else {
+                    return false;
+                }
+                result.add(line);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return true;
     }
 }
