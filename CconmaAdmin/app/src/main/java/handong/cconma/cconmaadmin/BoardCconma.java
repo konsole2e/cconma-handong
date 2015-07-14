@@ -44,7 +44,7 @@ public class BoardCconma extends Activity{
 
     ImageButton btn_board_write;
 
-    Button btn_board_list_prev;
+    Button btn_board_li_prev;
     Button btn_board_list_next;
 
     InputMethodManager input_manager;
