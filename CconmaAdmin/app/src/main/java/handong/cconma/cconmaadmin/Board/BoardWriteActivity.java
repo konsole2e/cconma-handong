@@ -166,14 +166,15 @@ public class BoardWriteActivity extends AppCompatActivity {
 
         // notice spinner
         String[] conditions = getResources().getStringArray(R.array.write_notice);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, conditions);
         Spinner noticeSpinner = (Spinner)findViewById(R.id.notice);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, conditions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         noticeSpinner.setAdapter(adapter);
         noticeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 TextView selectedItem = (TextView) view;
-                if(!selectedItem.getText().equals("")) {
+                if(!selectedItem.getText().equals("알림 조건")) {
                     Button testButton = new Button(getApplicationContext());
                     testButton.setText(selectedItem.getText());
                     ((LinearLayout) findViewById(R.id.selectedList)).addView(testButton);
@@ -205,7 +206,7 @@ public class BoardWriteActivity extends AppCompatActivity {
                 * INSERT notice, title, content, file INTO board_database
                 * */
 
-                if(!filePath.equals(""))
+                if (!filePath.equals(""))
                     Toast.makeText(context, filePath, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(BoardWriteActivity.this, MainActivity.class);
                 startActivity(intent);

@@ -6,4 +6,5 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="board" textColor="#000000">게시판</string>
     <string name="gcm_defaultSenderId">1042368924197</string>
+    <string name="write_notice_cond">알림 선택</string>
 </resources>
