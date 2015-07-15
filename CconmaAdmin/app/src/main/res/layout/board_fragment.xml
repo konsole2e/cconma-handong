@@ -27,7 +27,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        style="@android:style/Widget.Holo.Spinner"
+                        android:layout_marginLeft="5dp"
+                        style="@style/SmallBlack"
                         />
                     <EditText
                         android:id="@+id/edit_board_search"

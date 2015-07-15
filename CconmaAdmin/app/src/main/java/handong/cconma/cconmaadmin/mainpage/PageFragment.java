@@ -2,6 +2,7 @@ package handong.cconma.cconmaadmin.mainpage;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -63,9 +65,9 @@ public class PageFragment extends Fragment {
         btn_board_search_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(btn_board_search_view.isChecked()){
+                if (btn_board_search_view.isChecked()) {
                     layout_board_search.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     layout_board_search.setVisibility(View.GONE);
                 }
             }
@@ -74,12 +76,21 @@ public class PageFragment extends Fragment {
         layout_board_search = (FrameLayout)view.findViewById(R.id.layout_board_search);
         //검색 조건 spinner
         spinner_board_condition = (Spinner)view.findViewById(R.id.spinner_board_condition);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
-                R.array.board_condition,
-                android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_board_condition.setAdapter(spinnerAdapter);
+        String[] cond = getResources().getStringArray(R.array.board_condition);
+        SpinnerAdapter adapter = new SpinnerAdapter(getActivity().getApplicationContext(),
+                android.R.layout.simple_spinner_item, cond);
+        spinner_board_condition.setAdapter(adapter);
         spinner_board_condition.setSelection(0);
+        spinner_board_condition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView)parent.getChildAt(0)).setTextColor(Color.BLACK);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         //검색 입력
         edit_board_search = (EditText)view.findViewById(R.id.edit_board_search);
         //검색하기 버튼
@@ -129,5 +140,52 @@ public class PageFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public class SpinnerAdapter extends ArrayAdapter<String>{
+
+        Context context;
+        String items[];
+        public SpinnerAdapter(final Context context, final int textViewResourceId, final String[] objects){
+            super(context, textViewResourceId, objects);
+            this.items = objects;
+            this.context = context;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(
+                        android.R.layout.simple_spinner_dropdown_item, parent, false);
+            }
+
+            TextView tv = (TextView)convertView
+                    .findViewById(android.R.id.text1);
+            tv.setText(items[position]);
+            tv.setTextColor(Color.BLACK);
+            tv.setTextSize(15);
+            return convertView;
+        }
+
+        /**
+         * 기본 스피너 View 정의
+         */
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(
+                        android.R.layout.simple_spinner_item, parent, false);
+            }
+
+            TextView tv = (TextView) convertView
+                    .findViewById(android.R.id.text1);
+            tv.setText(items[position]);
+            tv.setTextColor(Color.BLACK);
+            tv.setTextSize(15);
+            return convertView;
+        }
     }
 }
