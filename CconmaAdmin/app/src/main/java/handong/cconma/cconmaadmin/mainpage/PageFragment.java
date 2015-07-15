@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -39,7 +40,7 @@ public class PageFragment extends Fragment {
     Button btn_board_search;
 
     InputMethodManager input_manager;
-
+    View view;
     public static PageFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -58,7 +59,7 @@ public class PageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.board_fragment, container, false);
+        view = inflater.inflate(R.layout.board_fragment, container, false);
 
         //검색창 열기/닫기 버튼
         btn_board_search_view = (ToggleButton)view.findViewById(R.id.btn_board_search_view);
@@ -113,7 +114,7 @@ public class PageFragment extends Fragment {
                 inflate(R.layout.board_list_footer, null);
 
         ListView list_board = (ListView)view.findViewById(R.id.board_list);
-        list_board.addFooterView(footer);
+        list_board.addFooterView(footer, null, false);
         BoardAdapter adapter_board = new BoardAdapter(view.getContext());
         list_board.setAdapter(adapter_board);
         adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
@@ -131,6 +132,7 @@ public class PageFragment extends Fragment {
         adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
         adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
 
+        paging(20542, 20, 1);
         list_board.setFocusable(false);
 
         list_board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -140,6 +142,7 @@ public class PageFragment extends Fragment {
                 startActivity(i);
             }
         });
+
 
         return view;
     }
@@ -189,5 +192,120 @@ public class PageFragment extends Fragment {
             tv.setTextSize(15);
             return convertView;
         }
+    }
+    /* paging(int, int, int) : 전체 글의 수, 한 페이지에 볼 글의 수, 현재 페이지 번호 */
+    public void paging(int total_article, int view_article, final int current_page) {
+
+        // 페이지 그룹 단위
+        int page_group = 10;
+
+        // 전체 페이지 수 = 전체 글의 수 / 한 페이지에 볼 글의 수
+        int total_page = (int) Math.ceil(total_article / view_article);
+
+        // 이전 페이지 = 현재 페이지 - 1
+        int prev_page = current_page - 1;
+        if (prev_page < 1)   // 이전 페이지가 1보다 작으면 1로 고정
+            prev_page = 1;
+
+        // 다음 페이지 = 현재 페이지 + 1
+        int next_page = current_page + 1;
+        if (next_page > total_page)  // 다음 페이지가 전체 페이지보다 크면 전체 페이지 수로 고정
+            next_page = total_page;
+
+        // 현재 그룹의 시작 페이지
+        int start_page;
+        if (current_page % page_group == 0)
+            start_page = current_page - (page_group - 1);
+        else
+            start_page = current_page - current_page % page_group + 1;
+
+        // 현재 그룹의 마지막 페이지는 시작 페이지 + index_cut
+        int end_page = start_page + page_group;
+
+        // 이전 그룹은 시작 페이지 - 1
+        int prev_group = start_page - 1;
+        if (prev_group < 1)  // 이전 그룹이 1보다 작으면 1로 고정
+            prev_group = 1;
+
+        // 다음 그룹은 마지막 페이지
+        int next_group = end_page;
+        if (next_group > total_page) // 다음 그룹이 전체 페이지보다 크면 전체 페이지 수로 고정
+            next_group = total_page;
+
+        // 현재 페이지가 1페이지가 아니면 이전 그룹으로 가는 버튼 출력
+        if (current_page != 1){
+
+            TextView prevButton = new TextView(getActivity().getApplicationContext());
+            prevButton.setWidth(40);
+            prevButton.setHeight(60);
+            prevButton.setTextSize(18);
+            prevButton.setText("<");
+            prevButton.setClickable(false);
+            ((LinearLayout)view.findViewById(R.id.board_list_footer_layout)).addView(prevButton);
+            prevButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    //current_page = prev_group;
+                }
+            });
+
+        }
+
+        // 시작 페이지에서 마지막 페이지 전까지 반복
+        for (int i = start_page; i < end_page; i++) {
+
+            if (i > total_page)  // i가 전체 페이지를 초과하면 종료
+                break;
+
+            // 페이지 번호 버튼 출력
+            if (i == current_page) {   // i가 현재 페이지와 일치
+
+                // 현재 페이지 버튼은 선택할 수 없음
+                TextView pageButton = new TextView(getActivity().getApplicationContext());
+                pageButton.setWidth(40);
+                pageButton.setHeight(60);
+                pageButton.setTextSize(18);
+                pageButton.setTextColor(Color.BLUE);
+                pageButton.setText(""+i);
+                pageButton.setClickable(false);
+                ((LinearLayout)view.findViewById(R.id.board_list_footer_layout)).addView(pageButton);
+
+            } else {
+
+                // 해당 페이지로 이동하는 버튼
+                final TextView pageButton = new TextView(getActivity().getApplicationContext());
+                pageButton.setWidth(40);
+                pageButton.setHeight(60);
+                pageButton.setTextSize(18);
+                pageButton.setText(""+i);
+                ((LinearLayout)view.findViewById(R.id.board_list_footer_layout)).addView(pageButton);
+                pageButton.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        // ((Button)v).getText();   // 해당 페이지로 이동(액티비티 새로고침)
+                        Toast.makeText(getActivity().getApplicationContext(), pageButton.getText().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+
+        }
+
+        // 현재 페이지가 전체 페이지가 아닐 경우 다음 그룹으로 가는 버튼 출력
+        if (current_page != total_page){
+
+            TextView nextButton = new TextView(getActivity().getApplicationContext());
+            nextButton.setWidth(40);
+            nextButton.setHeight(60);
+            nextButton.setTextSize(18);
+            nextButton.setText(">");
+            nextButton.setClickable(false);
+            ((LinearLayout) view.findViewById(R.id.board_list_footer_layout)).addView(nextButton);
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    // current_page = next_group;
+                }
+            });
+
+        }
+
     }
 }

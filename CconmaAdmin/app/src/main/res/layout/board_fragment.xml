@@ -34,7 +34,7 @@
                         android:id="@+id/edit_board_search"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="1.5"
                         android:hint="입력하세요"/>
                     <Button
                         android:id="@+id/btn_board_search"

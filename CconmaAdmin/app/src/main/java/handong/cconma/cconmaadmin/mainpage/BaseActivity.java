@@ -18,6 +18,7 @@ import android.view.View;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 import handong.cconma.cconmaadmin.etc.MyWebView;
+import handong.cconma.cconmaadmin.etc.SettingActivity;
 import handong.cconma.cconmaadmin.mainpage.RecyclerViewAdapter;
 import handong.cconma.cconmaadmin.statics.StaticsMain;
 
@@ -133,6 +134,7 @@ public class BaseActivity extends AppCompatActivity {
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             }else{
                                 //settings
+                                startActivity(new Intent(getApplicationContext(), SettingActivity.class));
                             }
                             mDrawerLayout.closeDrawers();
                             break;

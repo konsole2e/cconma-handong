@@ -5,5 +5,4 @@
     android:layout_height="wrap_content"
     android:background="@color/ColorPrimary"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:elevation="4dp"
-    app:layout_scrollFlags="scroll|enterAlways"/>
+    android:elevation="4dp"/>
