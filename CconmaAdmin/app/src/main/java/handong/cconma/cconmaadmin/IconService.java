@@ -17,9 +17,10 @@ import android.widget.Toast;
  */
 public class IconService extends Service {
 
-    private WindowManager.LayoutParams params;
+    private WindowManager.LayoutParams params, params2;
     private WindowManager windowManager;
     private ImageView cconmaIcon;
+    private ImageView xIcon;
     private float mTouchX, mTouchY;
     private int mViewX, mViewY;
 
@@ -53,15 +54,24 @@ public class IconService extends Service {
                         params.x = mViewX + x;
                         params.y = mViewY + y;
                         windowManager.updateViewLayout(cconmaIcon, params);
-                        if(event.getRawY() > 900 && cconmaIcon != null)
-                            cconmaIcon.setVisibility(View.INVISIBLE);
+                        if (cconmaIcon != null) {
+                            if (event.getRawY() > 800) {
+                                xIcon.setVisibility(View.VISIBLE);
+                            } else {
+                                xIcon.setVisibility(View.INVISIBLE);
+                            }
+                            if (event.getRawY() > 900) {
+                                windowManager.removeView(cconmaIcon);
+                                xIcon.setVisibility(View.INVISIBLE);
+                            }
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
-                        if (Math.abs((int) (event.getRawX() - mTouchX)) <= 5 && Math.abs((int) (event.getRawY() - mTouchY)) <= 5){
+                        if (Math.abs((int) (event.getRawX() - mTouchX)) <= 5 && Math.abs((int) (event.getRawY() - mTouchY)) <= 5) {
 
-                           String weather = new Test().getWeather();
+                            String weather = new Test().getWeather();
 
-                           Toast.makeText(getApplicationContext(), weather, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), weather, Toast.LENGTH_SHORT).show();
                             Log.e("location", "x : " + event.getRawX() + " y : " + event.getRawY());
 
                         }
@@ -71,17 +81,29 @@ public class IconService extends Service {
             }
         });
 
+        xIcon = new ImageView(this);
+        xIcon.setImageResource(R.drawable.x);
+
         params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.CENTER;
+        params.gravity = Gravity.LEFT | Gravity.TOP;
         params.x = 0;
-        params.y = 100;
+        params.y = 0;
+
+        params2 = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+        params2.gravity = Gravity.CENTER | Gravity.BOTTOM;
 
         windowManager.addView(cconmaIcon, params);
+        windowManager.addView(xIcon, params2);
 
     }
 
