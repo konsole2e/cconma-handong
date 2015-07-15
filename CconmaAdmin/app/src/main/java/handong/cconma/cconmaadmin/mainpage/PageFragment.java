@@ -101,15 +101,19 @@ public class PageFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), spinner_board_condition.getSelectedItem().toString()
                         + " " + edit_board_search.getText(), Toast.LENGTH_SHORT).show();
                 edit_board_search.setText("");
-                input_manager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                input_manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
                 layout_board_search.setVisibility(View.GONE);
                 btn_board_search_view.setChecked(false);
             }
         });
 
+        View footer = ((LayoutInflater)this.getActivity().getBaseContext().
+                getSystemService(Context.LAYOUT_INFLATER_SERVICE)).
+                inflate(R.layout.board_list_footer, null);
 
         ListView list_board = (ListView)view.findViewById(R.id.board_list);
+        list_board.addFooterView(footer);
         BoardAdapter adapter_board = new BoardAdapter(view.getContext());
         list_board.setAdapter(adapter_board);
         adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
