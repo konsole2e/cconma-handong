@@ -18,13 +18,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/img_board_file"
-                    android:layout_width="17dp"
-                    android:layout_height="12dp"
-                    android:src="@drawable/ic_file"
-                    android:paddingRight="5dp"
-                    android:visibility="gone" />
                 <TextView
                     android:id="@+id/text_board_title"
                     android:layout_width="wrap_content"
@@ -50,6 +43,14 @@
                     android:layout_height="wrap_content"
                     android:textColor="#304FFE"
                     android:hint="+3"/>
+                <ImageView
+                    android:id="@+id/img_board_file"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="17dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_file"
+                    android:paddingRight="5dp"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -70,14 +71,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
-                android:text="2015/06/30"/>
+                android:gravity="right"
+                android:text="2015/06/30\n14:20:56"/>
         </LinearLayout>
         <ToggleButton
             android:id="@+id/btn_board_mark"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="right|top"
-            android:layout_marginRight="8dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="right|center_vertical"
             android:background="@drawable/ic_btn_bookmark_selector"
             android:textOff=""
             android:textOn=""/>

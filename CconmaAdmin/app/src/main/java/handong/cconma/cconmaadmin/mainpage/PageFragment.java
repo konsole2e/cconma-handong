@@ -116,22 +116,20 @@ public class PageFragment extends Fragment {
         list_board.addFooterView(footer);
         BoardAdapter adapter_board = new BoardAdapter(view.getContext());
         list_board.setAdapter(adapter_board);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07", 3, false, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
+        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
 
         list_board.setFocusable(false);
 
