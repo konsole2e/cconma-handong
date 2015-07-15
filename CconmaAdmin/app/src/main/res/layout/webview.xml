@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/snackbarPosition"
+    android:background="@color/ColorPanel"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ColorPanel"
+        android:id="@+id/webView">
+    </WebView>
+
+</android.support.design.widget.CoordinatorLayout>
