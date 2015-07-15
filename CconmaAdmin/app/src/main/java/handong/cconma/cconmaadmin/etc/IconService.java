@@ -13,9 +13,6 @@ import android.widget.Toast;
 
 import handong.cconma.cconmaadmin.R;
 
-/**
- * Created by ????? on 2015-07-07.
- */
 public class IconService extends Service {
 
     private WindowManager.LayoutParams params;

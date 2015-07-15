@@ -2,6 +2,7 @@ package handong.cconma.cconmaadmin.statics;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -12,9 +13,15 @@ import android.view.View;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 
-import handong.cconma.cconmaadmin.R;
+import org.json.JSONObject;
 
-public class StaticsLike extends Activity {
+import java.util.ArrayList;
+
+import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.etc.HTTPConnector;
+import handong.cconma.cconmaadmin.etc.JSONResponse;
+
+public class StaticsLike extends Activity implements JSONResponse {
     //Combine Chart private CombinedChart dailyChart;
     private BarChart dailyChart;
     private LineChart weeklyChart;
@@ -59,8 +66,13 @@ public class StaticsLike extends Activity {
         weeklyChart.setMarkerView(mvW);
         monthlyChart.setMarkerView(mvM);
 
-        new ConnectToUrl().execute("서버 주소 1", "서버 주소 2", "서버 주소 3");
-
+        HTTPConnector hc = new HTTPConnector(this);
+        hc.setProgressMessage("차트를 그리고 있습니다.");
+        hc.execute(
+                "http://api.androidhive.info/contacts",
+                "http://api.androidhive.info/contacts",
+                "http://api.androidhive.info/contacts"
+        );
 
 /*       dailyChart.setDescription("");
         dailyChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
@@ -97,7 +109,6 @@ public class StaticsLike extends Activity {
 
         YAxis leftAxisM = monthlyChart.getAxisLeft();
         //  leftAxisM.setDrawGridLines(false);*/
-
 
         (findViewById(R.id.like_daily_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,6 +164,15 @@ public class StaticsLike extends Activity {
     }
 
     @Override
+    public void processFinish(ArrayList<JSONObject> output) {
+        int i = 0;
+        dailyChart.setData(manager.dailyChartSetting(output.get(i++)));
+        weeklyChart.setData(manager.weeklyChartSetting(output.get(i++)));
+        monthlyChart.setData(manager.monthlyChartSetting(output.get(i++)));
+        return;
+    }
+
+    @Override
     public void onBackPressed() {
         backPressCloseHandler.onBackPressed();
     }
@@ -179,12 +199,13 @@ public class StaticsLike extends Activity {
             }
         }
     }
-
+/*
     class ConnectToUrl extends AsyncTask<String, String, String> {
-
+        private ProgressDialog pd;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            pd = ProgressDialog.show(StaticsLike.this, "", "차트를 그리고 있습니다.", true, true);
         }
 
         @Override
@@ -199,12 +220,13 @@ public class StaticsLike extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            pd.dismiss();
             if (s != null) {
                 dailyChart.setData(manager.dailyChartSetting());
                 weeklyChart.setData(manager.weeklyChartSetting());
                 monthlyChart.setData(manager.monthlyChartSetting());
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(StaticsLike.this);
                 builder.setTitle("네트워크 오류");
                 builder.setMessage("데이터를 읽어 올 수 없습니다.")
                         .setCancelable(false)
@@ -215,6 +237,6 @@ public class StaticsLike extends Activity {
                         }).show();
             }
         }
-    }
+    }*/
 }
 

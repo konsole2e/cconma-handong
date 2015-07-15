@@ -10,6 +10,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,13 +24,13 @@ import handong.cconma.cconmaadmin.R;
 
 public class StaticsLikeManager {
     Context con;
-    ArrayList<String> result;
 
     public StaticsLikeManager(Context context) {
         con = context;
     }
 
-    public BarData dailyChartSetting() {
+    public BarData dailyChartSetting(JSONObject json) {
+
         BarData data = new BarData(generateDailyXVals(), generateDailyBarData());
         //data.setData(generateDailyLineData());
         data.setGroupSpace(80f);
@@ -37,7 +39,7 @@ public class StaticsLikeManager {
         return data;
     }
 
-    public LineData weeklyChartSetting() {
+    public LineData weeklyChartSetting(JSONObject json) {
         ArrayList<Entry> e = new ArrayList<Entry>();
 
         for (int i = 0; i < 10; i++) {
@@ -56,7 +58,7 @@ public class StaticsLikeManager {
         return data;
     }
 
-    public LineData monthlyChartSetting() {
+    public LineData monthlyChartSetting(JSONObject json) {
         ArrayList<Entry> e = new ArrayList<Entry>();
 
         for (int i = 0; i < 13; i++) {
@@ -253,11 +255,13 @@ public class StaticsLikeManager {
             return false;
         }
     }*/
+/*
 
     public boolean getData(String[] str) {
         for (String url : str) {
             try {
                 String line = null;
+                String appended = null;
                 HttpURLConnection con = (HttpURLConnection) (new URL(url)).openConnection();
                 con.setRequestMethod("GET");
                 //con.setDoOutput(true);
@@ -270,15 +274,16 @@ public class StaticsLikeManager {
                     is = new BufferedInputStream(con.getInputStream());
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is));
                     while ((line = reader.readLine()) != null) {
-                        line = line + line;
+                        appended = appended + line;
                     }
                     //  os.close();
                     is.close();
                     reader.close();
+                    result = new ArrayList<>();
+                    result.add(appended);
                 } else {
                     return false;
                 }
-                result.add(line);
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
@@ -286,4 +291,6 @@ public class StaticsLikeManager {
         }
         return true;
     }
+*/
+
 }

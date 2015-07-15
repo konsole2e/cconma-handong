@@ -10,18 +10,27 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import handong.cconma.cconmaadmin.R;
 
 public class StaticsMemberManager {
     Context con;
+    ArrayList<String> result;
 
     public StaticsMemberManager(Context context) {
         con = context;
     }
 
-    public BarData dailyChartSetting() {
+    public BarData dailyChartSetting(JSONObject json) {
         BarData data = new BarData(generateDailyXVals(), generateDailyBarData());
         //data.setData(generateDailyLineData());
         data.setGroupSpace(80f);
@@ -30,14 +39,14 @@ public class StaticsMemberManager {
         return data;
     }
 
-    public LineData weeklyChartSetting() {
+    public LineData weeklyChartSetting(JSONObject json) {
         ArrayList<Entry> e = new ArrayList<Entry>();
 
         for (int i = 0; i < 10; i++) {
             e.add(new Entry((float) Math.random() * 20, i));
         }
 
-        LineDataSet set = new LineDataSet(e , "주민되기(주간)");
+        LineDataSet set = new LineDataSet(e, "주민되기(주간)");
         set.setColor(con.getResources().getColor(R.color.statics_red));
         set.setLineWidth(2.5f);
         set.setCircleSize(3.5f);
@@ -49,7 +58,7 @@ public class StaticsMemberManager {
         return data;
     }
 
-    public LineData monthlyChartSetting() {
+    public LineData monthlyChartSetting(JSONObject json) {
         ArrayList<Entry> e = new ArrayList<Entry>();
 
         for (int i = 0; i < 13; i++) {
@@ -131,10 +140,11 @@ public class StaticsMemberManager {
     }*/
 
     private String[] generateDailyXVals() {
-        String [] xVals = {"일", "월", "화", "수", "목", "금", "토"};
+        String[] xVals = {"일", "월", "화", "수", "목", "금", "토"};
 
         return xVals;
     }
+
     private ArrayList<String> generateXVals(int numX) {
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < numX; i++) {
@@ -187,5 +197,40 @@ public class StaticsMemberManager {
         d.addDataSet(set3);*/
 
         return dataSets;
+    }
+
+    public boolean getData(String[] str) {
+        for (String url : str) {
+            try {
+                String line = null;
+                String appended = null;
+                HttpURLConnection con = (HttpURLConnection) (new URL(url)).openConnection();
+                con.setRequestMethod("GET");
+                //con.setDoOutput(true);
+                con.setDoInput(true);
+                BufferedInputStream is;
+                //BufferedOutputStream os;
+
+                if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    //os = new BufferedInputStream(con.getOutputStream());
+                    is = new BufferedInputStream(con.getInputStream());
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    while ((line = reader.readLine()) != null) {
+                        appended = appended + line;
+                    }
+                    //  os.close();
+                    is.close();
+                    reader.close();
+                    result = new ArrayList<>();
+                    result.add(appended);
+                } else {
+                    return false;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return true;
     }
 }
