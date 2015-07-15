@@ -18,12 +18,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final int VIEW_TYPE_USER  = 0;
     private static final int VIEW_TYPE_NAVMENU = 1;
 
-    private String navTitles[];
+    private CharSequence navTitles[];
     private int naviIcons[];
     private String name;
     private int status;
 
-    public RecyclerViewAdapter(String Titles[], int Icons[], String Name, int Status){
+    public RecyclerViewAdapter(CharSequence Titles[], int Icons[], String Name, int Status){
         navTitles = Titles;
         naviIcons = Icons;
         name = Name;
