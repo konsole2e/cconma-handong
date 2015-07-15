@@ -32,6 +32,9 @@
         <activity
             android:name=".etc.MyWebView">
         </activity>
+        <activity
+            android:name=".etc.SettingActivity">
+        </activity>
 
         <activity
             android:name=".board.BoardWriteActivity"
