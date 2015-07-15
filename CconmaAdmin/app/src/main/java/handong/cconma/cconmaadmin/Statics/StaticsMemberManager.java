@@ -31,7 +31,7 @@ public class StaticsMemberManager {
     }
 
     public BarData dailyChartSetting(JSONObject json) {
-        BarData data = new BarData(generateDailyXVals(), generateDailyBarData());
+        BarData data = new BarData(generateDailyXVals(), generateDailyBarData(json));
         //data.setData(generateDailyLineData());
         data.setGroupSpace(80f);
         data.setValueFormatter(new StaticsValueFormatter());
@@ -77,7 +77,7 @@ public class StaticsMemberManager {
         return data;
     }
 
-    public LimitLine weeklkyAVG() {
+    public LimitLine weeklkyAVG(JSONObject json) {
         LimitLine ll = new LimitLine((float) 10f, "기간평균 (" + 10 + ")");
         ll.setLineWidth(4f);
         ll.enableDashedLine(10f, 10f, 0f);
@@ -88,7 +88,7 @@ public class StaticsMemberManager {
         return ll;
     }
 
-    public LimitLine monthlyAVG() {
+    public LimitLine monthlyAVG(JSONObject json) {
         LimitLine ll = new LimitLine((float) 500f, "기간평균 (" + 500 + ")");
         ll.setLineWidth(4f);
         ll.enableDashedLine(10f, 10f, 0f);
@@ -154,7 +154,7 @@ public class StaticsMemberManager {
     }
 
 
-    private ArrayList<BarDataSet> generateDailyBarData() {
+    private ArrayList<BarDataSet> generateDailyBarData(JSONObject json) {
         ArrayList<BarEntry> e1 = new ArrayList<BarEntry>();
         ArrayList<BarEntry> e2 = new ArrayList<BarEntry>();
         ArrayList<BarEntry> e3 = new ArrayList<BarEntry>();

@@ -85,7 +85,7 @@ public class StaticsTradeManager {
         return data;
     }
 
-    public LimitLine weeklkyAVG() {
+    public LimitLine weeklkyAVG(JSONObject json) {
         LimitLine ll = new LimitLine((float) 10f, "기간평균 (" + 10 + ")");
         ll.setLineWidth(4f);
         ll.enableDashedLine(10f, 10f, 0f);
@@ -96,7 +96,7 @@ public class StaticsTradeManager {
         return ll;
     }
 
-    public LimitLine monthlyAVG() {
+    public LimitLine monthlyAVG(JSONObject json) {
         LimitLine ll = new LimitLine((float) 500f, "기간평균 (" + 500 + ")");
         ll.setLineWidth(4f);
         ll.enableDashedLine(10f, 10f, 0f);

@@ -47,6 +47,7 @@ public class StaticsMain extends Activity implements View.OnClickListener {
         memberRcnt.setOnClickListener(this);
 
  //       new ConnectToUrl().execute();
+
     }
 
     @Override

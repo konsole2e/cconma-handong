@@ -57,8 +57,6 @@ public class StaticsTrade extends Activity implements JSONResponse {
         setting.commonSetting(weeklyChart);
         setting.commonSetting(monthlyChart);
 
-        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG());
-        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG());
 
         mvH.attachChart(hourlyChart, "원");
         mvD.attachChart(dailyChart, "원");
@@ -215,8 +213,10 @@ public class StaticsTrade extends Activity implements JSONResponse {
         int i = 0;
         hourlyChart.setData(manager.hourlyChartSetting(output.get(i++)));
         dailyChart.setData(manager.dailyChartSetting(output.get(i++)));
-        weeklyChart.setData(manager.weeklyChartSetting(output.get(i++)));
-        monthlyChart.setData(manager.monthlyChartSetting(output.get(i++)));
+        weeklyChart.setData(manager.weeklyChartSetting(output.get(i)));
+        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG(output.get(i++)));
+        monthlyChart.setData(manager.monthlyChartSetting(output.get(i)));
+        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG(output.get(i++)));
         return;
     }
 
