@@ -91,5 +91,24 @@
                 android:layout_gravity="right"
                 />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:background="#ffffff"
+            android:layout_marginTop="1dp"><TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="알림 바로보기"
+            style="@style/MediumBlack"/>
+            <Switch
+                android:id="@+id/switch_icon"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
