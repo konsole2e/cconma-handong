@@ -1,18 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@color/ColorPanel">
-    <FrameLayout
-        android:id="@+id/board_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/board_list">
-    </ListView>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_alignBottom="@id/board_list"/>
-</RelativeLayout>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/ColorPanel">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <FrameLayout
+            android:id="@+id/board_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <FrameLayout
+                android:id="@+id/layout_board_search"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Spinner
+                        android:id="@+id/spinner_board_condition"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="5dp"
+                        style="@style/SmallBlack"
+                        />
+                    <EditText
+                        android:id="@+id/edit_board_search"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:hint="입력하세요"/>
+                    <Button
+                        android:id="@+id/btn_board_search"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:text="검색하기"/>
+                </LinearLayout>
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/framelay"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_board_search">
+                <ToggleButton
+                    android:id="@+id/btn_board_search_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:textOff=""
+                    android:textOn=""/>
+            </FrameLayout>
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/board_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</FrameLayout>

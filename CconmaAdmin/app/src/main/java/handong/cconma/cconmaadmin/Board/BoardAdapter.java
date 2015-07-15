@@ -88,6 +88,8 @@ public class BoardAdapter extends BaseAdapter{
         });
         if(data.board_file)
             holder.img_board_file.setVisibility(View.VISIBLE);
+        else
+            holder.img_board_file.setVisibility(View.GONE);
 
         return convertView;
     }

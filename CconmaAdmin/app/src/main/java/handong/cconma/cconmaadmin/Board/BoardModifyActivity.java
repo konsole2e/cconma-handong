@@ -62,7 +62,7 @@ public class BoardModifyActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 TextView selectedItem = (TextView) view;
 
-                if (!selectedItem.getText().equals("")) {
+                if (!selectedItem.getText().equals("알림 조건")) {
                     Button testButton = new Button(getApplicationContext());
                     testButton.setText(selectedItem.getText());
                     ((LinearLayout) findViewById(R.id.selectedList)).addView(testButton);
