@@ -101,7 +101,6 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.order_hourly_btn :
-                Log.d("Debugging", String.valueOf(v.getId()));
                 startActivity(new Intent(getActivity(), StaticsOrderH.class));
                 break;
             case R.id.order_recent_btn:

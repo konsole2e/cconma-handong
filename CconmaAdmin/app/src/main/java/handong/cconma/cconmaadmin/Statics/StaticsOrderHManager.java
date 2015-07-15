@@ -6,20 +6,29 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import handong.cconma.cconmaadmin.R;
 
 public class StaticsOrderHManager {
     Context con;
+    ArrayList<String> result;
 
     public StaticsOrderHManager(Context con) {
         this.con = con;
     }
 
-    public LineData setting() {
+    public LineData setting(JSONObject json) {
 
-        LineData d = new LineData(generateXValues(24), generateDataLine());
+        LineData d = new LineData(generateXValues(24), generateDataLine(json));
         d.setValueFormatter(new StaticsValueFormatter());
 
         return d;
@@ -33,7 +42,7 @@ public class StaticsOrderHManager {
         return xVal;
     }
 
-    private ArrayList<LineDataSet> generateDataLine() {
+    private ArrayList<LineDataSet> generateDataLine(JSONObject json) {
 
         ArrayList<Entry> e1 = new ArrayList<>();
         ArrayList<Entry> e2 = new ArrayList<>();
@@ -88,4 +97,39 @@ public class StaticsOrderHManager {
 
         return dataSets;
     }
+
+  /*  public boolean getData(String[] str) {
+        for (String url : str) {
+            try {
+                String line = null;
+                String appended = null;
+                HttpURLConnection con = (HttpURLConnection) (new URL(url)).openConnection();
+                con.setRequestMethod("GET");
+                //con.setDoOutput(true);
+                con.setDoInput(true);
+                BufferedInputStream is;
+                //BufferedOutputStream os;
+
+                if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    //os = new BufferedInputStream(con.getOutputStream());
+                    is = new BufferedInputStream(con.getInputStream());
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    while ((line = reader.readLine()) != null) {
+                        appended = appended + line;
+                    }
+                    //  os.close();
+                    is.close();
+                    reader.close();
+                    result = new ArrayList<>();
+                    result.add(appended);
+                } else {
+                    return false;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return true;
+    }*/
 }

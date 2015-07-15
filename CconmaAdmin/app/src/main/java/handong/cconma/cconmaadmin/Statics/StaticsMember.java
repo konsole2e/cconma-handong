@@ -1,17 +1,27 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 
-import handong.cconma.cconmaadmin.R;
+import org.json.JSONObject;
 
-public class StaticsMember extends Activity {
+import java.util.ArrayList;
+
+import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.etc.HTTPConnector;
+import handong.cconma.cconmaadmin.etc.JSONResponse;
+
+public class StaticsMember extends Activity implements JSONResponse{
     //Combine Chart private CombinedChart dailyChart;
     private BarChart dailyChart;
     private LineChart weeklyChart;
@@ -19,6 +29,7 @@ public class StaticsMember extends Activity {
     private boolean mode = false;
     private BackPressCloseHandler backPressCloseHandler;
     private StaticsCommonSetting setting;
+    private StaticsMemberManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +40,14 @@ public class StaticsMember extends Activity {
 
         setting = new StaticsCommonSetting();
 
-        StaticsMemberManager manager = new StaticsMemberManager(this);
+        manager = new StaticsMemberManager(this);
 
         StaticsMarkerView mvD = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
         StaticsMarkerView mvW = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
         StaticsMarkerView mvM = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
 
 //        dailyChart = (CombinedChart) findViewById(R.id.member_daily_combineChart);
-        dailyChart = (BarChart)findViewById(R.id.member_daily_barChart);
+        dailyChart = (BarChart) findViewById(R.id.member_daily_barChart);
         weeklyChart = (LineChart) findViewById(R.id.member_weekly_lineChart);
         monthlyChart = (LineChart) findViewById(R.id.member_monthly_lineChart);
 
@@ -44,9 +55,6 @@ public class StaticsMember extends Activity {
         setting.commonSetting(weeklyChart);
         setting.commonSetting(monthlyChart);
 
-        setting.commonSetting(dailyChart);
-        setting.commonSetting(weeklyChart);
-        setting.commonSetting(monthlyChart);
 
         mvD.attachChart(dailyChart, "명");
         mvW.attachChart(weeklyChart, "명");
@@ -55,6 +63,14 @@ public class StaticsMember extends Activity {
         dailyChart.setMarkerView(mvD);
         weeklyChart.setMarkerView(mvW);
         monthlyChart.setMarkerView(mvM);
+
+        HTTPConnector hc = new HTTPConnector(this);
+        hc.setProgressMessage("차트를 그리고 있습니다.");
+        hc.execute(
+                "http://api.androidhive.info/contacts",
+                "http://api.androidhive.info/contacts",
+                "http://api.androidhive.info/contacts"
+        );
 
 //        dailyChart.setDrawOrder(new DrawOrder[]{  DrawOrder.LINE, DrawOrder.BAR});
 
@@ -94,29 +110,23 @@ public class StaticsMember extends Activity {
         YAxis leftAxisM = monthlyChart.getAxisLeft();
       //  leftAxisM.setDrawGridLines(false);*/
 
-        dailyChart.setData(manager.dailyChartSetting());
-        dailyChart.invalidate();
-        weeklyChart.setData(manager.weeklyChartSetting());
-        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG());
-        monthlyChart.setData(manager.monthlyChartSetting());
-        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG());
 
         (findViewById(R.id.member_daily_zoom)).setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 if (mode == false) {
-                     mode = true;
-                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+            @Override
+            public void onClick(View v) {
+                if (mode == false) {
+                    mode = true;
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     // dailyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                     setting.zoomSetting(dailyChart);
-                     weeklyChart.setVisibility(View.GONE);
-                     monthlyChart.setVisibility(View.GONE);
-                     (findViewById(R.id.member_daily_rl)).setVisibility(View.GONE);
-                     (findViewById(R.id.member_weekly_rl)).setVisibility(View.GONE);
-                     (findViewById(R.id.member_monthly_rl)).setVisibility(View.GONE);
-                 }
-             }
-         });
+                    setting.zoomSetting(dailyChart);
+                    weeklyChart.setVisibility(View.GONE);
+                    monthlyChart.setVisibility(View.GONE);
+                    (findViewById(R.id.member_daily_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.member_weekly_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.member_monthly_rl)).setVisibility(View.GONE);
+                }
+            }
+        });
 
         (findViewById(R.id.member_weekly_zoom)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,6 +164,26 @@ public class StaticsMember extends Activity {
 
     }
 
+    public void refresh(){
+        dailyChart.invalidate();
+        weeklyChart.invalidate();
+        monthlyChart.invalidate();
+        return;
+    }
+
+    @Override
+    public void processFinish(ArrayList<JSONObject> output) {
+        int i = 0;
+        dailyChart.setData(manager.dailyChartSetting(output.get(i++)));
+        weeklyChart.setData(manager.weeklyChartSetting(output.get(i)));
+        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG(output.get(i++)));
+        monthlyChart.setData(manager.monthlyChartSetting(output.get(i)));
+        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG(output.get(i++)));
+
+        refresh();
+        return;
+    }
+
     @Override
     public void onBackPressed() {
         backPressCloseHandler.onBackPressed();
@@ -181,5 +211,46 @@ public class StaticsMember extends Activity {
             }
         }
     }
+
+    /*class ConnectToUrl extends AsyncTask<String, String, String> {
+        private ProgressDialog pd;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = ProgressDialog.show(StaticsMember.this, "", "차트를 그리고 있습니다.", true, true);
+        }
+
+        @Override
+        protected String doInBackground(String... str) {
+            if (manager.getData(str)) {
+                return "success";
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pd.dismiss();
+            if (s != null) {
+
+                dailyChart.setData(manager.dailyChartSetting());
+                weeklyChart.setData(manager.weeklyChartSetting());
+                monthlyChart.setData(manager.monthlyChartSetting());
+
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(StaticsMember.this);
+                builder.setTitle("네트워크 오류");
+                builder.setMessage("데이터를 읽어 올 수 없습니다.")
+                        .setCancelable(false)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+            }
+        }
+    }*/
 }
 

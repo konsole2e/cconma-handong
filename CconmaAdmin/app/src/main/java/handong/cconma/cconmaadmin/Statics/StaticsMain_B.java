@@ -8,13 +8,14 @@ import android.widget.Button;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.mainpage.BaseActivity;
 
-public class StaticsMain extends BaseActivity implements View.OnClickListener{
+public class StaticsMain_B extends BaseActivity implements View.OnClickListener{
     private Button orderH;
     private Button orderRcnt;
     private Button trade;
     private Button like;
     private Button member;
     private Button memberRcnt;
+    private String result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,9 @@ public class StaticsMain extends BaseActivity implements View.OnClickListener{
         member.setOnClickListener(this);
         memberRcnt = (Button) findViewById(R.id.member_recent_btn);
         memberRcnt.setOnClickListener(this);
+
+        //       new ConnectToUrl().execute();
+
     }
 
     @Override

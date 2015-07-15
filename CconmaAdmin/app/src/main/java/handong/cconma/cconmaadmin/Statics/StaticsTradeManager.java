@@ -12,34 +12,43 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import handong.cconma.cconmaadmin.R;
 
 public class StaticsTradeManager {
     Context con;
+    ArrayList<String> result;
 
     public StaticsTradeManager(Context context) {
         con = context;
     }
 
-    public CombinedData hourlyChartSetting() {
+    public CombinedData hourlyChartSetting(JSONObject json) {
         CombinedData data = new CombinedData(generateXVals(24));
-        data.setData(generateHourlyLineData());
-        data.setData(generateHourlyBarData());
+        data.setData(generateHourlyLineData(json));
+        data.setData(generateHourlyBarData(json));
         data.setValueFormatter(new StaticsValueFormatter());
         return data;
     }
 
-    public BarData dailyChartSetting() {
-        BarData data = new BarData(generateDailyXVals(), generateDailyBarData());
+    public BarData dailyChartSetting(JSONObject json) {
+        BarData data = new BarData(generateDailyXVals(), generateDailyBarData(json));
         //data.setData(generateDailyLineData());
         data.setGroupSpace(80f);
         data.setValueFormatter(new StaticsValueFormatter());
         return data;
     }
 
-    public LineData weeklyChartSetting() {
+    public LineData weeklyChartSetting(JSONObject json) {
         ArrayList<Entry> e = new ArrayList<Entry>();
 
         for (int i = 0; i < 10; i++) {
@@ -57,7 +66,7 @@ public class StaticsTradeManager {
         return data;
     }
 
-    public LineData monthlyChartSetting() {
+    public LineData monthlyChartSetting(JSONObject json) {
         ArrayList<Entry> e = new ArrayList<Entry>();
 
         for (int i = 0; i < 13; i++) {
@@ -76,7 +85,7 @@ public class StaticsTradeManager {
         return data;
     }
 
-    public LimitLine weeklkyAVG() {
+    public LimitLine weeklkyAVG(JSONObject json) {
         LimitLine ll = new LimitLine((float) 10f, "기간평균 (" + 10 + ")");
         ll.setLineWidth(4f);
         ll.enableDashedLine(10f, 10f, 0f);
@@ -87,7 +96,7 @@ public class StaticsTradeManager {
         return ll;
     }
 
-    public LimitLine monthlyAVG() {
+    public LimitLine monthlyAVG(JSONObject json) {
         LimitLine ll = new LimitLine((float) 500f, "기간평균 (" + 500 + ")");
         ll.setLineWidth(4f);
         ll.enableDashedLine(10f, 10f, 0f);
@@ -99,7 +108,7 @@ public class StaticsTradeManager {
     }
 
 
-    private LineData generateHourlyLineData() {
+    private LineData generateHourlyLineData(JSONObject json) {
 
         ArrayList<Entry> e1 = new ArrayList<>();
         ArrayList<Entry> e2 = new ArrayList<>();
@@ -164,7 +173,7 @@ public class StaticsTradeManager {
         return d;
     }
 
-    private BarData generateHourlyBarData() {
+    private BarData generateHourlyBarData(JSONObject json) {
         ArrayList<BarEntry> e1 = new ArrayList<BarEntry>();
 
         for (int i = 0; i < 24; i++) {
@@ -206,7 +215,7 @@ public class StaticsTradeManager {
         return xVals;
     }
 
-    private ArrayList<BarDataSet> generateDailyBarData() {
+    private ArrayList<BarDataSet> generateDailyBarData(JSONObject json) {
         ArrayList<BarEntry> e1 = new ArrayList<BarEntry>();
         ArrayList<BarEntry> e2 = new ArrayList<BarEntry>();
         ArrayList<BarEntry> e3 = new ArrayList<BarEntry>();
@@ -250,4 +259,39 @@ public class StaticsTradeManager {
 
         return dataSets;
     }
+
+    /*public boolean getData(String[] str) {
+        for (String url : str) {
+            try {
+                String line = null;
+                String appended = null;
+                HttpURLConnection con = (HttpURLConnection) (new URL(url)).openConnection();
+                con.setRequestMethod("GET");
+                //con.setDoOutput(true);
+                con.setDoInput(true);
+                BufferedInputStream is;
+                //BufferedOutputStream os;
+
+                if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    //os = new BufferedInputStream(con.getOutputStream());
+                    is = new BufferedInputStream(con.getInputStream());
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    while ((line = reader.readLine()) != null) {
+                        appended = appended + line;
+                    }
+                    //  os.close();
+                    is.close();
+                    reader.close();
+                    result = new ArrayList<>();
+                    result.add(appended);
+                } else {
+                    return false;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return true;
+    }*/
 }

@@ -77,7 +77,7 @@
         <activity android:name=".inquiry.InquryMember" />
         <activity android:name=".inquiry.InquryOrder" />
         <activity android:name=".push.PushView" />
-        <activity android:name=".statics.StaticsMain" />
+        <activity android:name=".statics.StaticsMain_B" />
         <activity
             android:name=".statics.StaticsOrderH"
             android:configChanges="keyboardHidden|orientation|screenSize" />
