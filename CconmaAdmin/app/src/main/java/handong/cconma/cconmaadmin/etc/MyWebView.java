@@ -45,9 +45,6 @@ public class MyWebView extends BaseActivity {
         });
 
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
-        webview.getSettings().setSupportZoom(true);
-        webview.getSettings().setBuiltInZoomControls(true);
-        webview.canGoBackOrForward(5);
         webview.getSettings().setBuiltInZoomControls(true);
         webview.loadUrl(url);
         webview.setWebViewClient(new WebClient());

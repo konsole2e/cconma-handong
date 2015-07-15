@@ -74,12 +74,9 @@ public class MainActivity extends AppCompatActivity{
     private String TITLESUSER[] = {"설정", "로그아웃"};
     private int ICONSUSER[] = {R.drawable.ic_setting_selector,
             R.drawable.ic_logout_selector};
-
-    private CharSequence TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
-    private int ICONS[] = {R.drawable.ic_board_selector, R.drawable.ic_chart_selector, R.drawable.ic_question_selector, R.drawable.ic_search_grey600_48dp, R.drawable.ic_shopping_cart_grey600_48dp, R.drawable.ic_home_selector };
-    private int returned = 0;
+    
     private int status = 0;
-    private String user_name = "개발새발";
+    private String user_name = "개발";
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     public static final String PROPERTY_REG_ID = "registration_id";
@@ -241,7 +238,7 @@ public class MainActivity extends AppCompatActivity{
                     Toast.makeText(getApplicationContext(), "menu button clicked", Toast.LENGTH_SHORT).show();
                     return true;
                 case KeyEvent.KEYCODE_BACK:
-                    Fragment webView = getSupportFragmentManager().findFragmentById(R.id.webView_b);
+                    Fragment webView = getSupportFragmentManager().findFragmentById(R.id.webView);
 
                     if (webView instanceof MainFragment) {
                         boolean goback = ((MainFragment)webView).canGoBack();
@@ -317,8 +314,6 @@ public class MainActivity extends AppCompatActivity{
         else {
             tabLayout.setVisibility(findViewById(R.id.tabLayout).GONE);
             floatingActionButton.setVisibility(findViewById(R.id.fab).GONE);
-            //final View snackbar = findViewById(R.id.snackbarPosition);
-            //Snackbar.make(snackbar, "Begin transaction", Snackbar.LENGTH_LONG).show();
             Fragment fragment = new MainFragment();
             Bundle args = new Bundle();
             args.putInt(MainFragment.POSITION, position);
@@ -327,14 +322,7 @@ public class MainActivity extends AppCompatActivity{
             fragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.replace(R.id.main_content_frame, fragment, "fragment");
-            //ft.addToBackStack("fragment");
             ft.commit();
-            /*fragmentManager = getFragmentManager();
-            android.app.FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.replace(R.id.main_content_frame, fragment, "fragment");
-            ft.addToBackStack("fragment");
-            Log.d(TAG, String.valueOf(fragmentManager.getBackStackEntryCount()));
-            ft.commit();*/
         }
     }
 
