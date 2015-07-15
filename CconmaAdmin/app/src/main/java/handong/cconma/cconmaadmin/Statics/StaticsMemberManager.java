@@ -24,7 +24,6 @@ import handong.cconma.cconmaadmin.R;
 
 public class StaticsMemberManager {
     Context con;
-    ArrayList<String> result;
 
     public StaticsMemberManager(Context context) {
         con = context;
@@ -199,7 +198,7 @@ public class StaticsMemberManager {
         return dataSets;
     }
 
-    public boolean getData(String[] str) {
+   /* public boolean getData(String[] str) {
         for (String url : str) {
             try {
                 String line = null;
@@ -232,5 +231,5 @@ public class StaticsMemberManager {
             }
         }
         return true;
-    }
+    }*/
 }

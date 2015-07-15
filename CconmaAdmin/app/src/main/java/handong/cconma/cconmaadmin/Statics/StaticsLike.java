@@ -56,7 +56,6 @@ public class StaticsLike extends Activity implements JSONResponse {
         setting.commonSetting(monthlyChart);
 
 
-
         mvD.attachChart(dailyChart, "명");
         mvW.attachChart(weeklyChart, "명");
         mvM.attachChart(monthlyChart, "명");
