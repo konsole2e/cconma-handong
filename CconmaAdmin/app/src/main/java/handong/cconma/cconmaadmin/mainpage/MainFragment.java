@@ -62,15 +62,21 @@ public class MainFragment extends Fragment implements View.OnClickListener{
             memberRcnt.setOnClickListener(this);
         }
         else {
-            rootView = inflater.inflate(R.layout.webview_b, container, false);
-
-            webview = (WebView) rootView.findViewById(R.id.webView_b);
-
-            webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
-            webview.getSettings().setBuiltInZoomControls(true);
-            webview.canGoBackOrForward(5);
-            webview.loadUrl("http://www.cconma.com/CconmaAdmin/login.fmv?cmd=loginForm&path=%2FCconmaAdmin%2Fmain.fmv");
-            webview.setWebViewClient(new WebClient());
+            rootView = inflater.inflate(R.layout.webview, container, false);
+            switch(position){
+                case 3:
+                    openWebView(rootView, "http://www.cconma.com/admin/help_board/help_board_list.pmv");
+                    break;
+                case 4:
+                    openWebView(rootView, "http://www.cconma.com/CconmaAdmin/member.fmv?cmd=list");
+                    break;
+                case 5:
+                    openWebView(rootView, "http://www.cconma.com/CconmaAdmin/orderList.fmv?cmd=list");
+                    break;
+                case 6:
+                    openWebView(rootView, "http://www.cconma.com/CconmaAdmin/main.fmv");
+                    break;
+            }
         }
         getActivity().setTitle(TITLES[position - 1]);
 
@@ -79,6 +85,16 @@ public class MainFragment extends Fragment implements View.OnClickListener{
 
     public boolean canGoBack() {
         return webview.canGoBack();
+    }
+
+    public void openWebView(View view, String url){
+        webview = (WebView) view.findViewById(R.id.webView);
+
+        webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
+        webview.getSettings().setBuiltInZoomControls(true);
+        webview.canGoBackOrForward(5);
+        webview.loadUrl("http://www.cconma.com/CconmaAdmin/login.fmv?cmd=loginForm&path=%2FCconmaAdmin%2Fmain.fmv");
+        webview.setWebViewClient(new WebClient());
     }
 
     @Override

@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity{
                     Toast.makeText(getApplicationContext(), "menu button clicked", Toast.LENGTH_SHORT).show();
                     return true;
                 case KeyEvent.KEYCODE_BACK:
-                    Fragment webView = getSupportFragmentManager().findFragmentById(R.id.webView_b);
+                    Fragment webView = getSupportFragmentManager().findFragmentById(R.id.webView);
 
                     if (webView instanceof MainFragment) {
                         boolean goback = ((MainFragment)webView).canGoBack();
@@ -317,8 +317,6 @@ public class MainActivity extends AppCompatActivity{
         else {
             tabLayout.setVisibility(findViewById(R.id.tabLayout).GONE);
             floatingActionButton.setVisibility(findViewById(R.id.fab).GONE);
-            //final View snackbar = findViewById(R.id.snackbarPosition);
-            //Snackbar.make(snackbar, "Begin transaction", Snackbar.LENGTH_LONG).show();
             Fragment fragment = new MainFragment();
             Bundle args = new Bundle();
             args.putInt(MainFragment.POSITION, position);
@@ -327,14 +325,7 @@ public class MainActivity extends AppCompatActivity{
             fragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.replace(R.id.main_content_frame, fragment, "fragment");
-            //ft.addToBackStack("fragment");
             ft.commit();
-            /*fragmentManager = getFragmentManager();
-            android.app.FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.replace(R.id.main_content_frame, fragment, "fragment");
-            ft.addToBackStack("fragment");
-            Log.d(TAG, String.valueOf(fragmentManager.getBackStackEntryCount()));
-            ft.commit();*/
         }
     }
 
