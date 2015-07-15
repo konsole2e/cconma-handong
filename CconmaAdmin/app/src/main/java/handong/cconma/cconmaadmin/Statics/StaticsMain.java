@@ -8,7 +8,7 @@ import android.widget.Button;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.mainpage.BaseActivity;
 
-public class StaticsMain extends BaseActivity implements View.OnClickListener {
+public class StaticsMain extends BaseActivity implements View.OnClickListener{
     private Button orderH;
     private Button orderRcnt;
     private Button trade;
