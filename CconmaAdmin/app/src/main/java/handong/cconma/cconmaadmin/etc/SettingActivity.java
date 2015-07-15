@@ -24,6 +24,7 @@ public class SettingActivity extends AppCompatActivity {
     Switch switch_push_board;
     Switch switch_push_happyrice;
     Switch switch_push_qna;
+    Switch switch_icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -41,11 +42,13 @@ public class SettingActivity extends AppCompatActivity {
         switch_push_board = (Switch)findViewById(R.id.switch_push_board);
         switch_push_happyrice = (Switch)findViewById(R.id.switch_push_happyrice);
         switch_push_qna = (Switch)findViewById(R.id.switch_push_qna);
+        switch_icon = (Switch)findViewById(R.id.switch_icon);
 
         switch_push.setOnCheckedChangeListener(switchCheck);
         switch_push_board.setOnCheckedChangeListener(switchCheck);
         switch_push_happyrice.setOnCheckedChangeListener(switchCheck);
         switch_push_qna.setOnCheckedChangeListener(switchCheck);
+        switch_icon.setOnCheckedChangeListener(switchCheck);
     }
 
     CompoundButton.OnCheckedChangeListener switchCheck = new CompoundButton.OnCheckedChangeListener() {
@@ -68,16 +71,23 @@ public class SettingActivity extends AppCompatActivity {
                     break;
                 case R.id.switch_push_happyrice:
                     if(isChecked){
-                        Toast.makeText(getApplicationContext(), "행밥 알림 끄기", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "행밥 알림 켜기", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getApplicationContext(), "행밥 알림 끄기", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.switch_push_qna:
                     if(isChecked){
-                        Toast.makeText(getApplicationContext(), "1:1문의 게시판 알림 끄기", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "1:1문의 게시판 알림 켜기", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getApplicationContext(), "1:1문의 게시판 알림 끄기", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case R.id.switch_icon:
+                    if(isChecked){
+                        Toast.makeText(getApplicationContext(), "알림 바로가기 켜기", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "알림 바로가기 끄기", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
