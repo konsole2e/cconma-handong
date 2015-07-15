@@ -35,7 +35,7 @@ public class StaticsMemberRecent extends Activity implements JSONResponse {
         backPressCloseHandler = new BackPressCloseHandler(this);
         setting = new StaticsCommonSetting();
 
-         manager = new StaticsMemberRecManager(this);
+        manager = new StaticsMemberRecManager(this);
 
         StaticsMarkerViewRecent mvPc = new StaticsMarkerViewRecent(this, R.layout.statics_marker_view_layout);
         StaticsMarkerViewRecent mvMob = new StaticsMarkerViewRecent(this, R.layout.statics_marker_view_layout);
@@ -85,39 +85,45 @@ public class StaticsMemberRecent extends Activity implements JSONResponse {
 
 /*
         pcChart.setDoubleTapToZoomEnabled(false);
-        mobChart.setDoubleTapToZoomEnabled(false)*/;
-
+        mobChart.setDoubleTapToZoomEnabled(false)*/
+        ;
 
 
         (findViewById(R.id.member_recent_pc_zoom)).setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 if (mode == false) {
-                     mode = true;
-                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+            @Override
+            public void onClick(View v) {
+                if (mode == false) {
+                    mode = true;
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     // pcChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                     setting.zoomSetting(pcChart);
-                     mobChart.setVisibility(View.GONE);
-                     (findViewById(R.id.member_recent_pc_rl)).setVisibility(View.GONE);
-                     (findViewById(R.id.member_recent_mobile_rl)).setVisibility(View.GONE);
-                 }
-             }
-         });
+                    setting.zoomSetting(pcChart);
+                    mobChart.setVisibility(View.GONE);
+                    (findViewById(R.id.member_recent_pc_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.member_recent_mobile_rl)).setVisibility(View.GONE);
+                }
+            }
+        });
 
         (findViewById(R.id.member_recent_mobile_zoom)).setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  if (mode == false) {
-                      mode = true;
-                      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
-                      //mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                      setting.zoomSetting(mobChart);
-                      pcChart.setVisibility(View.GONE);
-                      (findViewById(R.id.member_recent_pc_rl)).setVisibility(View.GONE);
-                      (findViewById(R.id.member_recent_mobile_rl)).setVisibility(View.GONE);
-                  }
-              }
-          });
+            @Override
+            public void onClick(View v) {
+                if (mode == false) {
+                    mode = true;
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                    //mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    setting.zoomSetting(mobChart);
+                    pcChart.setVisibility(View.GONE);
+                    (findViewById(R.id.member_recent_pc_rl)).setVisibility(View.GONE);
+                    (findViewById(R.id.member_recent_mobile_rl)).setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    public void refresh() {
+        pcChart.invalidate();
+        mobChart.invalidate();
+        return;
     }
 
     @Override
@@ -125,6 +131,7 @@ public class StaticsMemberRecent extends Activity implements JSONResponse {
         int i = 0;
         pcChart.setData(manager.setting("PC", output.get(i++)));
         mobChart.setData(manager.setting("모바일", output.get(i++)));
+        refresh();
         return;
     }
 

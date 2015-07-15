@@ -164,6 +164,13 @@ public class StaticsMember extends Activity implements JSONResponse{
 
     }
 
+    public void refresh(){
+        dailyChart.invalidate();
+        weeklyChart.invalidate();
+        monthlyChart.invalidate();
+        return;
+    }
+
     @Override
     public void processFinish(ArrayList<JSONObject> output) {
         int i = 0;
@@ -172,6 +179,8 @@ public class StaticsMember extends Activity implements JSONResponse{
         weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG(output.get(i++)));
         monthlyChart.setData(manager.monthlyChartSetting(output.get(i)));
         monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG(output.get(i++)));
+
+        refresh();
         return;
     }
 

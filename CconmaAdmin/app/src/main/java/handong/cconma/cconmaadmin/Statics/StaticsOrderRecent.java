@@ -117,11 +117,18 @@ public class StaticsOrderRecent extends Activity implements JSONResponse {
         });
     }
 
+    public void refresh() {
+        pcChart.invalidate();
+        mobChart.invalidate();
+        return;
+    }
+
     @Override
     public void processFinish(ArrayList<JSONObject> output) {
         int i = 0;
         pcChart.setData(manager.setting("PC", output.get(i++)));
         mobChart.setData(manager.setting("모바일", output.get(i++)));
+        refresh();
         return;
 
     }
