@@ -74,7 +74,9 @@ public class MainActivity extends AppCompatActivity{
     private String TITLESUSER[] = {"설정", "로그아웃"};
     private int ICONSUSER[] = {R.drawable.ic_setting_selector,
             R.drawable.ic_logout_selector};
-    
+
+    private CharSequence TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
+    private int ICONS[] = {R.drawable.ic_board_selector, R.drawable.ic_chart_selector, R.drawable.ic_question_selector, R.drawable.ic_search_grey600_48dp, R.drawable.ic_shopping_cart_grey600_48dp, R.drawable.ic_home_selector };
     private int status = 0;
     private String user_name = "개발";
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
