@@ -93,7 +93,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
         webview.getSettings().setBuiltInZoomControls(true);
         webview.canGoBackOrForward(5);
-        webview.loadUrl("http://www.cconma.com/CconmaAdmin/login.fmv?cmd=loginForm&path=%2FCconmaAdmin%2Fmain.fmv");
+        webview.loadUrl(url);
         webview.setWebViewClient(new WebClient());
     }
 

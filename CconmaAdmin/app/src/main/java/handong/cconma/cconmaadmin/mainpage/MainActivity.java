@@ -39,6 +39,7 @@ import android.os.Handler;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
+import handong.cconma.cconmaadmin.etc.SettingActivity;
 import handong.cconma.cconmaadmin.push.PushView;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
 import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity{
                             recyclerView.setAdapter(recyclerAdapter);
                             status = 0;
                         }
-                    } else {
+                    } else if(position != 0 && status == 0){
                         mDrawerLayout.closeDrawers();
 
                         new Handler().postDelayed(new Runnable() {
@@ -155,6 +156,15 @@ public class MainActivity extends AppCompatActivity{
                                 selectItem(position);
                             }
                         }, 350);
+                    } else if(position != 0 && status == 1){
+                        switch(position){
+                            case 1:
+                                startActivity(new Intent(getApplicationContext(), SettingActivity.class));
+                                break;
+                            case 2:
+                                //logout
+                                break;
+                        }
                     }
                     return true;
                 }

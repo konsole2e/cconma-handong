@@ -36,6 +36,9 @@
         </activity>
         <activity
             android:name=".etc.SettingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mainpage.MainActivity" />
         </activity>
 
         <activity
@@ -74,9 +77,11 @@
                 android:value=".mainpage.MainActivity" />
         </activity>
 
-        <activity android:name=".inquiry.InquryMember" />
-        <activity android:name=".inquiry.InquryOrder" />
-        <activity android:name=".push.PushView" />
+        <activity android:name=".push.PushView">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".mainpage.MainActivity" />
+        </activity>
         <activity android:name=".statics.StaticsMain_B" />
         <activity
             android:name=".statics.StaticsOrderH"
