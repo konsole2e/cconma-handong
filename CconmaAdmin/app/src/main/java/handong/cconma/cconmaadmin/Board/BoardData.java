@@ -5,11 +5,15 @@ package handong.cconma.cconmaadmin.board;
  */
 public class BoardData {
 
-    public String board_date;
-    public String board_title;
-    public String board_notice;
-    public String board_writer;
-    public int board_comment_num;
-    public boolean board_marked;
-    public boolean board_file;
+    public int board_num;           //게시판 번호
+    public int article_num;         //게시글 번호
+
+    public String board_date;       //게시글 날짜
+    public String board_title;      //게시글 제목
+    public String board_notice;     //알림 종류
+    public String board_writer;     //작성자
+    public int board_comment_num;   //댓글 수
+    public boolean board_file;      //파일 여부
+
+    public boolean board_marked;    //즐겨찾기 여부
 }

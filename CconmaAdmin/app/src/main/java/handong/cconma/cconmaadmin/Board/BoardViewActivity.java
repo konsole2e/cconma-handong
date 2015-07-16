@@ -274,6 +274,7 @@ public class BoardViewActivity extends AppCompatActivity{
                 @Override
                 public void onClick(View v) {
                     String currentComment = edit_board_view_comment.getText().toString();
+
                     edit_board_view_comment.setText(currentComment + "@" + data.commnet_writer);
                     Editable edt = edit_board_view_comment.getText();
                     Selection.setSelection(edt, edt.length());
