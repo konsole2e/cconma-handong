@@ -62,6 +62,7 @@
         <ListView
             android:id="@+id/board_list"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="104dp"/>
     </LinearLayout>
 </FrameLayout>

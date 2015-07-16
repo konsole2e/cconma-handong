@@ -117,20 +117,20 @@ public class PageFragment extends Fragment {
         list_board.addFooterView(footer, null, false);
         BoardAdapter adapter_board = new BoardAdapter(view.getContext());
         list_board.setAdapter(adapter_board);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
-        adapter_board.addItem("7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("1-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("2-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, true);
+        adapter_board.addItem("3-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
+        adapter_board.addItem("4-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("5-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
+        adapter_board.addItem("6-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("7-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("8-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, false);
+        adapter_board.addItem("9-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("10-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, true);
+        adapter_board.addItem("11-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
+        adapter_board.addItem("12-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
+        adapter_board.addItem("13-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
+        adapter_board.addItem("14-제일 아래거.", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
 
         paging(20542, 20, 1);
         list_board.setFocusable(false);
@@ -197,7 +197,7 @@ public class PageFragment extends Fragment {
     public void paging(int total_article, int view_article, final int current_page) {
 
         // 페이지 그룹 단위
-        int page_group = 10;
+        int page_group = 5;
 
         // 전체 페이지 수 = 전체 글의 수 / 한 페이지에 볼 글의 수
         int total_page = (int) Math.ceil(total_article / view_article);
@@ -237,7 +237,8 @@ public class PageFragment extends Fragment {
 
             TextView prevButton = new TextView(getActivity().getApplicationContext());
             prevButton.setWidth(40);
-            prevButton.setHeight(60);
+            prevButton.setHeight(100);
+            prevButton.setPadding(0, 20, 0, 0);
             prevButton.setTextSize(18);
             prevButton.setText("<");
             prevButton.setClickable(false);
@@ -262,7 +263,8 @@ public class PageFragment extends Fragment {
                 // 현재 페이지 버튼은 선택할 수 없음
                 TextView pageButton = new TextView(getActivity().getApplicationContext());
                 pageButton.setWidth(40);
-                pageButton.setHeight(60);
+                pageButton.setHeight(100);
+                pageButton.setPadding(0, 20, 0, 0);
                 pageButton.setTextSize(18);
                 pageButton.setTextColor(Color.BLUE);
                 pageButton.setText(""+i);
@@ -274,7 +276,8 @@ public class PageFragment extends Fragment {
                 // 해당 페이지로 이동하는 버튼
                 final TextView pageButton = new TextView(getActivity().getApplicationContext());
                 pageButton.setWidth(40);
-                pageButton.setHeight(60);
+                pageButton.setHeight(100);
+                pageButton.setPadding(0, 20, 0, 0);
                 pageButton.setTextSize(18);
                 pageButton.setText(""+i);
                 ((LinearLayout)view.findViewById(R.id.board_list_footer_layout)).addView(pageButton);
@@ -294,7 +297,8 @@ public class PageFragment extends Fragment {
 
             TextView nextButton = new TextView(getActivity().getApplicationContext());
             nextButton.setWidth(40);
-            nextButton.setHeight(60);
+            nextButton.setHeight(100);
+            nextButton.setPadding(0, 20, 0, 0);
             nextButton.setTextSize(18);
             nextButton.setText(">");
             nextButton.setClickable(false);
