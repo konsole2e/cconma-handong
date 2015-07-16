@@ -57,6 +57,13 @@ public class PageFragment extends Fragment {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+
+        btn_board_search_view.setChecked(false);
+        layout_board_search.setVisibility(View.GONE);
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.board_fragment, container, false);
@@ -82,16 +89,6 @@ public class PageFragment extends Fragment {
                 android.R.layout.simple_spinner_item, cond);
         spinner_board_condition.setAdapter(adapter);
         spinner_board_condition.setSelection(0);
-        spinner_board_condition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ((TextView)parent.getChildAt(0)).setTextColor(Color.BLACK);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
         //검색 입력
         edit_board_search = (EditText)view.findViewById(R.id.edit_board_search);
         //검색하기 버튼
@@ -240,6 +237,7 @@ public class PageFragment extends Fragment {
             prevButton.setHeight(100);
             prevButton.setPadding(0, 20, 0, 0);
             prevButton.setTextSize(18);
+            prevButton.setTextColor(Color.BLACK);
             prevButton.setText("<");
             prevButton.setClickable(false);
             ((LinearLayout)view.findViewById(R.id.board_list_footer_layout)).addView(prevButton);
@@ -279,6 +277,7 @@ public class PageFragment extends Fragment {
                 pageButton.setHeight(100);
                 pageButton.setPadding(0, 20, 0, 0);
                 pageButton.setTextSize(18);
+                pageButton.setTextColor(Color.BLACK);
                 pageButton.setText(""+i);
                 ((LinearLayout)view.findViewById(R.id.board_list_footer_layout)).addView(pageButton);
                 pageButton.setOnClickListener(new View.OnClickListener() {
@@ -300,6 +299,7 @@ public class PageFragment extends Fragment {
             nextButton.setHeight(100);
             nextButton.setPadding(0, 20, 0, 0);
             nextButton.setTextSize(18);
+            nextButton.setTextColor(Color.BLACK);
             nextButton.setText(">");
             nextButton.setClickable(false);
             ((LinearLayout) view.findViewById(R.id.board_list_footer_layout)).addView(nextButton);
