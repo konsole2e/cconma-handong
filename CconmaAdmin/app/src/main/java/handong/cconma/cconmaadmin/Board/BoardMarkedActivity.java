@@ -34,11 +34,10 @@ public class BoardMarkedActivity extends AppCompatActivity {
         list_board_marked = (ListView)findViewById(R.id.list_board_marked);
         adapter_marked = new BoardAdapter(this);
         list_board_marked.setAdapter(adapter_marked);
-        adapter_marked.addItem("제목", "김은지", "전체알림", "2015/07/07", 3, true, true);
-        adapter_marked.addItem("제목", "김은지", "전체알림", "2015/07/07", 2, false, true);
-        adapter_marked.addItem("제목", "김은지", "전체알림", "2015/07/07", 1, true, false);
-        adapter_marked.addItem("제목", "김은지", "전체알림", "2015/07/07", 9, true, false);
-        adapter_marked.addItem("제목", "김은지", "전체알림", "2015/07/07", 3, false, true);
+
+        /* 데이터 넣기 */
+
+
         list_board_marked.setFocusable(false);
 
         list_board_marked.setOnItemClickListener(new AdapterView.OnItemClickListener() {

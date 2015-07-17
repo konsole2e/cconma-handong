@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,10 +18,17 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.logging.Handler;
 
 import handong.cconma.cconmaadmin.board.BoardAdapter;
 import handong.cconma.cconmaadmin.board.BoardViewActivity;
@@ -32,6 +41,12 @@ public class PageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     private static int layoutName;
     private int mPage;
+
+    ProgressBar progress;
+
+    boolean lastitemVisibleFlag;
+    ListView list_board;
+    BoardAdapter adapter_board;
 
     ToggleButton btn_board_search_view;
     FrameLayout layout_board_search;
@@ -67,6 +82,7 @@ public class PageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.board_fragment, container, false);
+        progress = (ProgressBar)view.findViewById(R.id.progress_list_update);
 
         //검색창 열기/닫기 버튼
         btn_board_search_view = (ToggleButton)view.findViewById(R.id.btn_board_search_view);
@@ -85,7 +101,7 @@ public class PageFragment extends Fragment {
         //검색 조건 spinner
         spinner_board_condition = (Spinner)view.findViewById(R.id.spinner_board_condition);
         String[] cond = getResources().getStringArray(R.array.board_condition);
-        SpinnerAdapter adapter = new SpinnerAdapter(getActivity().getApplicationContext(),
+        final SpinnerAdapter adapter = new SpinnerAdapter(getActivity().getApplicationContext(),
                 android.R.layout.simple_spinner_item, cond);
         spinner_board_condition.setAdapter(adapter);
         spinner_board_condition.setSelection(0);
@@ -106,30 +122,33 @@ public class PageFragment extends Fragment {
             }
         });
 
-        View footer = ((LayoutInflater)this.getActivity().getBaseContext().
+        /*View footer = ((LayoutInflater)this.getActivity().getBaseContext().
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE)).
-                inflate(R.layout.board_list_footer, null);
+                inflate(R.layout.board_list_footer, null);*/
 
-        ListView list_board = (ListView)view.findViewById(R.id.board_list);
-        list_board.addFooterView(footer, null, false);
-        BoardAdapter adapter_board = new BoardAdapter(view.getContext());
+        list_board = (ListView)view.findViewById(R.id.board_list);
+        //list_board.addFooterView(footer, null, false);
+        adapter_board = new BoardAdapter(view.getContext());
         list_board.setAdapter(adapter_board);
-        adapter_board.addItem("1-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("2-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, true);
-        adapter_board.addItem("3-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
-        adapter_board.addItem("4-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("5-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
-        adapter_board.addItem("6-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("7-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("8-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, false);
-        adapter_board.addItem("9-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("10-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, true);
-        adapter_board.addItem("11-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
-        adapter_board.addItem("12-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
-        adapter_board.addItem("13-7월 3주 공동구매 예고페이지 작업 요청", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, false, true);
-        adapter_board.addItem("14-제일 아래거.", "신명재", "전체알림", "2015/07/07\n14:02:36", 3, true, false);
 
-        paging(20542, 20, 1);
+        /**        데이터 넣기       **/
+        adapter_board.addItem(3, "12", "1223", "0", "96",
+                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+        adapter_board.addItem(1, "12", "1223", "0", "96",
+                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+        adapter_board.addItem(0, "12", "1223", "0", "96",
+                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+        adapter_board.addItem(5, "12", "1223", "0", "96",
+                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+        adapter_board.addItem(6, "12", "1223", "0", "96",
+                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+        adapter_board.addItem(10, "12", "1223", "0", "96",
+                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+        adapter_board.addItem(3, "12", "1223", "0", "96",
+                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+        adapter_board.addItem(3, "12", "1223", "0", "96",
+                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+
         list_board.setFocusable(false);
 
         list_board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -137,6 +156,34 @@ public class PageFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getActivity(), BoardViewActivity.class);
                 startActivity(i);
+            }
+        });
+        list_board.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag){
+
+                    /**        데이터 넣기       **/
+                    adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+                    adapter_board.addItem(1, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+                    adapter_board.addItem(0, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+                    adapter_board.addItem(5, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+                    adapter_board.addItem(6, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+                    adapter_board.addItem(10, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+                    adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+                    adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+
+                    //progress.setVisibility(View.VISIBLE);
+                    adapter_board.notifyDataSetChanged();
+
+                }else{
+
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                lastitemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
             }
         });
 
@@ -190,7 +237,38 @@ public class PageFragment extends Fragment {
             return convertView;
         }
     }
-    /* paging(int, int, int) : 전체 글의 수, 한 페이지에 볼 글의 수, 현재 페이지 번호 */
+
+
+    public void jsonParser(String page){
+        try{
+            JSONArray jsonArray = new JSONArray(page);
+            for(int i=0; i<jsonArray.length(); i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                JSONArray commentArr = jsonObject.getJSONArray("comment");
+
+                int comment_count = commentArr.length();
+                String board_no = jsonObject.getString("board_no");
+                String boardarticle_no = jsonObject.getString("boardarticle_no");
+                String notice_type = jsonObject.getString("notice_type");
+                String hit = jsonObject.getString("hit");
+                String reg_data = jsonObject.getString("reg_data");
+                String subject = jsonObject.getString("subject");
+                String board_short_name = jsonObject.getString("board_short_name");
+                String name = jsonObject.getString("name");
+                String article_hashtag = jsonObject.getString("article_hashtag");
+
+                adapter_board.addItem(comment_count, board_no, boardarticle_no, notice_type, hit,
+                        reg_data, subject, board_short_name, name, article_hashtag);
+            }
+
+            adapter_board.notifyDataSetChanged();
+        }catch(JSONException e){
+            Log.e("JSON", Log.getStackTraceString(e));
+        }
+    }
+
+
+    /* paging(int, int, int) : 전체 글의 수, 한 페이지에 볼 글의 수, 현재 페이지 번호
     public void paging(int total_article, int view_article, final int current_page) {
 
         // 페이지 그룹 단위
@@ -311,5 +389,5 @@ public class PageFragment extends Fragment {
 
         }
 
-    }
+    }*/
 }
