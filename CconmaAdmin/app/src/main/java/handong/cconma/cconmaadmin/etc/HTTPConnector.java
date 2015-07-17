@@ -4,24 +4,35 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.webkit.CookieManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HTTPConnector extends AsyncTask<String, Void, Boolean> {
     public JSONResponse response = null;
     private Context con;
     private ProgressDialog pd;
-    private JSONObject param = null;
+    private HashMap<String, String> param = null;
     private ArrayList<JSONObject> result = new ArrayList<>();
     private String method = "GET";
     private String msg = "잠시 기다려 주세요";
@@ -37,13 +48,13 @@ public class HTTPConnector extends AsyncTask<String, Void, Boolean> {
         response = (JSONResponse) context;
     }
 
-    public HTTPConnector(Context context, JSONObject parameter) {
+    public HTTPConnector(Context context, HashMap<String, String> parameter) {
         con = context;
         param = parameter;
         response = (JSONResponse) context;
     }
 
-    public HTTPConnector(Context context, JSONObject parameter, String requsestMethod) {
+    public HTTPConnector(Context context, HashMap<String, String> parameter, String requsestMethod) {
         con = context;
         param = parameter;
         method = requsestMethod;
@@ -67,25 +78,30 @@ public class HTTPConnector extends AsyncTask<String, Void, Boolean> {
             try {
                 String line = null;
                 String appended = "";
+
                 HttpURLConnection con = (HttpURLConnection) (new URL(s)).openConnection();
                 con.setRequestMethod(method);
-                //con.setDoOutput(true);
+                con.setDoOutput(true);
                 con.setDoInput(true);
-                BufferedInputStream is;
-                //BufferedOutputStream os;
+
+                if (param != null) {
+                    BufferedOutputStream os = new BufferedOutputStream(con.getOutputStream());
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(getPostDataString(param));
+                    writer.flush();
+                    writer.close();
+                    os.close();
+                }
 
                 if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    //os = new BufferedInputStream(con.getOutputStream());
-                    is = new BufferedInputStream(con.getInputStream());
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    BufferedInputStream is = new BufferedInputStream(con.getInputStream());
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "EUC-KR"));
                     while ((line = reader.readLine()) != null) {
                         appended = appended + line;
                     }
-                    //  os.close();
                     is.close();
                     reader.close();
-                    JSONObject j = new JSONObject(appended);
-                    result.add(j);
+                    result.add(new JSONObject(appended));
                 } else {
                     return false;
                 }
@@ -118,5 +134,26 @@ public class HTTPConnector extends AsyncTask<String, Void, Boolean> {
                     }).show();
 
         }
+    }
+
+    private String getPostDataString(HashMap<String, String> params) {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        try {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                if (first)
+                    first = false;
+                else
+                    result.append("&");
+
+                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return result.toString();
     }
 }

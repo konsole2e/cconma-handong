@@ -69,7 +69,7 @@ public class StaticsMarkerViewRecent extends MarkerView {
         entry = e;
         tv1.setVisibility(VISIBLE);
         tv1.setTextColor(lineChart.getLineData().getDataSetForEntry(e).getColor());
-        tv1.setText(lineChart.getXValue(e.getXIndex()) + " : " + String.format("%,d", (int) e.getVal()) + unit);
+        tv1.setText(lineChart.getXValue(e.getXIndex()) + " : " + String.format("%,d", (long) e.getVal()) + unit);
 
 /*        int eXIndex = e.getXIndex();
 //        invisible();

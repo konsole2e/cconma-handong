@@ -9,13 +9,19 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 
+import net.htmlparser.jericho.Source;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.etc.HTTPConnector;
@@ -28,6 +34,7 @@ public class StaticsOrderH extends Activity implements JSONResponse {
     private StaticsCommonSetting setting;
     private boolean mode = false;
     private StaticsOrderHManager manager;
+    private HashMap<View, ViewGroup.LayoutParams> views = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,9 @@ public class StaticsOrderH extends Activity implements JSONResponse {
 
         StaticsMarkerView mvPc = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
         StaticsMarkerView mvMob = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
+
+        RelativeLayout pTag = (RelativeLayout) findViewById(R.id.order_hourly_pc_rl);
+        RelativeLayout mTag = (RelativeLayout) findViewById(R.id.order_hourly_mobile_rl);
 
         pcChart = (LineChart) findViewById(R.id.order_hourly_pc_chart);
         mobChart = (LineChart) findViewById(R.id.order_hourly_mobile_chart);
@@ -59,6 +69,11 @@ public class StaticsOrderH extends Activity implements JSONResponse {
 
         pcChart.setMarkerView(mvPc);
         mobChart.setMarkerView(mvMob);
+
+        views.put(pTag, pTag.getLayoutParams());
+        views.put(pcChart, pcChart.getLayoutParams());
+        views.put(mTag, mTag.getLayoutParams());
+        views.put(mobChart, mobChart.getLayoutParams());
 
         HTTPConnector hc = new HTTPConnector(this);
         hc.setProgressMessage("차트를 그리고 있습니다.");
@@ -102,12 +117,10 @@ public class StaticsOrderH extends Activity implements JSONResponse {
                 if (mode == false) {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                    gone();
                     setting.zoomSetting(pcChart);
                   /*  pcChart.setScaleEnabled(true);
                     pcChart.setPinchZoom(true);*/
-                    mobChart.setVisibility(View.GONE);
-                    (findViewById(R.id.order_hourly_pc_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.order_hourly_mobile_rl)).setVisibility(View.GONE);
                 }
             }
         });
@@ -118,11 +131,9 @@ public class StaticsOrderH extends Activity implements JSONResponse {
                 if (mode == false) {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                    gone();
                     setting.zoomSetting(mobChart);
                     //mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                    pcChart.setVisibility(View.GONE);
-                    (findViewById(R.id.order_hourly_pc_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.order_hourly_mobile_rl)).setVisibility(View.GONE);
                 }
             }
         });
@@ -133,6 +144,22 @@ public class StaticsOrderH extends Activity implements JSONResponse {
         mobChart.invalidate();
         return;
     }
+
+    public void visible() {
+        for (Map.Entry<View, ViewGroup.LayoutParams> e : views.entrySet()) {
+            View v = e.getKey();
+            v.setVisibility(View.VISIBLE);
+            v.setLayoutParams(e.getValue());
+        }
+    }
+
+    public void gone() {
+        for (Map.Entry<View, ViewGroup.LayoutParams> e : views.entrySet()) {
+            View v = e.getKey();
+            v.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void processFinish(ArrayList<JSONObject> output) {
         int i = 0;
@@ -159,11 +186,11 @@ public class StaticsOrderH extends Activity implements JSONResponse {
             if (mode && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
                 mode = false;
-                activity.recreate();
+                visible();
             } else if (mode && config.orientation == Configuration.ORIENTATION_PORTRAIT) {// 세로
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                 mode = false;
-                activity.recreate();
+                visible();
             } else {
                 activity.finish();
             }

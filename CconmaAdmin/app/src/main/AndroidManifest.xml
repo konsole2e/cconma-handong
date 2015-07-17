@@ -74,8 +74,6 @@
                 android:value=".mainpage.MainActivity" />
         </activity>
 
-        <activity android:name=".inquiry.InquryMember" />
-        <activity android:name=".inquiry.InquryOrder" />
         <activity android:name=".push.PushView" />
         <activity android:name=".statics.StaticsMain_B" />
         <activity

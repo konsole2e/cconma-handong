@@ -80,7 +80,7 @@ public class StaticsMarkerView extends MarkerView {
                 TextView tv = tvs.get(i);
                 tv.setVisibility(VISIBLE);
                 tv.setTextColor(lineChart.getLineData().getDataSetByIndex(i).getColor());
-                tv.setText(lineChart.getLineData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (int) set.get(i).getVal()) + unit);
+                tv.setText(lineChart.getLineData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
             }
         } else if (barChart != null) {
             List<Entry> set = barChart.getEntriesAtIndex(eXIndex);
@@ -88,19 +88,19 @@ public class StaticsMarkerView extends MarkerView {
                 TextView tv = tvs.get(i);
                 tv.setVisibility(VISIBLE);
                 tv.setTextColor(barChart.getBarData().getDataSetByIndex(i).getColor());
-                tv.setText(barChart.getBarData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (int) set.get(i).getVal()) + unit);
+                tv.setText(barChart.getBarData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
             }
         } else if (combinedChart != null) {
             List<Entry> set = combinedChart.getEntriesAtIndex(eXIndex);
             for (int i = 0; i < set.size(); i++) {
                 TextView tv = tvs.get(i);
-                if (combinedChart.getData().getDataSetByIndex(i).getLabel().equals("현재 시각") && (int) set.get(i).getVal() == 0) {
+                if (combinedChart.getData().getDataSetByIndex(i).getLabel().equals("현재 시각") && (long) set.get(i).getVal() == 0) {
                     tv.setVisibility(GONE);
                     continue;
                 }
                 tv.setVisibility(VISIBLE);
                 tv.setTextColor(combinedChart.getData().getDataSetByIndex(i).getColor());
-                tv.setText(combinedChart.getData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (int) set.get(i).getVal()) + unit);
+                tv.setText(combinedChart.getData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
             }
         } else {
             return;

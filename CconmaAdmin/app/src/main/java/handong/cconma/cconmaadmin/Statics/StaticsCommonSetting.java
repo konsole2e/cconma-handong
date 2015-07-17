@@ -1,5 +1,6 @@
 package handong.cconma.cconmaadmin.statics;
 
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -41,6 +42,7 @@ public class StaticsCommonSetting {
     }
 
     public void zoomSetting(LineChart line) {
+        line.setVisibility(View.VISIBLE);
         line.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         line.setScaleEnabled(true);
         line.setPinchZoom(true);
@@ -77,6 +79,7 @@ public class StaticsCommonSetting {
     }
 
     public void zoomSetting(BarChart bar) {
+        bar.setVisibility(View.VISIBLE);
         bar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         bar.setScaleEnabled(true);
         bar.setPinchZoom(true);
@@ -119,6 +122,7 @@ public class StaticsCommonSetting {
     }
 
     public void zoomSetting(CombinedChart combine) {
+        combine.setVisibility(View.VISIBLE);
         combine.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         combine.setScaleEnabled(true);
         combine.setPinchZoom(true);

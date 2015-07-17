@@ -1,6 +1,7 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.data.BarData;
@@ -12,13 +13,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
+
+import javax.xml.transform.Source;
 
 import handong.cconma.cconmaadmin.R;
 
@@ -30,7 +27,6 @@ public class StaticsLikeManager {
     }
 
     public BarData dailyChartSetting(JSONObject json) {
-
         BarData data = new BarData(generateDailyXVals(), generateDailyBarData(json));
         //data.setData(generateDailyLineData());
         data.setGroupSpace(80f);
@@ -62,7 +58,7 @@ public class StaticsLikeManager {
         ArrayList<Entry> e = new ArrayList<Entry>();
 
         for (int i = 0; i < 13; i++) {
-            e.add(new Entry((float) Math.random() * 10000000, i));
+            e.add(new Entry((float) Math.random() * 1000000000, i));
         }
 
         LineDataSet set = new LineDataSet(e, "단골등록(월간)");
@@ -99,9 +95,7 @@ public class StaticsLikeManager {
         return ll;
     }
 
-
 /*
-
     public CombinedData dailyChartSetting() {
         CombinedData data = new CombinedData(generateXValues());
         data.setData(generateDailyLineData());
@@ -109,9 +103,7 @@ public class StaticsLikeManager {
 
         return data;
     }
-*/
-
-    /*    private LineData generateDailyLineData() {
+   private LineData generateDailyLineData() {
             LineData d = new LineData();
 
             ArrayList<Entry> e = new ArrayList<>();

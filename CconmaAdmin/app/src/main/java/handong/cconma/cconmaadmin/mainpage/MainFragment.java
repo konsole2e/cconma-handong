@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.statics.StaticsLike;
+import handong.cconma.cconmaadmin.statics.StaticsMain_B;
 import handong.cconma.cconmaadmin.statics.StaticsMember;
 import handong.cconma.cconmaadmin.statics.StaticsMemberRecent;
 import handong.cconma.cconmaadmin.statics.StaticsOrderH;
@@ -43,12 +44,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
             rootView = inflater.inflate(R.layout.statics_main, container, false);
 
             Button orderH = (Button)rootView.findViewById(R.id.order_hourly_btn);
-            orderH.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
+            orderH.setOnClickListener(this);
             Button orderRcnt = (Button)rootView.findViewById(R.id.order_recent_btn);
             Log.d("Debugging", String.valueOf(orderH.getId()));
             orderRcnt.setOnClickListener(this);
@@ -93,7 +89,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
         webview.getSettings().setBuiltInZoomControls(true);
         webview.canGoBackOrForward(5);
-        webview.loadUrl("http://www.cconma.com/CconmaAdmin/login.fmv?cmd=loginForm&path=%2FCconmaAdmin%2Fmain.fmv");
+        webview.loadUrl(url);
         webview.setWebViewClient(new WebClient());
     }
 
