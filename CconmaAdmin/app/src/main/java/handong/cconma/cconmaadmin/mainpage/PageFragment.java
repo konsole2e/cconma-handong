@@ -3,6 +3,7 @@ package handong.cconma.cconmaadmin.mainpage;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,7 +29,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import handong.cconma.cconmaadmin.board.BoardAdapter;
 import handong.cconma.cconmaadmin.board.BoardViewActivity;
@@ -42,9 +45,11 @@ public class PageFragment extends Fragment {
     private static int layoutName;
     private int mPage;
 
+    LinearLayout layout_list_update;
     ProgressBar progress;
 
     boolean lastitemVisibleFlag;
+    boolean lock = false;
     ListView list_board;
     BoardAdapter adapter_board;
 
@@ -82,6 +87,8 @@ public class PageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.board_fragment, container, false);
+
+        layout_list_update = (LinearLayout)view.findViewById(R.id.layout_list_update);
         progress = (ProgressBar)view.findViewById(R.id.progress_list_update);
 
         //검색창 열기/닫기 버튼
@@ -161,20 +168,24 @@ public class PageFragment extends Fragment {
         list_board.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag){
+                if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag && (lock == false)){
 
                     /**        데이터 넣기       **/
-                    adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+                    layout_list_update.setVisibility(View.VISIBLE);
+
+                    //progress.setVisibility(View.VISIBLE);
+
+                    new getMoreItems().execute();
+                    /*adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
                     adapter_board.addItem(1, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
                     adapter_board.addItem(0, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
                     adapter_board.addItem(5, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
                     adapter_board.addItem(6, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
                     adapter_board.addItem(10, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
                     adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-                    adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+                    adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");*/
 
-                    //progress.setVisibility(View.VISIBLE);
-                    adapter_board.notifyDataSetChanged();
+                    //adapter_board.notifyDataSetChanged();
 
                 }else{
 
@@ -267,6 +278,48 @@ public class PageFragment extends Fragment {
         }
     }
 
+    private class getMoreItems extends AsyncTask<ArrayList<String>, Integer, Long>{
+
+        @Override
+        protected Long doInBackground(ArrayList<String>... params) {
+
+            lock = true;
+            /**        데이터 넣기       **/
+            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "11글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(1, "12", "1223", "0", "96", "07/16 14:24", "12글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(0, "12", "1223", "0", "96", "07/16 14:24", "13글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(5, "12", "1223", "0", "96", "07/16 14:24", "14글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(6, "12", "1223", "0", "96", "07/16 14:24", "15글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(10, "12", "1223", "0", "96", "07/16 14:24", "16글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "17글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "18글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "19글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(1, "12", "1223", "0", "96", "07/16 14:24", "20글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(0, "12", "1223", "0", "96", "07/16 14:24", "21글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(5, "12", "1223", "0", "96", "07/16 14:24", "22글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(6, "12", "1223", "0", "96", "07/16 14:24", "23글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(10, "12", "1223", "0", "96", "07/16 14:24", "24글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "25글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "26글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+
+
+
+            try{
+                Thread.sleep(3000);
+            }catch(Exception e){
+
+            }
+
+            return null;
+        }
+
+        protected void onPostExecute(Long result){
+            adapter_board.notifyDataSetChanged();
+            layout_list_update.setVisibility(View.GONE);
+            lock = false;
+            //progress.setVisibility(View.GONE);
+        }
+    }
 
     /* paging(int, int, int) : 전체 글의 수, 한 페이지에 볼 글의 수, 현재 페이지 번호
     public void paging(int total_article, int view_article, final int current_page) {

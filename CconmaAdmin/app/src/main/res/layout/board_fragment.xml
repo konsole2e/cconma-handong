@@ -65,11 +65,26 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="104dp"/>
     </LinearLayout>
-    <ProgressBar
-        android:id="@+id/progress_list_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="104dp"
-        android:visibility="gone"/>
+    <LinearLayout
+        android:id="@+id/layout_list_update"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal|bottom"
+        android:layout_marginBottom="115dp"
+        android:clickable="true"
+        android:visibility="gone">
+        <ProgressBar
+            android:id="@+id/progress_list_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateDrawable="@drawable/progress_large"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="로딩중..."
+            style="@style/MediumBlack"/>
+    </LinearLayout>
 </FrameLayout>
