@@ -204,7 +204,7 @@ public class PageFragment extends Fragment {
                     adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
                     adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");*/
 
-                    //adapter_board.notifyDataSetChanged();
+                    //adapter_board.notifyDataSetChanged();햐
 
                 } else {
 
