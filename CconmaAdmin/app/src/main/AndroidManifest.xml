@@ -31,9 +31,10 @@
 
         <activity android:name=".mainpage.MainActivity"/>
 
-        <activity
-            android:name=".etc.MyWebView">
-        </activity>
+        <activity android:name=".etc.LoginWebView"/>
+
+        <activity android:name=".etc.MyWebView"/>
+
         <activity
             android:name=".etc.SettingActivity">
             <meta-data

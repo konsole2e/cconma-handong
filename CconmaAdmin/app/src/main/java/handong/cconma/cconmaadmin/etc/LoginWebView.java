@@ -3,25 +3,26 @@ package handong.cconma.cconmaadmin.etc;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.mainpage.BaseActivity;
+import handong.cconma.cconmaadmin.mainpage.MainActivity;
+import handong.cconma.cconmaadmin.mainpage.testActivity;
 
 /**
- * Created by Young Bin Kim on 2015-07-06.
+ * Created by Young Bin Kim on 2015-07-20.
  */
-public class MyWebView extends BaseActivity {
-    Toolbar toolbar;
-    android.webkit.WebView webview;
+public class LoginWebView extends BaseActivity {
+    private android.webkit.WebView webview;
     private String url;
 
     @Override
@@ -68,9 +69,20 @@ public class MyWebView extends BaseActivity {
 
     class WebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
-            view.loadUrl(url);
-            return true;
+
+            if(url.contains("index.pmv")){
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                return true;
+            }else {
+                return super.shouldOverrideUrlLoading(view, url);
+            }
         }
+
+        public void onPageStarted(WebView view, String url,
+                                  android.graphics.Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        };
+
         public void onPageFinished(WebView view, String url){
             Cookies.getInstance().updateCookies(url);
         }

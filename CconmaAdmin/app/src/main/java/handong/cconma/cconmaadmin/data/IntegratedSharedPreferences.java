@@ -47,6 +47,14 @@ public class IntegratedSharedPreferences {
             editor.apply();
         }
 
+        public void remove(String key){
+            SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+
+            editor.remove(key);
+            editor.apply();
+        }
+
         public String getValue(String key, String dftValue) {
             SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME,
                     Activity.MODE_PRIVATE);

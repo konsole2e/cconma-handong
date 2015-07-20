@@ -22,6 +22,13 @@
         android:text="입력"
         android:layout_alignBottom="@+id/editText1"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/stopbutton"
+        android:text="멈춰"
+       android:layout_alignBottom="@+id/button"/>
+
     </android.support.design.widget.TextInputLayout>
 
 </RelativeLayout>
