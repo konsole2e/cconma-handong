@@ -48,7 +48,6 @@ public class HttpConnection  {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Content-Language", "en-US");
             conn.setRequestProperty("Cookie", Cookies.getInstance().getCurrentCookies());
-            Log.d(TAG, "COOKIE: " + Cookies.getInstance().getCurrentCookies());
             conn.setDoInput(true);
             conn.setRequestMethod(method);
 
