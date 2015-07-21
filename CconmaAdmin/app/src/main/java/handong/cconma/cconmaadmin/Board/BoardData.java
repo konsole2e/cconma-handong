@@ -23,7 +23,7 @@ public class BoardData {
     public String name;                 //작성자 **
     public String subject;              //게시글 제목 **
     public String mem_no;               //회원 번호
-    public String reg_data;             //게시글 날짜 **
+    public String reg_date;             //게시글 날짜 **
     public String ip;                   //ip
     public String hit;                  //조회수
     public String board_short_name;     //게시판 이름

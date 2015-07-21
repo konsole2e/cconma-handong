@@ -23,8 +23,8 @@ public class StartPage extends Activity{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                //intent.putExtra("URL", "http://www.cconma.com/mobile/auth/index.pmv?path=http%3A%2F%2Fwww.cconma.com%2Fmobile%2Findex.pmv");
+                Intent intent = new Intent(getApplicationContext(), LoginWebView.class);
+                intent.putExtra("URL", "http://www.cconma.com/mobile/auth/index.pmv?path=http%3A%2F%2Fwww.cconma.com%2Fmobile%2Findex.pmv");
                 startActivity(intent);
             }
         });

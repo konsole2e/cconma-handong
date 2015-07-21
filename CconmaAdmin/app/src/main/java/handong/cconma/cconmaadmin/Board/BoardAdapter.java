@@ -69,7 +69,7 @@ public class BoardAdapter extends BaseAdapter{
         BoardData data = board_list_data.get(position);
         holder.text_board_title.setText(data.subject);
         holder.text_board_comment_num.setText("+" + data.comment_count);
-        holder.text_board_date.setText(data.reg_data);
+        holder.text_board_date.setText(data.reg_date);
         for(int i=0; i<data.hash_count; i++){
             holder.text_board_notice.setText((data.article_hash_tags).get("hash_tag"+i).toString());
         }
@@ -101,7 +101,7 @@ public class BoardAdapter extends BaseAdapter{
     //  댓글 개수, 게시판 번호, 게시글 번호, 공지사항여부, 조회수,
     //  작성 날짜, 게시글 제목, 게시판 이름, 작성자, 알림 종류
     public void addItem(String notice_type, String board_no, String boardarticle_no, String name,
-                        String subject, String mem_no, String reg_data, String ip, String hit,
+                        String subject, String mem_no, String reg_date, String ip, String hit,
                         String board_short_name, HashMap article_hash_tags, String comment_nicknames){
 
         BoardData addData = new BoardData();
@@ -113,7 +113,7 @@ public class BoardAdapter extends BaseAdapter{
 
         addData.subject = subject;
         addData.mem_no = mem_no;
-        addData.reg_data = reg_data;
+        addData.reg_date = reg_date;
         addData.ip = ip;
         addData.hit = hit;
 

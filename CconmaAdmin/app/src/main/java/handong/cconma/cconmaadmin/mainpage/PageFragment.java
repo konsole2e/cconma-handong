@@ -145,12 +145,9 @@ public class PageFragment extends Fragment {
         MainAsyncTask aysnc = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/board_no/12", "GET", "");
         try{
             result = aysnc.execute().get();
-            Log.d("list", result.toString());
         }catch(Exception e){
             Log.d("debugging", e.getMessage());
         }
-
-        Log.d("list", result.toString());
 
         jsonParser(result);
 
@@ -246,26 +243,37 @@ public class PageFragment extends Fragment {
         try{
             int page = obj.getInt("page");
             int n = obj.getInt("n");
-            //JSONArray jsonArray = obj.getJSONArray("article_list");
-            Log.d("list", "실패실패실패");
-            /*for(int i=0; i<jsonArray.length(); i++){
+            JSONArray jsonArray = obj.getJSONArray("article_list");
+
+            for(int i=0; i<jsonArray.length(); i++){
                 Log.d("list", "testtest");
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 //JSONArray commentArr = jsonObject.getJSONArray("comment");
 
                 //int comment_count = commentArr.length();
+                Log.d("list", "1111");
 
                 String notice_type = jsonObject.getString("notice_type");
+                Log.d("list", "22222");
                 String board_no = jsonObject.getString("board_no");
+                Log.d("list", "33333");
                 String boardarticle_no = jsonObject.getString("boardarticle_no");
+                Log.d("list", "44444");
                 String name = jsonObject.getString("name");
+                Log.d("list", "5555");
                 String subject = jsonObject.getString("subject");
+                Log.d("list", "6666");
                 String mem_no = jsonObject.getString("mem_no");
-                String reg_data = jsonObject.getString("reg_data");
+                Log.d("list", "7777");
+                String reg_date = jsonObject.getString("reg_date");
+                Log.d("list", "8888");
                 String ip = jsonObject.getString("ip");
+                Log.d("list", "9999");
                 String hit = jsonObject.getString("hit");
+                Log.d("list", "10");
                 String board_short_name = jsonObject.getString("board_short_name");
                 JSONArray hashArr = jsonObject.getJSONArray("article_hash_tags");
+
                 HashMap article_hash_tags = new HashMap();
 
                 if(hashArr.length() != 0) {
@@ -278,13 +286,15 @@ public class PageFragment extends Fragment {
                         article_hash_tags.put("hash_tag_type"+j, hash_tag_type);
                     }
                 }
+                Log.d("list", "33333333333");
+
                 String comment_nicknames = jsonObject.getString("comment_nicknames");
 
-
-                /*adapter_board.addItem(notice_type, board_no, boardarticle_no, name,
-                        subject, mem_no, reg_data, ip, hit,
+                Log.d("list", "다 잘 받았을까");
+                adapter_board.addItem(notice_type, board_no, boardarticle_no, name,
+                        subject, mem_no, reg_date, ip, hit,
                         board_short_name, article_hash_tags, comment_nicknames);
-            }*/
+            }
             //Log.d("list", "1222testtest");
 
         }catch(JSONException e){
@@ -292,7 +302,7 @@ public class PageFragment extends Fragment {
         }
 
         //adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "11글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        //adapter_board.notifyDataSetChanged();
+        adapter_board.notifyDataSetChanged();
     }
 
     private class getMoreItems extends AsyncTask<ArrayList<String>, Integer, Long>{
