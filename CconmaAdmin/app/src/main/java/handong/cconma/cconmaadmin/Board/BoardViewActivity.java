@@ -9,7 +9,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Selection;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +27,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 
 /**
  * 게시판 목록에서 하나 선택하여 글 내용을 보여주는 화면
@@ -56,6 +64,8 @@ public class BoardViewActivity extends AppCompatActivity{
     Button btn_board_view_comment;
 
     InputMethodManager input_manager;
+    JSONObject result;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +94,6 @@ public class BoardViewActivity extends AppCompatActivity{
         btn_board_view_comment = (Button)findViewById(R.id.btn_board_view_comment);
         btn_board_view_comment.setOnClickListener(clickListener);
 
-
         text_board_view_title = (TextView)header.findViewById(R.id.text_board_view_title);
         text_board_view_notice = (TextView)header.findViewById(R.id.text_board_view_notice);
         text_board_view_writer = (TextView)header.findViewById(R.id.text_board_view_writer);
@@ -97,8 +106,44 @@ public class BoardViewActivity extends AppCompatActivity{
         btn_board_view_modify.setOnClickListener(clickListener);
         btn_board_view_delete = (Button)header.findViewById(R.id.btn_board_view_delete);
         btn_board_view_delete.setOnClickListener(clickListener);
+
+        String boardarticle_no = getIntent().getExtras().getString("number");
+
+        MainAsyncTask aysnc = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/board_no/12/article_no/"+boardarticle_no, "GET", "");
+
+        try{
+
+            result = aysnc.execute().get();
+
+        }catch(Exception e){}
+
+        BoardViewData data = jsonParsing(result);
+
+        if(data.notice_type == 0) text_board_view_notice.setText("공지");
+        text_board_view_writer.setText(data.name);
+        text_board_view_title.setText(data.subject);
+        text_board_view_content.setText(Html.fromHtml(data.content));
+
     }
 
+    public BoardViewData jsonParsing(JSONObject obj){
+
+        BoardViewData data = new BoardViewData();
+
+        try{
+
+            data.notice_type = obj.getInt("notice_type");
+            data.board_no = obj.getInt("board_no");
+            data.boardarticle_no = obj.getInt("boardarticle_no");
+            data.name = obj.getString("name");
+            data.subject = obj.getString("subject");
+            data.content = obj.getString("content");
+
+        }catch(Exception e){}
+
+        return data;
+
+    }
 
     AbsListView.OnItemLongClickListener itemClickListner = new AbsListView.OnItemLongClickListener(){
 
