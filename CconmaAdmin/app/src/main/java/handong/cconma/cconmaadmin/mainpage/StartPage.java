@@ -3,6 +3,7 @@ package handong.cconma.cconmaadmin.mainpage;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -22,14 +23,14 @@ public class StartPage extends Activity{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), LoginWebView.class);
-                intent.putExtra("URL", "http://www.cconma.com/mobile/auth/index.pmv?path=http%3A%2F%2Fwww.cconma.com%2Fmobile%2Findex.pmv");
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                //intent.putExtra("URL", "http://www.cconma.com/mobile/auth/index.pmv?path=http%3A%2F%2Fwww.cconma.com%2Fmobile%2Findex.pmv");
                 startActivity(intent);
             }
         });
 
         Button button2 = (Button) findViewById(R.id.stopbutton);
-        button.setOnClickListener(new View.OnClickListener() {
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

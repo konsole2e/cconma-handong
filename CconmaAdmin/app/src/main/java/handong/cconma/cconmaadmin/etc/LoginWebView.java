@@ -16,7 +16,6 @@ import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.mainpage.BaseActivity;
 import handong.cconma.cconmaadmin.mainpage.MainActivity;
-import handong.cconma.cconmaadmin.mainpage.testActivity;
 
 /**
  * Created by Young Bin Kim on 2015-07-20.

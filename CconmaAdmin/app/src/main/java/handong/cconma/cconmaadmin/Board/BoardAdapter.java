@@ -11,6 +11,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import handong.cconma.cconmaadmin.R;
 
@@ -69,7 +70,9 @@ public class BoardAdapter extends BaseAdapter{
         holder.text_board_title.setText(data.subject);
         holder.text_board_comment_num.setText("+" + data.comment_count);
         holder.text_board_date.setText(data.reg_data);
-        holder.text_board_notice.setText(data.article_hashtag);
+        for(int i=0; i<data.hash_count; i++){
+            holder.text_board_notice.setText((data.article_hash_tags).get("hash_tag"+i).toString());
+        }
         holder.text_board_writer.setText(data.name);
 
         holder.btn_board_mark.setChecked(data.board_marked);
@@ -97,20 +100,28 @@ public class BoardAdapter extends BaseAdapter{
     //파싱한 데이터 저장하기
     //  댓글 개수, 게시판 번호, 게시글 번호, 공지사항여부, 조회수,
     //  작성 날짜, 게시글 제목, 게시판 이름, 작성자, 알림 종류
-    public void addItem(int comment_count, String board_no, String boardarticle_no, String notice_type, String hit,
-                        String reg_data, String subject, String board_short_name, String name, String article_hashtag){
+    public void addItem(String notice_type, String board_no, String boardarticle_no, String name,
+                        String subject, String mem_no, String reg_data, String ip, String hit,
+                        String board_short_name, HashMap article_hash_tags, String comment_nicknames){
+
         BoardData addData = new BoardData();
 
-        addData.comment_count = comment_count;
+        addData.notice_type = notice_type;
         addData.board_no = board_no;
         addData.boardarticle_no = boardarticle_no;
-        addData.notice_type = notice_type;
-        addData.hit = hit;
-        addData.reg_data = reg_data;
-        addData.subject = subject;
-        addData.board_short_name = board_short_name;
         addData.name = name;
-        addData.article_hashtag = article_hashtag;
+
+        addData.subject = subject;
+        addData.mem_no = mem_no;
+        addData.reg_data = reg_data;
+        addData.ip = ip;
+        addData.hit = hit;
+
+        addData.board_short_name = board_short_name;
+        addData.article_hash_tags = article_hash_tags;
+        addData.comment_nicknames = comment_nicknames;
+
+        addData.hash_count = article_hash_tags.size()/2;
 
         board_list_data.add(addData);
     }
