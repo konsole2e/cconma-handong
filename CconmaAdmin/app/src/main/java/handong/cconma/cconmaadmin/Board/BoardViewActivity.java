@@ -37,8 +37,7 @@ import handong.cconma.cconmaadmin.R;
  */
 public class BoardViewActivity extends AppCompatActivity{
     private Toolbar toolbar;
-    private String string;
-    String str;
+
     TextView text_board_view_title;
     TextView text_board_view_notice;
     TextView text_board_view_writer;
