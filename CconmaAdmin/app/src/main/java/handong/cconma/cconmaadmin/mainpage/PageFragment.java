@@ -31,12 +31,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import handong.cconma.cconmaadmin.board.BoardAdapter;
 import handong.cconma.cconmaadmin.board.BoardViewActivity;
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 
 /**
  * Created by Young Bin Kim on 2015-07-08.
@@ -45,7 +47,7 @@ public class PageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     private static int layoutName;
     private int mPage;
-
+    JSONObject result;
     LinearLayout layout_list_update;
     ProgressBar progress;
 
@@ -140,39 +142,19 @@ public class PageFragment extends Fragment {
         list_board.setAdapter(adapter_board);
         list_board.setOnTouchListener(touchListener);
 
-        /**        데이터 넣기       **/
-        adapter_board.addItem(3, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(1, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(0, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(5, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(6, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(10, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(3, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(3, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(3, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(1, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(0, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(5, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(6, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(10, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(3, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-        adapter_board.addItem(3, "12", "1223", "0", "96",
-                "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+        MainAsyncTask aysnc = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/board_no/12", "GET", "");
+        try{
+            result = aysnc.execute().get();
+            Log.d("list", result.toString());
+        }catch(Exception e){
+            Log.d("debugging", e.getMessage());
+        }
+
+        Log.d("list", result.toString());
+
+        jsonParser(result);
+
+
 
         list_board.setFocusable(false);
 
@@ -195,16 +177,6 @@ public class PageFragment extends Fragment {
                     //progress.setVisibility(View.VISIBLE);
 
                     new getMoreItems().execute();
-                    /*adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-                    adapter_board.addItem(1, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-                    adapter_board.addItem(0, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-                    adapter_board.addItem(5, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-                    adapter_board.addItem(6, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-                    adapter_board.addItem(10, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-                    adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-                    adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "글 제목입니다.", "[꽃마]", "김은지", "전체알림");*/
-
-                    //adapter_board.notifyDataSetChanged();햐
 
                 } else {
 
@@ -269,32 +241,58 @@ public class PageFragment extends Fragment {
     }
 
 
-    public void jsonParser(String page){
-        try{
-            JSONArray jsonArray = new JSONArray(page);
-            for(int i=0; i<jsonArray.length(); i++){
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                JSONArray commentArr = jsonObject.getJSONArray("comment");
+    public void jsonParser(JSONObject obj){
 
-                int comment_count = commentArr.length();
+        try{
+            int page = obj.getInt("page");
+            int n = obj.getInt("n");
+            //JSONArray jsonArray = obj.getJSONArray("article_list");
+            Log.d("list", "실패실패실패");
+            /*for(int i=0; i<jsonArray.length(); i++){
+                Log.d("list", "testtest");
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                //JSONArray commentArr = jsonObject.getJSONArray("comment");
+
+                //int comment_count = commentArr.length();
+
+                String notice_type = jsonObject.getString("notice_type");
                 String board_no = jsonObject.getString("board_no");
                 String boardarticle_no = jsonObject.getString("boardarticle_no");
-                String notice_type = jsonObject.getString("notice_type");
-                String hit = jsonObject.getString("hit");
-                String reg_data = jsonObject.getString("reg_data");
-                String subject = jsonObject.getString("subject");
-                String board_short_name = jsonObject.getString("board_short_name");
                 String name = jsonObject.getString("name");
-                String article_hashtag = jsonObject.getString("article_hashtag");
+                String subject = jsonObject.getString("subject");
+                String mem_no = jsonObject.getString("mem_no");
+                String reg_data = jsonObject.getString("reg_data");
+                String ip = jsonObject.getString("ip");
+                String hit = jsonObject.getString("hit");
+                String board_short_name = jsonObject.getString("board_short_name");
+                JSONArray hashArr = jsonObject.getJSONArray("article_hash_tags");
+                HashMap article_hash_tags = new HashMap();
 
-                adapter_board.addItem(comment_count, board_no, boardarticle_no, notice_type, hit,
-                        reg_data, subject, board_short_name, name, article_hashtag);
-            }
+                if(hashArr.length() != 0) {
+                    for (int j = 0; j < hashArr.length(); j++) {
+                        JSONObject hashObj = hashArr.getJSONObject(j);
+                        String hash_tag = hashObj.getString("hash_tag");
+                        String hash_tag_type = hashObj.getString("hash_tag_type");
 
-            adapter_board.notifyDataSetChanged();
+                        article_hash_tags.put("hash_tag"+j, hash_tag);
+                        article_hash_tags.put("hash_tag_type"+j, hash_tag_type);
+                    }
+                }
+                String comment_nicknames = jsonObject.getString("comment_nicknames");
+
+
+                /*adapter_board.addItem(notice_type, board_no, boardarticle_no, name,
+                        subject, mem_no, reg_data, ip, hit,
+                        board_short_name, article_hash_tags, comment_nicknames);
+            }*/
+            //Log.d("list", "1222testtest");
+
         }catch(JSONException e){
             Log.e("JSON", Log.getStackTraceString(e));
         }
+
+        //adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "11글 제목입니다.", "[꽃마]", "김은지", "전체알림");
+        //adapter_board.notifyDataSetChanged();
     }
 
     private class getMoreItems extends AsyncTask<ArrayList<String>, Integer, Long>{
@@ -303,25 +301,7 @@ public class PageFragment extends Fragment {
         protected Long doInBackground(ArrayList<String>... params) {
 
             lock = true;
-            /**        데이터 넣기       **/
-            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "11글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(1, "12", "1223", "0", "96", "07/16 14:24", "12글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(0, "12", "1223", "0", "96", "07/16 14:24", "13글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(5, "12", "1223", "0", "96", "07/16 14:24", "14글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(6, "12", "1223", "0", "96", "07/16 14:24", "15글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(10, "12", "1223", "0", "96", "07/16 14:24", "16글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "17글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "18글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "19글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(1, "12", "1223", "0", "96", "07/16 14:24", "20글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(0, "12", "1223", "0", "96", "07/16 14:24", "21글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(5, "12", "1223", "0", "96", "07/16 14:24", "22글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(6, "12", "1223", "0", "96", "07/16 14:24", "23글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(10, "12", "1223", "0", "96", "07/16 14:24", "24글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "25글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-            adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "26글 제목입니다.", "[꽃마]", "김은지", "전체알림");
-
-
+            //데이터 넣기.
 
             try{
                 Thread.sleep(3000);
