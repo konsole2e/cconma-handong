@@ -46,15 +46,21 @@ public class HttpConnection  {
             conn.setConnectTimeout(10000);
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Content-Language", "en-US");
             conn.setRequestProperty("Cookie", Cookies.getInstance().getCurrentCookies());
-            conn.setDoOutput(true);
+            Log.d(TAG, "COOKIE: " + Cookies.getInstance().getCurrentCookies());
             conn.setDoInput(true);
+            conn.setRequestMethod(method);
 
-            OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
-            osw.write(jsonString);
-            osw.flush();
+            //if(conn.getResponseMessage().equals("OK"));
+            if(!jsonString.equals("")) {
+                conn.setDoOutput(true);
+                OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
+                osw.write(jsonString);
+                osw.flush();
+            }
 
-            InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "euc-kr");
+            InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "UTF-8");
             BufferedReader reader = new BufferedReader(tmp);
             StringBuilder builder = new StringBuilder();
             String str;
