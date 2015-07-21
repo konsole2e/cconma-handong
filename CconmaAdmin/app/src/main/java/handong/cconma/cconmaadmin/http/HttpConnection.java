@@ -60,7 +60,7 @@ public class HttpConnection  {
                 osw.flush();
             }
 
-            InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "UTF-8");
+            InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "euc-kr");
             BufferedReader reader = new BufferedReader(tmp);
             StringBuilder builder = new StringBuilder();
             String str;
