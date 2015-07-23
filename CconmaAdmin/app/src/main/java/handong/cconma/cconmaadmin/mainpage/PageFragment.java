@@ -36,6 +36,7 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import handong.cconma.cconmaadmin.board.BoardAdapter;
+import handong.cconma.cconmaadmin.board.BoardData;
 import handong.cconma.cconmaadmin.board.BoardViewActivity;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
@@ -159,6 +160,8 @@ public class PageFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getActivity(), BoardViewActivity.class);
+                BoardData data = (BoardData)adapter_board.getItem(position);
+                i.putExtra("number", data.boardarticle_no);
                 startActivity(i);
             }
         });
