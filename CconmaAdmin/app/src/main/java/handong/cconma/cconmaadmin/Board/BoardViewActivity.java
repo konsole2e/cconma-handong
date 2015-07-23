@@ -68,6 +68,9 @@ public class BoardViewActivity extends AppCompatActivity{
 
     String boardarticle_no;
     String board_no;
+
+    JSONObject result;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +104,6 @@ public class BoardViewActivity extends AppCompatActivity{
         btn_board_view_comment = (Button)findViewById(R.id.btn_board_view_comment);
         btn_board_view_comment.setOnClickListener(clickListener);
 
-
         text_board_view_title = (TextView)header.findViewById(R.id.text_board_view_title);
         text_board_view_notice = (TextView)header.findViewById(R.id.text_board_view_notice);
         text_board_view_writer = (TextView)header.findViewById(R.id.text_board_view_writer);
@@ -116,7 +118,20 @@ public class BoardViewActivity extends AppCompatActivity{
         btn_board_view_delete.setOnClickListener(clickListener);
 
 
+
         jsonParser();
+
+        String boardarticle_no = getIntent().getExtras().getString("number");
+
+        MainAsyncTask aysnc = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/board_no/12/article_no/"+boardarticle_no, "GET", "");
+
+        try{
+
+            result = aysnc.execute().get();
+
+        }catch(Exception e){}
+
+
     }
 
 

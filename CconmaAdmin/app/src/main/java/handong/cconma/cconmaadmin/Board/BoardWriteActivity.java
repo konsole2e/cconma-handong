@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 import handong.cconma.cconmaadmin.mainpage.MainActivity;
@@ -45,7 +46,6 @@ public class BoardWriteActivity extends AppCompatActivity {
     String filePath = "";
     FrameLayout layout_board_write_file;
     ListView list_board_write_file;
-
     List<String> item = null;
     List<String> path = null;
     String root = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -62,6 +62,7 @@ public class BoardWriteActivity extends AppCompatActivity {
     TextView text_select_file;
     File file;
     ArrayAdapter<String> fileList;
+
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_write);
@@ -199,21 +200,37 @@ public class BoardWriteActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        final EditText mTitle = (EditText)findViewById(R.id.title);
+        final EditText mContent = (EditText)findViewById(R.id.content);
         // confirm button
         Button confirm = (Button)findViewById(R.id.confirm);
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    String content = mContent.getText().toString().replace("\n", "<br>");
+
+                    String requestBody ="subject=" + String.valueOf(mTitle.getText())
+                    + "&content=" + content + "<br> - From App" + "&filename=" +
+                    "" + "&filename2=" + "";
+
+                    Log.d("debugging", requestBody);
+                    new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/board_no/12", "POST", requestBody).execute().get();
+                } catch (Exception e) {
+                    Log.d("debugging", "Exception in BoardWriteActivity line 212 " + e.getMessage());
+                    e.printStackTrace();
+                }
                 // ArrayList<String> noticeList = new ArrayList<String>();
                 // for noticeList.size -> noticeList.add(i);
-                boolean notice = ((CheckBox) findViewById(R.id.checkNotice)).isChecked();
-                String title = ((EditText) findViewById(R.id.title)).getText() + "";
-                String content = ((EditText) findViewById(R.id.content)).getText() + "";
+                //boolean notice = ((CheckBox) findViewById(R.id.checkNotice)).isChecked();
+               // String title = ((EditText) findViewById(R.id.title)).getText() + "";
+                //String content = ((EditText) findViewById(R.id.content)).getText() + "";
                 // String fild = ((Button)findViewById(R.id.file)).getText()+""; // need to fix it...
 
                 /*
                 * INSERT notice, title, content, file INTO board_database
                 * */
+
 
                 try{
                     JSONObject jsonObject = new JSONObject();
@@ -232,6 +249,12 @@ public class BoardWriteActivity extends AppCompatActivity {
                 Intent intent = new Intent(BoardWriteActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
+               // if (!filePath.equals(""))
+                //    Toast.makeText(context, filePath, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "글이 등록되었습니다", Toast.LENGTH_SHORT).show();
+               // Intent intent = new Intent(BoardWriteActivity.this, MainActivity.class);
+                //startActivity(intent);
+               // finish();
             }
         });
 

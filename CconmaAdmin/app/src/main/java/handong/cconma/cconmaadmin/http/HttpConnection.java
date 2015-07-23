@@ -2,13 +2,18 @@ package handong.cconma.cconmaadmin.http;
 
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import handong.cconma.cconmaadmin.data.Cookies;
 
@@ -16,66 +21,95 @@ import handong.cconma.cconmaadmin.data.Cookies;
  * Created by Young Bin Kim on 2015-07-20.
  */
 public class HttpConnection  {
-    private String url;
+    private URL url;
     private String method;
-    private String jsonString;
+    private String requestBody;
     private HttpURLConnection conn;
+    private String responseBody;
 
     private static String TAG = "debugging";
 
-    public HttpConnection(String url, String method, String jsonString){
-        this.url = url;
-        this.method = method;
-        this.jsonString = jsonString;
-    }
-
-    public String init() {
-        URL target_url = null;
-        String sResult = "ERROR";
-
+    public HttpConnection(String url, String method, String requestBody){
         try {
-            target_url = new URL(this.url);
+            this.url = new URL(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Log.d(TAG, "URL exception!!! " + e.getMessage());
         }
+        this.method = method;
+        this.requestBody = requestBody;
+    }
+    public String init() {
+        String sResult = "{\"empty\": \"none\"}";
 
         try {
-            conn = (HttpURLConnection) target_url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             Log.d(TAG, "Connection start");
             conn.setConnectTimeout(10000);
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Content-Language", "en-US");
             conn.setRequestProperty("Cookie", Cookies.getInstance().getCurrentCookies());
-            Log.d(TAG, "COOKIE: " + Cookies.getInstance().getCurrentCookies());
-            conn.setDoInput(true);
             conn.setRequestMethod(method);
-
-            //if(conn.getResponseMessage().equals("OK"));
-            if(!jsonString.equals("")) {
-                conn.setDoOutput(true);
-                OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
-                osw.write(jsonString);
-                osw.flush();
+            if(method.equals("POST")){
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            }
+            else{
+                conn.setRequestProperty("Content-Type", "application/json");
             }
 
-            InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "euc-kr");
-            BufferedReader reader = new BufferedReader(tmp);
-            StringBuilder builder = new StringBuilder();
-            String str;
-
-            while ((str = reader.readLine()) != null) {
-                builder.append(str);
+            if(!requestBody.equals("")) {
+                OutputStream os = conn.getOutputStream();
+                os.write(requestBody.getBytes());
+                os.close();
             }
 
-            sResult = builder.toString();
+            int responseCode = conn.getResponseCode();
+
+            InputStream inputStream = null;
+            try {
+                if (responseCode == 200) {
+                    inputStream = conn.getInputStream();
+                } else {
+                    inputStream = conn.getErrorStream();
+                }
+                responseBody = getString(inputStream);
+                Log.d(TAG, responseBody);
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        Log.d(TAG, "IOException in HttpConnection line 91: " + e.getMessage());
+                    }
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
             Log.d(TAG, "IO EXCEPTION!!! " + e.getMessage());
         }
-        Log.d(TAG, "Return string is " + sResult);
+        Log.d(TAG, "Return string is " + responseBody);
 
-        return sResult;
+        conn.disconnect();
+        return responseBody;
+    }
+
+    private String getString(InputStream stream) throws IOException {
+        if (stream == null) {
+            return "";
+        }
+        BufferedReader reader =
+                new BufferedReader(new InputStreamReader(stream));
+        StringBuilder content = new StringBuilder();
+        String newLine;
+        do {
+            newLine = reader.readLine();
+            if (newLine != null) {
+                content.append(newLine).append('\n');
+            }
+        } while (newLine != null);
+        if (content.length() > 0) {
+            // strip last newline
+            content.setLength(content.length() - 1);
+        }
+        return content.toString();
     }
 }

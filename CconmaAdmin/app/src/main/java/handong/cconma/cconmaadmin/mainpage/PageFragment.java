@@ -161,8 +161,13 @@ public class PageFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getActivity(), BoardViewActivity.class);
+
                 i.putExtra("board_no", ((BoardData)adapter_board.getItem(position)).board_no);
                 i.putExtra("boardarticle_no", ((BoardData)adapter_board.getItem(position)).boardarticle_no);
+
+                BoardData data = (BoardData)adapter_board.getItem(position);
+                i.putExtra("number", data.boardarticle_no);
+
                 startActivity(i);
             }
         });

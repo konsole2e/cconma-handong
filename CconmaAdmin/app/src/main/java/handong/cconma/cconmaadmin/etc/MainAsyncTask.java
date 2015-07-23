@@ -3,7 +3,10 @@ package handong.cconma.cconmaadmin.etc;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import handong.cconma.cconmaadmin.http.HttpConnection;
 
@@ -15,29 +18,28 @@ public class MainAsyncTask extends AsyncTask<JSONObject, Void, JSONObject> {
     private final static String TAG = "debugging";
     private String url;
     private String method;
-    private String jsonString;
-    private JSONObject json;
+    private String requestBody;
+    private String sResult;
 
-    public MainAsyncTask(String url, String method, String jsonString) {
+    public MainAsyncTask(String url, String method, String requestBody) {
         this.url = url;
         this.method = method;
-        this.jsonString = jsonString;
+        this.requestBody = requestBody;
     }
 
     @Override
     protected JSONObject doInBackground(JSONObject... params) {
-        String sResult;
 
-        Log.d(TAG, "task start");
-        HttpConnection connection = new HttpConnection(url, method, jsonString);
+        HttpConnection connection = new HttpConnection(url, method, requestBody);
         sResult = connection.init();
         Log.d(TAG, sResult);
-        try {
-            json = new JSONObject(sResult);
-        }catch(Exception e){
-            Log.d(TAG, "JSON Exception: " + e.getMessage());
-        }
 
-        return json;
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(sResult);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }
