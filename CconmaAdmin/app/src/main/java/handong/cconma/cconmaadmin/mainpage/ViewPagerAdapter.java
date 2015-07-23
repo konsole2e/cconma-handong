@@ -10,8 +10,9 @@ import android.support.v4.app.FragmentPagerAdapter;
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private Context mContext;
-    final int pageCount = 8;
-    private String tabTitles[] = new String[] { "꽃마보드", "IT개발", "CM", "CS", "마케팅", "행밥", "디자인", "물류" };
+    final int pageCount = 13;
+    private String tabTitles[] = new String[] { "꽃마보드", "개발", "CM", "CS", "마케팅", "행밥", "디자인", "물류", "스크랩", "초안", "별도메일", "해외장터", "IT자산/차량" };
+    private int tablTitles_no[] = new int[] {12, 17, 39, 46, 30, 45, 37, 18, 32, 33, 26, 48, 27 };
 
     public ViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -20,7 +21,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return PageFragment.newInstance(position + 1);
+        return PageFragment.newInstance(position + 1, tablTitles_no[position]);
     }
 
     @Override

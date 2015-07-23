@@ -12,8 +12,9 @@
             android:id="@+id/text_board_view_comment_writer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.7"
             android:textColor="#000000"
+            android:gravity="center_horizontal"
             android:hint="김은지"/>
         <TextView
             android:id="@+id/text_board_view_comment"
@@ -21,6 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:textColor="#000000"
+            android:autoLink="web"
             android:hint="댓글입니다."/>
         <TextView
             android:id="@+id/text_board_view_comment_date"

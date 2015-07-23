@@ -9,7 +9,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Selection;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +29,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 
 /**
  * 게시판 목록에서 하나 선택하여 글 내용을 보여주는 화면
@@ -56,13 +65,20 @@ public class BoardViewActivity extends AppCompatActivity{
     Button btn_board_view_comment;
 
     InputMethodManager input_manager;
+
+    String boardarticle_no;
+    String board_no;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_view);
 
+        board_no = this.getIntent().getStringExtra("board_no");
+        boardarticle_no = this.getIntent().getStringExtra("boardarticle_no");
+
         View header = getLayoutInflater().inflate(R.layout.board_list_header, null, false);
 
+        header.setLongClickable(false);
         // Attaching the layout to the toolbar object
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -71,6 +87,7 @@ public class BoardViewActivity extends AppCompatActivity{
 
         list_board_view_comment = (ListView)findViewById(R.id.list_board_view_comment);
         list_board_view_comment.addHeaderView(header);
+        list_board_view_comment.setHeaderDividersEnabled(false);
         adapter_comment = new BoardCommentAdapter(this);
         list_board_view_comment.setAdapter(adapter_comment);
         //list_board_view_comment.setOnScrollListener(scrollListener);
@@ -97,6 +114,9 @@ public class BoardViewActivity extends AppCompatActivity{
         btn_board_view_modify.setOnClickListener(clickListener);
         btn_board_view_delete = (Button)header.findViewById(R.id.btn_board_view_delete);
         btn_board_view_delete.setOnClickListener(clickListener);
+
+
+        jsonParser();
     }
 
 
@@ -104,7 +124,8 @@ public class BoardViewActivity extends AppCompatActivity{
 
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            dialog(2, position);
+            if(position>0)
+                dialog(2, position);
             return false;
         }
     };
@@ -133,7 +154,7 @@ public class BoardViewActivity extends AppCompatActivity{
                             adapter_comment.notifyDataSetChanged();
                             edit_board_view_comment.setTag(null);
                         }else{
-                            adapter_comment.addItem("김은지", strNow, edit_board_view_comment.getText().toString());
+                            adapter_comment.addItem("김은지", strNow, edit_board_view_comment.getText().toString(), null);
                             adapter_comment.notifyDataSetChanged();
                         }
                         edit_board_view_comment.setText("");
@@ -280,18 +301,41 @@ public class BoardViewActivity extends AppCompatActivity{
                     Selection.setSelection(edt, edt.length());
                 }
             });
-            holder.text_board_view_comment.setText(data.comment);
+            String tag="";
+            if(data.comment_hashMap.size() != 0){
+                for(int i=0; i < data.comment_hashMap.size()/2; i++)
+                {
+                    String type;
+                    if(data.comment_hashMap.get("hash_tag_type"+i).equals("notice_myteam"))
+                        type = "<font color=\"blue\">" + data.comment_hashMap.get("hash_tag"+i) + "</font>";
+                    else if(data.comment_hashMap.get("hash_tag_type"+i).equals("notice_team"))
+                        type = "<font color=\"red\">" + data.comment_hashMap.get("hash_tag"+i) + "</font>";
+                    else if(data.comment_hashMap.get("hash_tag_type"+i).equals("notice_member"))
+                        type = "<font color=\"green\">" + data.comment_hashMap.get("hash_tag"+i) + "</font>";
+                    else
+                        type = data.comment_hashMap.get("hash_tag"+i).toString();
+
+                    tag = tag + type;
+                            //Html.fromHtml("<font color=\"red\">"+data.comment_hashMap.get("hash_tag" + i)+"</font>");
+                }
+            }
+
+            holder.text_board_view_comment.setText(Html.fromHtml(tag + data.comment));
+            holder.text_board_view_comment.setMovementMethod(LinkMovementMethod.getInstance());
+            holder.text_board_view_comment.setAutoLinkMask(Linkify.WEB_URLS);
             holder.text_board_view_comment_date.setText(data.comment_date);
 
+            convertView.setFocusable(false);
             return convertView;
         }
 
-        public void addItem(String comment_writer, String comment_date, String comment){
+        public void addItem(String comment_writer, String comment_date, String comment, HashMap commentHashMap){
             BoardCommentData addData = new BoardCommentData();
 
             addData.comment = comment;
             addData.comment_date = comment_date;
             addData.commnet_writer = comment_writer;
+            addData.comment_hashMap = commentHashMap;
 
             board_comment_list_data.add(addData);
         }
@@ -347,5 +391,73 @@ public class BoardViewActivity extends AppCompatActivity{
             AlertDialog alert = alert_build.create();
             alert.show();
         }
+    }
+
+
+
+    public void jsonParser(){
+        try{
+
+            JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/board_no/"
+                    +Integer.parseInt(board_no)+"/article_no/"
+                    +Integer.parseInt(boardarticle_no), "GET", "").execute().get();
+
+            String subject = json.getString("subject");
+            String name = json.getString("name");
+            String reg_date = json.getString("reg_date");
+            String content = json.getString("content");
+
+            JSONArray noticeArr = json.getJSONArray("article_hash_tags");
+            String tag = "";
+            for(int k=0; k<noticeArr.length(); k++){
+                JSONObject noticeObj = noticeArr.getJSONObject(k);
+
+                String type;
+                if(noticeObj.getString("hash_tag_type").equals("notice_myteam"))
+                    type = "<font color=\"blue\">" + noticeObj.getString("hash_tag") + "</font>";
+                else if(noticeObj.getString("hash_tag_type").equals("notice_myteam"))
+                    type = "<font color=\"blue\">" + noticeObj.getString("hash_tag") + "</font>";
+                else if(noticeObj.getString("hash_tag_type").equals("notice_myteam"))
+                    type = "<font color=\"blue\">" + noticeObj.getString("hash_tag") + "</font>";
+                else
+                    type = noticeObj.getString("hash_tag").toString();
+
+                tag = tag + type;
+            }
+
+            text_board_view_notice.setText(Html.fromHtml(tag));
+
+            text_board_view_date.setText(reg_date);
+            text_board_view_title.setText(subject);
+            text_board_view_writer.setText(name);
+            text_board_view_content.setText(Html.fromHtml(content));
+            text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
+
+
+            JSONArray jsonArray = json.getJSONArray("comment_list");
+            for(int i=0; i<jsonArray.length(); i++){
+                JSONObject commentObj = jsonArray.getJSONObject(i);
+                String comment_name = commentObj.getString("name");
+                String comment_reg_date = commentObj.getString("reg_date");
+                String comment_content = Html.fromHtml(commentObj.getString("content")).toString();
+
+                JSONArray hashArr = commentObj.getJSONArray("comment_hash_tags");
+                HashMap commentHashMap = new HashMap();
+                if(hashArr.length()!=0) {
+                    for (int j = 0; j < hashArr.length(); j++) {
+                        JSONObject hashObj = hashArr.getJSONObject(j);
+                        commentHashMap.put("hash_tag"+j, hashObj.getString("hash_tag"));
+                        commentHashMap.put("hash_tag_type"+j, hashObj.getString("hash_tag_type"));
+                    }
+                }
+                adapter_comment.addItem(comment_name, comment_reg_date, comment_content, commentHashMap);
+            }
+
+            adapter_comment.notifyDataSetChanged();
+
+        }catch(Exception e){
+            Log.e("JSON", Log.getStackTraceString(e));
+        }
+
     }
 }

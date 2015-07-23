@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,12 +31,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import handong.cconma.cconmaadmin.board.BoardAdapter;
+import handong.cconma.cconmaadmin.board.BoardData;
 import handong.cconma.cconmaadmin.board.BoardViewActivity;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
@@ -45,8 +48,12 @@ import handong.cconma.cconmaadmin.etc.MainAsyncTask;
  */
 public class PageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
-    private static int layoutName;
+    public static final String ARG_PAGE_NO = "ARG_PAGE_NO";
     private int mPage;
+    private int mPage_no;
+    private int jsonPage = 0;
+
+
     JSONObject result;
     LinearLayout layout_list_update;
     ProgressBar progress;
@@ -64,9 +71,10 @@ public class PageFragment extends Fragment {
 
     InputMethodManager input_manager;
     View view;
-    public static PageFragment newInstance(int page) {
+    public static PageFragment newInstance(int page, int page_no) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
+        args.putInt(ARG_PAGE_NO, page_no);
         PageFragment fragment = new PageFragment();
         fragment.setArguments(args);
 
@@ -77,6 +85,7 @@ public class PageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
+        mPage_no = getArguments().getInt(ARG_PAGE_NO);
     }
 
     @Override
@@ -90,7 +99,7 @@ public class PageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.board_fragment, container, false);
-
+        jsonPage = 0;
         layout_list_update = (LinearLayout)view.findViewById(R.id.layout_list_update);
         progress = (ProgressBar)view.findViewById(R.id.progress_list_update);
 
@@ -142,14 +151,7 @@ public class PageFragment extends Fragment {
         list_board.setAdapter(adapter_board);
         list_board.setOnTouchListener(touchListener);
 
-        MainAsyncTask aysnc = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/board_no/12", "GET", "");
-        try{
-            result = aysnc.execute().get();
-        }catch(Exception e){
-            Log.d("debugging", e.getMessage());
-        }
-
-        jsonParser(result);
+        jsonParser();
 
 
 
@@ -159,6 +161,8 @@ public class PageFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getActivity(), BoardViewActivity.class);
+                i.putExtra("board_no", ((BoardData)adapter_board.getItem(position)).board_no);
+                i.putExtra("boardarticle_no", ((BoardData)adapter_board.getItem(position)).boardarticle_no);
                 startActivity(i);
             }
         });
@@ -169,11 +173,7 @@ public class PageFragment extends Fragment {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag && (lock == false)) {
 
                     /**        데이터 넣기       **/
-                    layout_list_update.setVisibility(View.VISIBLE);
-
-                    //progress.setVisibility(View.VISIBLE);
-
-                    new getMoreItems().execute();
+                    jsonParser();
 
                 } else {
 
@@ -238,98 +238,51 @@ public class PageFragment extends Fragment {
     }
 
 
-    public void jsonParser(JSONObject obj){
-
+    public void jsonParser(){
+        jsonPage = jsonPage + 1;
         try{
-            int page = obj.getInt("page");
-            int n = obj.getInt("n");
-            JSONArray jsonArray = obj.getJSONArray("article_list");
+
+            JSONObject jason = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/board_no/"+mPage_no+"/writer/all"
+                    +"?page="+jsonPage+"&n=20", "GET", "").execute().get();
+
+            JSONArray jsonArray = jason.getJSONArray("article_list");
 
             for(int i=0; i<jsonArray.length(); i++){
-                Log.d("list", "testtest");
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                //JSONArray commentArr = jsonObject.getJSONArray("comment");
-
-                //int comment_count = commentArr.length();
-                Log.d("list", "1111");
 
                 String notice_type = jsonObject.getString("notice_type");
-                Log.d("list", "22222");
                 String board_no = jsonObject.getString("board_no");
-                Log.d("list", "33333");
                 String boardarticle_no = jsonObject.getString("boardarticle_no");
-                Log.d("list", "44444");
                 String name = jsonObject.getString("name");
-                Log.d("list", "5555");
                 String subject = jsonObject.getString("subject");
-                Log.d("list", "6666");
                 String mem_no = jsonObject.getString("mem_no");
-                Log.d("list", "7777");
                 String reg_date = jsonObject.getString("reg_date");
-                Log.d("list", "8888");
                 String ip = jsonObject.getString("ip");
-                Log.d("list", "9999");
                 String hit = jsonObject.getString("hit");
-                Log.d("list", "10");
                 String board_short_name = jsonObject.getString("board_short_name");
+                String hash_tag="";
                 JSONArray hashArr = jsonObject.getJSONArray("article_hash_tags");
-
-                HashMap article_hash_tags = new HashMap();
-
-                if(hashArr.length() != 0) {
+                HashMap hashMap = new HashMap();
+                if(hashArr.length()!=0) {
                     for (int j = 0; j < hashArr.length(); j++) {
                         JSONObject hashObj = hashArr.getJSONObject(j);
-                        String hash_tag = hashObj.getString("hash_tag");
-                        String hash_tag_type = hashObj.getString("hash_tag_type");
-
-                        article_hash_tags.put("hash_tag"+j, hash_tag);
-                        article_hash_tags.put("hash_tag_type"+j, hash_tag_type);
+                        hashMap.put("hash_tag"+j, hashObj.getString("hash_tag"));
+                        hashMap.put("hash_tag_type"+j, hashObj.getString("hash_tag_type"));
                     }
                 }
-                Log.d("list", "33333333333");
-
                 String comment_nicknames = jsonObject.getString("comment_nicknames");
 
-                Log.d("list", "다 잘 받았을까");
                 adapter_board.addItem(notice_type, board_no, boardarticle_no, name,
                         subject, mem_no, reg_date, ip, hit,
-                        board_short_name, article_hash_tags, comment_nicknames);
+                        board_short_name, hashMap, comment_nicknames);
             }
-            //Log.d("list", "1222testtest");
 
-        }catch(JSONException e){
+        }catch(Exception e){
             Log.e("JSON", Log.getStackTraceString(e));
         }
 
-        //adapter_board.addItem(3, "12", "1223", "0", "96", "07/16 14:24", "11글 제목입니다.", "[꽃마]", "김은지", "전체알림");
         adapter_board.notifyDataSetChanged();
     }
-
-    private class getMoreItems extends AsyncTask<ArrayList<String>, Integer, Long>{
-
-        @Override
-        protected Long doInBackground(ArrayList<String>... params) {
-
-            lock = true;
-            //데이터 넣기.
-
-            try{
-                Thread.sleep(3000);
-            }catch(Exception e){
-
-            }
-
-            return null;
-        }
-
-        protected void onPostExecute(Long result){
-            adapter_board.notifyDataSetChanged();
-            layout_list_update.setVisibility(View.GONE);
-            lock = false;
-            //progress.setVisibility(View.GONE);
-        }
-    }
-
 
     View.OnTouchListener touchListener = new View.OnTouchListener() {
         int prevY, curY, dy;

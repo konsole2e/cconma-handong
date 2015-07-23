@@ -26,10 +26,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 import handong.cconma.cconmaadmin.mainpage.MainActivity;
 import handong.cconma.cconmaadmin.R;
 
@@ -47,6 +50,9 @@ public class BoardWriteActivity extends AppCompatActivity {
     List<String> path = null;
     String root = Environment.getExternalStorageDirectory().getAbsolutePath();
     Context context = this;
+
+    EditText edit_title;
+    EditText edit_content;
 
     private Toolbar toolbar;
     Button btn_board_write_file;
@@ -66,6 +72,9 @@ public class BoardWriteActivity extends AppCompatActivity {
         ActionBar haha = getSupportActionBar();
         haha.setDisplayHomeAsUpEnabled(true);
 
+
+        edit_title = (EditText)findViewById(R.id.title);
+        edit_content = (EditText)findViewById(R.id.content);
 
         layout_board_write_file = (FrameLayout)findViewById(R.id.layout_board_write_file);
         text_selected_file = (TextView)findViewById(R.id.text_selected_file);
@@ -205,6 +214,18 @@ public class BoardWriteActivity extends AppCompatActivity {
                 /*
                 * INSERT notice, title, content, file INTO board_database
                 * */
+
+                try{
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("subject", edit_title.getText());
+                    jsonObject.put("content", edit_content.getText());
+
+                    String jsonString = jsonObject.toString();
+                    new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/board_no/12", "POST", jsonString).execute().get();
+
+                }catch(Exception e){
+
+                }
 
                 if (!filePath.equals(""))
                     Toast.makeText(context, filePath, Toast.LENGTH_SHORT).show();

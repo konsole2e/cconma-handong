@@ -28,11 +28,9 @@ public class BoardData {
     public String hit;                  //조회수
     public String board_short_name;     //게시판 이름
 
-    public HashMap article_hash_tags;   //알림 종류 / hash_tag, hash_tag_type
     public String comment_nicknames;    //댓글
 
+    public HashMap hashMap;
 
-
-    public int hash_count;
 
 }

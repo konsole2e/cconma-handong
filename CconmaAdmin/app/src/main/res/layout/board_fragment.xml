@@ -81,8 +81,8 @@
             android:indeterminateDrawable="@drawable/progress_large"
             />
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_marginLeft="20dp"
             android:text="로딩중..."
             style="@style/MediumBlack"/>
