@@ -6,6 +6,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -36,6 +38,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import android.os.Handler;
 
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity{
     private FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout mSwipeRefresh;
     private FragmentManager fragmentManager;
+    private CircularProgressBar circularProgressBar;
 
     private String TITLESUSER[] = {"설정", "로그아웃"};
     private int ICONSUSER[] = {R.drawable.ic_setting_selector,
@@ -72,7 +76,6 @@ public class MainActivity extends AppCompatActivity{
     private int ICONS[] = {R.drawable.ic_board_selector, R.drawable.ic_chart_selector, R.drawable.ic_question_selector, R.drawable.ic_search_grey600_48dp, R.drawable.ic_shopping_cart_grey600_48dp, R.drawable.ic_home_selector };
     private int status = 0;
     private String user_name = "개발";
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     public static final String PROPERTY_REG_ID = "registration_id";
     public static final String PROPERTY_APP_VERSION = "1";
@@ -100,22 +103,47 @@ public class MainActivity extends AppCompatActivity{
         mTitle = getTitle();
         context = getApplicationContext();
 
-        getInstanceIdToken(); //get regId for GCM
-
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
-        recyclerView = (RecyclerView)findViewById(R.id.RecyclerView);
-        recyclerView.setHasFixedSize(true);
+        circularProgressBar = (CircularProgressBar)findViewById(R.id.progressbar_circular);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
-        recyclerAdapter = new RecyclerViewAdapter(TITLES, ICONS, user_name, 0);
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-        recyclerView.setAdapter(recyclerAdapter);
+                if(menuItem.isChecked()) {
+                    menuItem.setChecked(false);
+                }
+                else {
+                    //menuItem.setChecked(true);
+                }
 
-        final GestureDetector mGestureDetector = new GestureDetector(getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+                mDrawerLayout.closeDrawers();
+                Log.d(TAG, String.valueOf(menuItem.getGroupId()));
+                switch (menuItem.getItemId()){
+                    case 1:
+                        break;
+                }
+                return true;
+            }
+        });
+        //recyclerView = (RecyclerView)findViewById(R.id.RecyclerView);
+        //recyclerView.setHasFixedSize(true);
+
+        //layoutManager = new LinearLayoutManager(this);
+        //recyclerView.setLayoutManager(layoutManager);
+
+        //recyclerAdapter = new RecyclerViewAdapter(TITLES, ICONS, user_name, 0);
+
+        //recyclerView.setAdapter(recyclerAdapter);
+
+        /*final GestureDetector mGestureDetector = new GestureDetector(getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 return true;
@@ -174,7 +202,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
             }
-        });
+        });*/
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -198,7 +226,8 @@ public class MainActivity extends AppCompatActivity{
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
-            selectItem(1);
+            new init(1).execute();
+            //selectItem(1);
         }
     }
 
@@ -234,7 +263,7 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    /*@Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             switch (event.getKeyCode()) {
@@ -260,7 +289,7 @@ public class MainActivity extends AppCompatActivity{
             }
         }
         return super.dispatchKeyEvent(event);
-    }
+    }*/
 
     @Override
     public void setTitle(CharSequence title) {
@@ -282,84 +311,202 @@ public class MainActivity extends AppCompatActivity{
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void selectItem(int position) {
-        if(position == 1){
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
-            if(fragment != null) {
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.remove(fragment).commit();
+    /*private void selectItem(final int position) {
+        class  handler extends Handler{
+            @Override
+            public void handleMessage(Message msg){
+                circularProgressBar.setVisibility(View.GONE);
             }
+        };
 
-            // View Page Adapter
-            viewPager = (ViewPager)findViewById(R.id.viewPager);
-            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
-                    this);
-            viewPager.setAdapter(viewPagerAdapter);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        if (position == 1) {
+                            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
+                            if (fragment != null) {
+                                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                                ft.remove(fragment).commit();
+                            }
 
-            // ViewPager setting
-            tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-            tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
-            tabLayout.setupWithViewPager(viewPager);
-            tabLayout.setVisibility(tabLayout.VISIBLE);
+                            // View Page Adapter
+                            viewPager = (ViewPager) findViewById(R.id.viewPager);
+                            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
+                                    MainActivity.this);
+                            viewPager.setAdapter(viewPagerAdapter);
 
-            floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-            floatingActionButton.setVisibility(floatingActionButton.VISIBLE);
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, BoardWriteActivity.class);
-                    startActivity(intent);
+                            // ViewPager setting
+                            tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+                            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+                            tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
+                            tabLayout.setupWithViewPager(viewPager);
+                            tabLayout.setVisibility(tabLayout.VISIBLE);
+
+                            floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+                            floatingActionButton.setVisibility(floatingActionButton.VISIBLE);
+                            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(MainActivity.this, BoardWriteActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                            getSupportActionBar().setTitle(TITLES[position - 1]);
+                            new handler().sendEmptyMessage(0);
+                        } else {
+                            tabLayout.setVisibility(findViewById(R.id.tabLayout).GONE);
+                            floatingActionButton.setVisibility(findViewById(R.id.fab).GONE);
+                            Fragment fragment = new MainFragment();
+                            Bundle args = new Bundle();
+                            args.putInt(MainFragment.POSITION, position);
+                            fragment.setArguments(args);
+
+                            fragmentManager = getSupportFragmentManager();
+                            FragmentTransaction ft = fragmentManager.beginTransaction();
+                            ft.replace(R.id.main_content_frame, fragment, "fragment");
+                            ft.commit();
+                        }
+                    }
+                });
+            }
+        }).start();*/
+
+        /*final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (position == 1) {
+                    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
+                    if (fragment != null) {
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.remove(fragment).commit();
+                    }
+
+                    // View Page Adapter
+                    viewPager = (ViewPager) findViewById(R.id.viewPager);
+                    ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
+                            MainActivity.this);
+                    viewPager.setAdapter(viewPagerAdapter);
+
+                    // ViewPager setting
+                    tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+                    tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                    tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+                    tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
+                    tabLayout.setupWithViewPager(viewPager);
+                    tabLayout.setVisibility(tabLayout.VISIBLE);
+
+                    floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+                    floatingActionButton.setVisibility(floatingActionButton.VISIBLE);
+                    floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(MainActivity.this, BoardWriteActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+
+                    getSupportActionBar().setTitle(TITLES[position - 1]);
+                } else {
+                    tabLayout.setVisibility(findViewById(R.id.tabLayout).GONE);
+                    floatingActionButton.setVisibility(findViewById(R.id.fab).GONE);
+                    Fragment fragment = new MainFragment();
+                    Bundle args = new Bundle();
+                    args.putInt(MainFragment.POSITION, position);
+                    fragment.setArguments(args);
+
+                    fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction ft = fragmentManager.beginTransaction();
+                    ft.replace(R.id.main_content_frame, fragment, "fragment");
+                    ft.commit();
                 }
-            });
-            getSupportActionBar().setTitle(TITLES[position - 1]);
-        }
-        else {
-            tabLayout.setVisibility(findViewById(R.id.tabLayout).GONE);
-            floatingActionButton.setVisibility(findViewById(R.id.fab).GONE);
-            Fragment fragment = new MainFragment();
-            Bundle args = new Bundle();
-            args.putInt(MainFragment.POSITION, position);
-            fragment.setArguments(args);
+            }
+        }, 0);*/
 
-            fragmentManager = getSupportFragmentManager();
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.replace(R.id.main_content_frame, fragment, "fragment");
-            ft.commit();
+
+    //}
+
+    class init extends AsyncTask<Void, Void, Void>{
+        int position;
+        public init(int position){
+            this.position = position;
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (position == 1) {
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
+                if (fragment != null) {
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.remove(fragment).commit();
+                }
+
+                // View Page Adapter
+
+                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
+                        MainActivity.this);
+                viewPager.setAdapter(viewPagerAdapter);
+
+                // ViewPager setting
+                tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+                tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
+                tabLayout.setTabsFromPagerAdapter(viewPager.getAdapter());
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+
+                    }
+                });
+                tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+
+                tabLayout.setVisibility(tabLayout.VISIBLE);
+
+
+                floatingActionButton.setVisibility(floatingActionButton.VISIBLE);
+                floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, BoardWriteActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                getSupportActionBar().setTitle(TITLES[position - 1]);
+            } else {
+                tabLayout.setVisibility(findViewById(R.id.tabLayout).GONE);
+                floatingActionButton.setVisibility(findViewById(R.id.fab).GONE);
+                Fragment fragment = new MainFragment();
+                Bundle args = new Bundle();
+                args.putInt(MainFragment.POSITION, position);
+                fragment.setArguments(args);
+
+                fragmentManager = getSupportFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.main_content_frame, fragment, "fragment");
+                ft.commit();
+            }
+            return null;
         }
     }
-
     private void setSwipeToRefresh(){
         //set SwipeToRefresh on the activity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SwipeToRefresh swipe = new SwipeToRefresh();
         transaction.add(R.id.board_container, swipe);
         transaction.commit();
-    }
-
-    public void getInstanceIdToken() {
-        if (checkPlayServices()) {
-            Log.d(TAG, "GCM INTENT");
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
-    }
-
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                Log.i(TAG, "This device is not supported.");
-                finish();
-            }
-            return false;
-        }
-        return true;
     }
 
     private static int getAppVersion(Context context) {
