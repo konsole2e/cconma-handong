@@ -415,11 +415,11 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 {
                     String type;
                     if(data.comment_hashMap.get("hash_tag_type"+i).equals("notice_myteam"))
-                        type = "<font color=\"blue\">" + data.comment_hashMap.get("hash_tag"+i) + "</font>";
+                        type = "<font color=\"#22741C\">" + data.comment_hashMap.get("hash_tag"+i) + " " + "</font>";
                     else if(data.comment_hashMap.get("hash_tag_type"+i).equals("notice_team"))
-                        type = "<font color=\"red\">" + data.comment_hashMap.get("hash_tag"+i) + "</font>";
+                        type = "<font color=\"#6BA300\">" + data.comment_hashMap.get("hash_tag"+i) + " " + "</font>";
                     else if(data.comment_hashMap.get("hash_tag_type"+i).equals("notice_member"))
-                        type = "<font color=\"green\">" + data.comment_hashMap.get("hash_tag"+i) + "</font>";
+                        type = "<font color=\"#4641D9\">" + data.comment_hashMap.get("hash_tag"+i) + " " + "</font>";
                     else
                         type = data.comment_hashMap.get("hash_tag"+i).toString();
 
@@ -539,8 +539,8 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             text_board_view_title.setText(subject);
             text_board_view_writer.setText(name);
             //Spanned spanned = Html.fromHtml(content, this, null);
-            text_board_view_content.setText(content);
-            //text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
+            text_board_view_content.setText(Html.fromHtml(content));
+            text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
 
 
             JSONArray jsonArray = json.getJSONArray("comment_list");
