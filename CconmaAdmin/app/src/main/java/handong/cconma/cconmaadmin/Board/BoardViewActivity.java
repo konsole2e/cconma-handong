@@ -89,7 +89,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_view);
-        뿡치치
+        뿡치치ㅇ
         board_no = this.getIntent().getStringExtra("board_no");
         boardarticle_no = this.getIntent().getStringExtra("boardarticle_no");
 
