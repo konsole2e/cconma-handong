@@ -89,14 +89,14 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_view);
-        뿡치치ㅇ
+
         board_no = this.getIntent().getStringExtra("board_no");
         boardarticle_no = this.getIntent().getStringExtra("boardarticle_no");
 
         View header = getLayoutInflater().inflate(R.layout.board_list_header, null, false);
 
         header.setLongClickable(false);
-        // Attaching the layout to the toolbar object
+        
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
