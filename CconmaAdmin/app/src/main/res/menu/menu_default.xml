@@ -23,6 +23,18 @@
             android:icon="@drawable/ic_question_selector"/>
 
         <item
+            android:title="회원정보 조회"
+            android:checked="false"
+            android:id="@+id/searchuser"
+            android:icon="@drawable/ic_search_grey600_48dp"/>
+
+        <item
+            android:title="주문조회"
+            android:checked="false"
+            android:id="@+id/searchorder"
+            android:icon="@drawable/ic_shopping_cart_grey600_48dp"/>
+
+        <item
             android:title="마을지기 홈페이지"
             android:checked="false"
             android:id="@+id/homepage"

@@ -107,6 +107,7 @@
                     android:layout_height="fill_parent"
                     android:layout_marginRight="16dp"
                     android:gravity="top"
+                    android:inputType="textMultiLine"
                     android:id="@+id/content"
                     style="@style/SmallBlack"/>
             </LinearLayout>

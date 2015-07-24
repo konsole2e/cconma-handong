@@ -3,6 +3,8 @@ package handong.cconma.cconmaadmin.etc;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.util.CircularArray;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
@@ -12,37 +14,33 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.Cookies;
+import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 import handong.cconma.cconmaadmin.mainpage.BaseActivity;
 import handong.cconma.cconmaadmin.mainpage.MainActivity;
 
 /**
  * Created by Young Bin Kim on 2015-07-20.
  */
-public class LoginWebView extends BaseActivity {
+public class LoginWebView extends AppCompatActivity {
     private android.webkit.WebView webview;
+    private CircularProgressBar circularProgressBar;
     private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview);
+
+        circularProgressBar= (CircularProgressBar) findViewById(R.id.progressbar_circular);
 
         webview = (WebView) findViewById(R.id.webView);
 
         Intent data = getIntent();
         url = data.getStringExtra("URL");
-        final Activity activity = this;
-
-        webview.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(android.webkit.WebView view, int progress) {
-                // Activities and WebViews measure progress with different scales.
-                // The progress meter will automatically disappear when we reach 100%
-                activity.setProgress(progress * 1000);
-            }
-        });
 
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
         webview.getSettings().setBuiltInZoomControls(true);
@@ -50,26 +48,10 @@ public class LoginWebView extends BaseActivity {
         webview.setWebViewClient(new WebClient());
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_BACK:
-                    if (webview.canGoBack()) {
-                        webview.goBack();
-                    } else {
-                        finish();
-                    }
-                    return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     class WebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
-
             if(url.contains("index.pmv")){
+                finish();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 return true;
             }else {
@@ -77,13 +59,9 @@ public class LoginWebView extends BaseActivity {
             }
         }
 
-        public void onPageStarted(WebView view, String url,
-                                  android.graphics.Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-        };
-
         public void onPageFinished(WebView view, String url){
             Cookies.getInstance().updateCookies(url);
+            ((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).progressiveStop();
         }
     }
 }

@@ -12,7 +12,10 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 
 
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.statics.StaticsLike;
 import handong.cconma.cconmaadmin.statics.StaticsMember;
 import handong.cconma.cconmaadmin.statics.StaticsMemberRecent;
@@ -29,6 +32,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     private CharSequence TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
 
     private WebView webview;
+    private CircularProgressBar circularProgressBar;
 
     public MainFragment(){
     }
@@ -63,6 +67,8 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         }
         else {
             rootView = inflater.inflate(R.layout.webview, container, false);
+            circularProgressBar = (CircularProgressBar)rootView.findViewById(R.id.progressbar_circular);
+
             switch(position){
                 case 3:
                     openWebView(rootView, "http://www.cconma.com/admin/help_board/help_board_list.pmv");
@@ -92,6 +98,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
 
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
         webview.getSettings().setBuiltInZoomControls(true);
+        webview.getSettings().setUserAgentString("User-agent");
         webview.canGoBackOrForward(5);
         webview.loadUrl(url);
         webview.setWebViewClient(new WebClient());
@@ -125,6 +132,10 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
             view.loadUrl(url);
             return true;
+        }
+        public void onPageFinished(WebView view, String url){
+            ((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).progressiveStop();
+            Cookies.getInstance().updateCookies(url);
         }
     }
 }

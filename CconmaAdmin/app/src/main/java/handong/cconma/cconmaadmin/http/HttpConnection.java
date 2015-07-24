@@ -1,6 +1,8 @@
 package handong.cconma.cconmaadmin.http;
 
+import android.app.SharedElementCallback;
 import android.util.Log;
+import android.util.Xml;
 
 import org.json.JSONObject;
 
@@ -16,6 +18,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import handong.cconma.cconmaadmin.data.Cookies;
+import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 
 /**
  * Created by Young Bin Kim on 2015-07-20.
@@ -49,6 +52,7 @@ public class HttpConnection  {
             conn.setRequestProperty("Content-Language", "en-US");
             conn.setRequestProperty("Cookie", Cookies.getInstance().getCurrentCookies());
             conn.setRequestMethod(method);
+            conn.setRequestProperty("Accept-Charset", "UTF-8");
             if(method.equals("POST")){
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             }
@@ -86,7 +90,7 @@ public class HttpConnection  {
             e.printStackTrace();
             Log.d(TAG, "IO EXCEPTION!!! " + e.getMessage());
         }
-        Log.d(TAG, "Return string is " + responseBody);
+        Log.d(TAG, "Return string is " +  responseBody);
 
         conn.disconnect();
         return responseBody;

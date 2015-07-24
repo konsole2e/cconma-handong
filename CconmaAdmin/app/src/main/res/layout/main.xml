@@ -31,4 +31,18 @@
 
     </android.support.design.widget.TextInputLayout>
 
+    <fr.castorflex.android.circularprogressbar.CircularProgressBar
+        android:id="@+id/progressbar_circular"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        android:indeterminate="true"
+        android:indeterminateOnly="false"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        app:cpb_colors="@array/colors"/>
 </RelativeLayout>

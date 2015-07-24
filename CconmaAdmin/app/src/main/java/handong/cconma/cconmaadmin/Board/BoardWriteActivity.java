@@ -222,9 +222,9 @@ public class BoardWriteActivity extends AppCompatActivity {
                 }
 
                 Toast.makeText(context, "글이 등록되었습니다", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(BoardWriteActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+               // Intent intent = new Intent(BoardWriteActivity.this, MainActivity.class);
+                //startActivity(intent);
+               // finish();
             }
         });
 

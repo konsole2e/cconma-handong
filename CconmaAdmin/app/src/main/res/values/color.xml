@@ -18,4 +18,11 @@
     <color name="statics_blue">#058DC7</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
+
+    <integer-array name="colors">
+        <item>@android:color/holo_red_light</item>
+        <item>@android:color/holo_blue_bright</item>
+        <item>@android:color/holo_green_light</item>
+        <item>@android:color/holo_orange_light</item>
+    </integer-array>
 </resources>

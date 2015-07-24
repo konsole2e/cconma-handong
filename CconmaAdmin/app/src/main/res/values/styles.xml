@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/ColorPrimary</item>
         <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
         <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlActivated">#64B5F6</item>
         <!-- Customize your theme here. -->
     </style>
 
