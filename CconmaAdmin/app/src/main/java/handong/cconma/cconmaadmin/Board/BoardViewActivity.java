@@ -4,6 +4,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LevelListDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +17,15 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Selection;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -32,6 +41,11 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,7 +58,7 @@ import handong.cconma.cconmaadmin.etc.MainAsyncTask;
  * 게시판 목록에서 하나 선택하여 글 내용을 보여주는 화면
  * Created by eundi on 15. 7. 6..
  */
-public class BoardViewActivity extends AppCompatActivity{
+public class BoardViewActivity extends AppCompatActivity implements Html.ImageGetter{
     private Toolbar toolbar;
 
     TextView text_board_view_title;
@@ -261,6 +275,85 @@ public class BoardViewActivity extends AppCompatActivity{
         alert.show();
     }
 
+    @Override
+    public Drawable getDrawable(String source) {
+        LevelListDrawable d = new LevelListDrawable();
+        Drawable empty = getResources().getDrawable(R.drawable.ic_star_outline_grey600_48dp);
+        d.addLevel(0, 0, empty);
+        d.setBounds(0, 0, empty.getIntrinsicWidth(), empty.getIntrinsicHeight());
+
+        new LoadImage().execute(source, d);
+
+        return d;
+    }
+    class LoadImage extends AsyncTask<Object, Void, Bitmap> {
+
+        private LevelListDrawable mDrawable;
+
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+            String source = (String) params[0];
+            mDrawable = (LevelListDrawable) params[1];
+            Log.d("list", "doInBackground " + source);
+            Display dis;
+
+            dis = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+            try {
+                InputStream is = new URL(source).openStream();
+                //BitmapFactory.Options options = new BitmapFactory.Options();
+                //options.inSampleSize = 7;
+
+
+                int scale=1;
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeStream(is, null, options);
+                if (options.outHeight > (dis.getHeight()) || options.outWidth > (dis.getWidth()*5/6)) {
+                    scale = (int)Math.pow(2, (int)Math.round(Math.log((dis.getWidth()*5/6)/(double)Math.max(options.outHeight, options.outWidth)) / Math.log(0.5)));
+                }
+                options.inJustDecodeBounds = false;
+                options.inSampleSize = scale;
+                Log.d("list", ""+scale);
+                is.close();
+
+                is = new URL(source).openStream();
+                Bitmap resize = BitmapFactory.decodeStream(is, null, options);
+                /*Bitmap bit = BitmapFactory.decodeStream(is);
+                Bitmap resize = bit;
+                if(bit.getWidth() > dis.getWidth() || bit.getHeight() > (dis.getHeight()*3/4)) {
+                    resize = Bitmap.createScaledBitmap(bit, (int) dis.getWidth()/2, (int) (dis.getHeight()/ 4), true);
+                    Log.d("list", "RESIZE");
+                }*/
+                return resize;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            Log.d("list", "onPostExecute drawable " + mDrawable);
+            Log.d("list", "onPostExecute bitmap " + bitmap);
+            if (bitmap != null) {
+                BitmapDrawable d = new BitmapDrawable(bitmap);
+                mDrawable.addLevel(1, 1, d);
+                mDrawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                mDrawable.setLevel(1);
+                // i don't know yet a better way to refresh TextView
+                // mTv.invalidate() doesn't work as expected
+                CharSequence t = text_board_view_content.getText();
+                text_board_view_content.setText(t);
+
+            }else{
+                Log.d("list", "bitmap is null!!!!!!!!!!!!!!!");
+            }
+        }
+    }
     public class BoardCommentAdapter extends BaseAdapter {
 
 
@@ -429,11 +522,11 @@ public class BoardViewActivity extends AppCompatActivity{
 
                 String type;
                 if(noticeObj.getString("hash_tag_type").equals("notice_myteam"))
-                    type = "<font color=\"blue\">" + noticeObj.getString("hash_tag") + "</font>";
-                else if(noticeObj.getString("hash_tag_type").equals("notice_myteam"))
-                    type = "<font color=\"blue\">" + noticeObj.getString("hash_tag") + "</font>";
-                else if(noticeObj.getString("hash_tag_type").equals("notice_myteam"))
-                    type = "<font color=\"blue\">" + noticeObj.getString("hash_tag") + "</font>";
+                    type = "<font color=#22741C>" + noticeObj.getString("hash_tag") + " " + "</font>";
+                else if(noticeObj.getString("hash_tag_type").equals("notice_team"))
+                    type = "<font color=\"#6BA300\">" + noticeObj.getString("hash_tag") + " " + "</font>";
+                else if(noticeObj.getString("hash_tag_type").equals("notice_member"))
+                    type = "<font color=\"#4641D9\">" + noticeObj.getString("hash_tag") + " " + "</font>";
                 else
                     type = noticeObj.getString("hash_tag").toString();
 
@@ -445,8 +538,9 @@ public class BoardViewActivity extends AppCompatActivity{
             text_board_view_date.setText(reg_date);
             text_board_view_title.setText(subject);
             text_board_view_writer.setText(name);
-            text_board_view_content.setText(Html.fromHtml(content));
-            text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
+            //Spanned spanned = Html.fromHtml(content, this, null);
+            text_board_view_content.setText(content);
+            //text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
 
 
             JSONArray jsonArray = json.getJSONArray("comment_list");

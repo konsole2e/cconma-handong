@@ -34,6 +34,7 @@ public class MainAsyncTask extends AsyncTask<JSONObject, Void, JSONObject> {
         sResult = connection.init();
         Log.d(TAG, sResult);
 
+
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(sResult);
