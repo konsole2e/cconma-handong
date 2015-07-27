@@ -1,9 +1,9 @@
 package handong.cconma.cconmaadmin.board;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
-import android.util.Log;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +76,8 @@ public class BoardAdapter extends BaseAdapter{
         holder.text_notice5 = (TextView)convertView.findViewById(R.id.text_notice5);
         holder.text_notice6 = (TextView)convertView.findViewById(R.id.text_notice6);
 
+        holder.layout_for_mark = (LinearLayout)convertView.findViewById(R.id.layout_for_mark);
+
         convertView.setTag(holder);
         //}else{
         //    holder = (ViewHolder)convertView.getTag();
@@ -84,10 +86,28 @@ public class BoardAdapter extends BaseAdapter{
         BoardData data = board_list_data.get(position);
 
         holder.text_board_title.setText(data.subject);
+        String date = "";
+        if(data.comment_count != 0) {
+            holder.text_board_comment_num.setVisibility(View.VISIBLE);
+            holder.text_board_comment_num.setText(data.comment_nicknames);
+        }
+            //holder.text_board_comment_num.setText("+" + data.comment_count);
 
-        if(data.comment_count != 0)
-            holder.text_board_comment_num.setText("+" + data.comment_count);
-        holder.text_board_date.setText(data.reg_date);
+        StringTokenizer st = new StringTokenizer(data.reg_date, "-:");
+        int count=0;
+        while(st.hasMoreTokens()){
+            String stDate = st.nextToken();
+            if(count == 1){
+                date = date + stDate;
+            }else if(count ==2){
+                date = date + "/" +stDate;
+            }else if(count == 3){
+                date = date+ ":" + stDate;
+                break;
+            }
+            count++;
+        }
+        holder.text_board_date.setText(date);
 
 
 
@@ -121,19 +141,43 @@ public class BoardAdapter extends BaseAdapter{
         holder.text_board_writer.setText(data.name);
 
         holder.btn_board_mark.setChecked(data.board_marked);
-        holder.btn_board_mark.setTag(position);
-        holder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
+        //holder.btn_board_mark.setTag(position);
+        holder.btn_board_mark.setClickable(false);
+        /*holder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.btn_board_mark.isChecked()) {
+                    Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
+                    board_list_data.get((Integer) v.getTag()).board_marked = true;
+                } else {
+
+                    Toast.makeText(context, "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
+                    board_list_data.get((Integer) v.getTag()).board_marked = false;
+                }
+            }
+        });*/
+
+
+        holder.layout_for_mark.setTag(position);
+        holder.layout_for_mark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(holder.btn_board_mark.isChecked()){
-                    Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
-                    board_list_data.get((Integer)v.getTag()).board_marked = true;
-                }else{
                     Toast.makeText(context, "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
+                    holder.btn_board_mark.setChecked(false);
                     board_list_data.get((Integer)v.getTag()).board_marked = false;
+                }else{
+                    Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
+                    holder.btn_board_mark.setChecked(true);
+                    board_list_data.get((Integer)v.getTag()).board_marked = true;
+
                 }
             }
         });
+
+
+
+
         if(data.board_file)
             holder.img_board_file.setVisibility(View.VISIBLE);
         else
@@ -179,25 +223,8 @@ public class BoardAdapter extends BaseAdapter{
             addData.comment_count++;
         }
 
-        //addData.hash_count = hash_tag.size();
-
         board_list_data.add(addData);
     }
-
-
-    /*public void addItem(String title, String writer, String notice, String date, int comment, boolean marked, boolean file){
-        BoardData addData = new BoardData();
-
-        addData.board_title = title;
-        addData.board_writer = writer;
-        addData.board_notice = notice;
-        addData.board_date = date;
-        addData.board_comment_num = comment;
-        addData.board_marked = marked;
-        addData.board_file = file;
-
-        board_list_data.add(addData);
-    }*/
 
     public class ViewHolder{
         public TextView text_board_title;
@@ -214,23 +241,34 @@ public class BoardAdapter extends BaseAdapter{
         public TextView text_notice5;
         public TextView text_notice6;
 
+        public LinearLayout layout_for_mark;
+
     }
 
     public void color(TextView textView, BoardData boardData, int n){
         String hash_tag_type = boardData.hashMap.get("hash_tag_type"+n).toString();
         textView.setText(" "+boardData.hashMap.get("hash_tag" + n).toString()+" ");
         textView.setVisibility(View.VISIBLE);
+
+        Resources res = context.getResources();
         if(hash_tag_type.equals("notice_myteam")) {
-            textView.setBackgroundColor(Color.rgb(34, 116, 28));
-            textView.setTextColor(Color.WHITE);
+            Drawable d = res.getDrawable(R.drawable.notice_myteam);
+            textView.setBackgroundDrawable(d);
+            textView.setTextColor(Color.rgb(255, 255, 255));
         }
         else if(hash_tag_type.equals("notice_team")) {
-            textView.setBackgroundColor(Color.rgb(228, 247, 186));
-            textView.setTextColor(Color.rgb(107, 153, 0));
+            Drawable d = res.getDrawable(R.drawable.notice_team);
+            textView.setBackgroundDrawable(d);
+            textView.setTextColor(Color.rgb(42, 117, 0));
         }
         else if(hash_tag_type.equals("notice_member")) {
-            textView.setBackgroundColor(Color.rgb(218, 217, 255));
-            textView.setTextColor(Color.rgb(70, 65, 217));
+            Drawable d = res.getDrawable(R.drawable.notice_member);
+            textView.setBackgroundDrawable(d);
+            textView.setTextColor(Color.rgb(59, 89, 152));
+        }else if(hash_tag_type.equals("notice_me")){
+            Drawable d = res.getDrawable(R.drawable.notice_me);
+            textView.setBackgroundDrawable(d);
+            textView.setTextColor(Color.rgb(255, 255, 255));
         }
     }
 }

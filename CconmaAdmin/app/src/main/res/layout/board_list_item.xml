@@ -3,7 +3,8 @@
     android:layout_width="fill_parent" android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="72dp"
+        android:layout_height="wrap_content"
+        android:minHeight="55dp"
         android:orientation="horizontal"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -12,19 +13,9 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
             android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/text_board_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="20150704_꽃바람 1기 모임 - 꽃..."
-                    android:textColor="#000000"/>
-            </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,9 +38,15 @@
                             android:id="@+id/text_notice2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+
                             android:visibility="gone" />
                         <TextView
                             android:id="@+id/text_notice3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+                        <TextView
+                            android:id="@+id/text_notice4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:visibility="gone" />
@@ -58,11 +55,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-                        <TextView
-                            android:id="@+id/text_notice4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone" />
                         <TextView
                             android:id="@+id/text_notice5"
                             android:layout_width="wrap_content"
@@ -83,41 +75,62 @@
                         android:paddingRight="5dp"
                         android:visibility="gone" />
                 </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/text_board_comment_num"
+                    android:id="@+id/text_board_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#304FFE"/>
+                    android:hint="20150704_꽃바람 1기 모임 - 꽃..."
+                    android:textColor="#000000"/>
             </LinearLayout>
+            <TextView
+                android:id="@+id/text_board_comment_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10dp"
+                android:visibility="gone"
+                android:textColor="#0099FF"/>
         </LinearLayout>
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/layout_for_mark"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="right"
             android:padding="8sp">
-            <TextView
-                android:id="@+id/text_board_writer"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:hint="김은지"/>
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/text_board_writer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:hint="김은지"/>
+                <ToggleButton
+                    android:id="@+id/btn_board_mark"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:background="@drawable/ic_btn_bookmark_selector"
+                    android:textOff=""
+                    android:textOn=""/>
+            </LinearLayout>
             <TextView
                 android:id="@+id/text_board_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
                 android:gravity="right"
-                android:text="2015/06/30\n14:20:56"/>
+                android:textSize="11dp"
+                android:text="06/30 14:20"/>
         </LinearLayout>
-        <ToggleButton
-            android:id="@+id/btn_board_mark"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_gravity="right|center_vertical"
-            android:background="@drawable/ic_btn_bookmark_selector"
-            android:textOff=""
-            android:textOn=""/>
     </LinearLayout>
 </FrameLayout>

@@ -20,6 +20,8 @@ import android.text.Selection;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.Base64;
+import android.util.Base64InputStream;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -41,6 +43,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -294,21 +297,64 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         protected Bitmap doInBackground(Object... params) {
             String source = (String) params[0];
             mDrawable = (LevelListDrawable) params[1];
-            Log.d("list", "doInBackground " + source);
+            //Log.d("list", "doInBackground " + source);
             Display dis;
 
             dis = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
             try {
-                InputStream is = new URL(source).openStream();
+
+                if(source.substring(0, 4).equals("data")){
+
+                    /*Log.d("list", "base64 Image");
+
+                    String bytes64bytes = Base64.encodeToString(source.substring(4, source.length()).getBytes(), 0);
+                    String txtPlainOrg = "";
+                    byte[] bytePlainOrg = Base64.decode(bytes64bytes, 0);
+                    Log.d("list", bytePlainOrg.toString());
+
+                    //byte[] 데이터  stream 데이터로 변환 후 bitmapFactory로 이미지 생성
+                    ByteArrayInputStream inStream = new ByteArrayInputStream(bytePlainOrg);
+                    Bitmap bm = BitmapFactory.decodeStream(inStream);
+
+                    if(bm == null)
+                        Log.d("list", "bm is null");
+*/
+                    return null;
+                }else{
+                    Log.d("list", "WS.CCONMA");
+                    InputStream is = new URL(source).openStream();
+                    int scale=1;
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    BitmapFactory.decodeStream(is, null, options);
+                    if (options.outHeight > (dis.getHeight()) || options.outWidth > (dis.getWidth()*5/6)) {
+                        scale = (int)Math.pow(2, (int)Math.round(Math.log((dis.getWidth()*5/6)/(double)Math.max(options.outHeight, options.outWidth)) / Math.log(0.5)));
+                    }
+                    options.inJustDecodeBounds = false;
+                    options.inSampleSize = scale;
+                    Log.d("list", ""+scale);
+                    is.close();
+
+                    is = new URL(source).openStream();
+                    Bitmap resize = BitmapFactory.decodeStream(is, null, options);
+
+                    return resize;
+                }
+
+
                 //BitmapFactory.Options options = new BitmapFactory.Options();
                 //options.inSampleSize = 7;
 
 
-                int scale=1;
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeStream(is, null, options);
-                if (options.outHeight > (dis.getHeight()) || options.outWidth > (dis.getWidth()*5/6)) {
+
+
+
+
+                //데이터 base64 형식으로 Decode
+
+
+
+                /*if (options.outHeight > (dis.getHeight()) || options.outWidth > (dis.getWidth()*5/6)) {
                     scale = (int)Math.pow(2, (int)Math.round(Math.log((dis.getWidth()*5/6)/(double)Math.max(options.outHeight, options.outWidth)) / Math.log(0.5)));
                 }
                 options.inJustDecodeBounds = false;
@@ -317,14 +363,16 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 is.close();
 
                 is = new URL(source).openStream();
-                Bitmap resize = BitmapFactory.decodeStream(is, null, options);
+                Bitmap resize = BitmapFactory.decodeStream(is, null, options);*/
+
+
+
                 /*Bitmap bit = BitmapFactory.decodeStream(is);
                 Bitmap resize = bit;
                 if(bit.getWidth() > dis.getWidth() || bit.getHeight() > (dis.getHeight()*3/4)) {
                     resize = Bitmap.createScaledBitmap(bit, (int) dis.getWidth()/2, (int) (dis.getHeight()/ 4), true);
                     Log.d("list", "RESIZE");
                 }*/
-                return resize;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (MalformedURLException e) {
@@ -538,8 +586,8 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             text_board_view_date.setText(reg_date);
             text_board_view_title.setText(subject);
             text_board_view_writer.setText(name);
-            //Spanned spanned = Html.fromHtml(content, this, null);
-            text_board_view_content.setText(Html.fromHtml(content));
+            Spanned spanned = Html.fromHtml(content, this, null);
+            text_board_view_content.setText(spanned);
             text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
 
 
