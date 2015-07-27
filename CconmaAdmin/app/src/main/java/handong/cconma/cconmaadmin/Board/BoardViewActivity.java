@@ -4,8 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LevelListDrawable;
@@ -53,6 +56,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
@@ -65,7 +71,12 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     private Toolbar toolbar;
 
     TextView text_board_view_title;
-    TextView text_board_view_notice;
+    TextView text_board_view_notice1;
+    TextView text_board_view_notice2;
+    TextView text_board_view_notice3;
+    TextView text_board_view_notice4;
+    TextView text_board_view_notice5;
+    TextView text_board_view_notice6;
     TextView text_board_view_writer;
     TextView text_board_view_date;
     CheckBox check_board_view_complete;
@@ -122,7 +133,12 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         btn_board_view_comment.setOnClickListener(clickListener);
 
         text_board_view_title = (TextView)header.findViewById(R.id.text_board_view_title);
-        text_board_view_notice = (TextView)header.findViewById(R.id.text_board_view_notice);
+        text_board_view_notice1 = (TextView)header.findViewById(R.id.text_board_view_notice1);
+        text_board_view_notice2 = (TextView)header.findViewById(R.id.text_board_view_notice2);
+        text_board_view_notice3 = (TextView)header.findViewById(R.id.text_board_view_notice3);
+        text_board_view_notice4 = (TextView)header.findViewById(R.id.text_board_view_notice4);
+        text_board_view_notice5 = (TextView)header.findViewById(R.id.text_board_view_notice5);
+        text_board_view_notice6 = (TextView)header.findViewById(R.id.text_board_view_notice6);
         text_board_view_writer = (TextView)header.findViewById(R.id.text_board_view_writer);
         text_board_view_date = (TextView)header.findViewById(R.id.text_board_view_date);
         check_board_view_complete = (CheckBox)header.findViewById(R.id.check_board_view_complete);
@@ -447,14 +463,25 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
 
             final BoardCommentData data = board_comment_list_data.get(position);
             holder.text_board_view_comment_writer.setText(data.commnet_writer);
+            holder.text_board_view_comment_writer.setPaintFlags(holder.text_board_view_comment_writer.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+
+
             holder.text_board_view_comment_writer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String currentComment = edit_board_view_comment.getText().toString();
 
-                    edit_board_view_comment.setText(currentComment + "@" + data.commnet_writer);
-                    Editable edt = edit_board_view_comment.getText();
-                    Selection.setSelection(edt, edt.length());
+                    boolean isValid = true;
+                    Pattern pattern = Pattern.compile("@" + holder.text_board_view_comment_writer.getText() + " ");
+                    Matcher matcher = pattern.matcher(currentComment);
+                    while (matcher.find()) {
+                        isValid = false;
+                    }
+                    if (isValid) {
+                        edit_board_view_comment.setText(currentComment + "@" + data.commnet_writer + " ");
+                        Editable edt = edit_board_view_comment.getText();
+                        Selection.setSelection(edt, edt.length());
+                    }
                 }
             });
             String tag="";
@@ -564,28 +591,38 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             String content = json.getString("content");
 
             JSONArray noticeArr = json.getJSONArray("article_hash_tags");
-            String tag = "";
             for(int k=0; k<noticeArr.length(); k++){
                 JSONObject noticeObj = noticeArr.getJSONObject(k);
-
-                String type;
-                if(noticeObj.getString("hash_tag_type").equals("notice_myteam"))
-                    type = "<font color=#22741C>" + noticeObj.getString("hash_tag") + " " + "</font>";
-                else if(noticeObj.getString("hash_tag_type").equals("notice_team"))
-                    type = "<font color=\"#6BA300\">" + noticeObj.getString("hash_tag") + " " + "</font>";
-                else if(noticeObj.getString("hash_tag_type").equals("notice_member"))
-                    type = "<font color=\"#4641D9\">" + noticeObj.getString("hash_tag") + " " + "</font>";
-                else
-                    type = noticeObj.getString("hash_tag").toString();
-
-                tag = tag + type;
+                String notice_tag = noticeObj.getString("hash_tag");
+                String notice_tag_type = noticeObj.getString("hash_tag_type");
+                switch(k){
+                    case 0:
+                        color(text_board_view_notice1, notice_tag, notice_tag_type);
+                        break;
+                    case 1:
+                        color(text_board_view_notice2, notice_tag, notice_tag_type);
+                        break;
+                    case 2:
+                        color(text_board_view_notice3, notice_tag, notice_tag_type);
+                        break;
+                    case 3:
+                        color(text_board_view_notice4, notice_tag, notice_tag_type);
+                        break;
+                    case 4:
+                        color(text_board_view_notice5, notice_tag, notice_tag_type);
+                        break;
+                    case 5:
+                        color(text_board_view_notice6, notice_tag, notice_tag_type);
+                        break;
+                }
             }
-
-            text_board_view_notice.setText(Html.fromHtml(tag));
 
             text_board_view_date.setText(reg_date);
             text_board_view_title.setText(subject);
+            text_board_view_title.setPaintFlags(text_board_view_title.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
             text_board_view_writer.setText(name);
+            text_board_view_writer.setPaintFlags(text_board_view_writer.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+
             Spanned spanned = Html.fromHtml(content, this, null);
             text_board_view_content.setText(spanned);
             text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
@@ -595,7 +632,28 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             for(int i=0; i<jsonArray.length(); i++){
                 JSONObject commentObj = jsonArray.getJSONObject(i);
                 String comment_name = commentObj.getString("name");
+
+
                 String comment_reg_date = commentObj.getString("reg_date");
+                StringTokenizer st = new StringTokenizer(comment_reg_date, "- :");
+                int count=0;
+                String date="";
+                while(st.hasMoreTokens()){
+                    String stDate = st.nextToken();
+                    if(count == 1){
+                        date = date + stDate;
+                    }else if(count ==2){
+                        date = date + "/" +stDate;
+                    }else if(count == 3){
+                        date = date+ "\n" + stDate;
+                    }else if(count == 4){
+                        date = date + ":" +stDate;
+                        break;
+                    }
+                    count++;
+                }
+                comment_reg_date = date;
+
                 String comment_content = Html.fromHtml(commentObj.getString("content")).toString();
 
                 JSONArray hashArr = commentObj.getJSONArray("comment_hash_tags");
@@ -616,5 +674,49 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             Log.e("JSON", Log.getStackTraceString(e));
         }
 
+    }
+
+    public void color(final TextView textView, String tag, String type){
+        textView.setText(" " + tag + " ");
+        textView.setVisibility(View.VISIBLE);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String currentComment = edit_board_view_comment.getText().toString();
+                boolean isValid = true;
+                Pattern pattern = Pattern.compile("@"+textView.getText()+" ");
+                Matcher matcher = pattern.matcher(currentComment);
+                while(matcher.find()){
+                    isValid = false;
+                }
+                if(isValid){
+                    edit_board_view_comment.setText(currentComment + "@" + textView.getText() + " ");
+                    Editable edt = edit_board_view_comment.getText();
+                    Selection.setSelection(edt, edt.length());
+                }
+            }
+        });
+
+        Resources res = getApplicationContext().getResources();
+        if(type.equals("notice_myteam")) {
+            Drawable d = res.getDrawable(R.drawable.notice_myteam);
+            textView.setBackgroundDrawable(d);
+            textView.setTextColor(Color.rgb(255, 255, 255));
+        }
+        else if(type.equals("notice_team")) {
+            Drawable d = res.getDrawable(R.drawable.notice_team);
+            textView.setBackgroundDrawable(d);
+            textView.setTextColor(Color.rgb(42, 117, 0));
+        }
+        else if(type.equals("notice_member")) {
+            Drawable d = res.getDrawable(R.drawable.notice_member);
+            textView.setBackgroundDrawable(d);
+            textView.setTextColor(Color.rgb(59, 89, 152));
+        }else if(type.equals("notice_me")){
+            Drawable d = res.getDrawable(R.drawable.notice_me);
+            textView.setBackgroundDrawable(d);
+            textView.setTextColor(Color.rgb(255, 255, 255));
+        }
     }
 }

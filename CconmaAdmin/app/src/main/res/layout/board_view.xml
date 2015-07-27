@@ -16,47 +16,57 @@
             android:id="@+id/list_board_view_comment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="56dp"
+            android:layout_marginBottom="50dp"
             android:divider="#C5C5C5"
-            android:dividerHeight="1dp"
-            android:background="#ffffff"/>
+            android:dividerHeight="1dp"/>
     </LinearLayout>
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:background="#f44336"/>
-
     <LinearLayout
-        android:id="@+id/layout_board_view_comment"
         android:layout_width="fill_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
+        android:layout_height="50dp"
         android:layout_gravity="bottom"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:background="#ffffff">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="16dp"
-            style="@style/MediumBlack"
-            android:text="댓글"/>
-        <EditText
-            android:id="@+id/edit_board_view_comment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:textColorHint="#C5C5C5"
-            android:textColor="#000000"
-            android:hint="댓글을 입력하세요"/>
-        <Button
-            android:id="@+id/btn_board_view_comment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="입력"/>
+        android:background="#8C8C8C">
+        <LinearLayout
+            android:id="@+id/layout_board_view_comment"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_marginTop="1dp"
+            android:background="#ffffff">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:paddingLeft="16dp"
+                style="@style/SmallBlack"
+                android:text="댓글"/>
+            <EditText
+                android:id="@+id/edit_board_view_comment"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:paddingLeft="7dp"
+                android:layout_weight="3"
+                style="@style/SmallBlack"
+                android:textColorHint="#C5C5C5"
+                android:background="@drawable/edit_comment"
+                android:textColor="#000000"
+                android:hint="댓글을 입력하세요"/>
+            <Button
+                android:id="@+id/btn_board_view_comment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:text="입력"/>
+        </LinearLayout>
     </LinearLayout>
+
 </FrameLayout>
