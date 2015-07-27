@@ -1,5 +1,8 @@
 package handong.cconma.cconmaadmin.board;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +34,5 @@ public class BoardData {
     public String comment_nicknames;    //댓글
 
     public HashMap hashMap;
-
 
 }

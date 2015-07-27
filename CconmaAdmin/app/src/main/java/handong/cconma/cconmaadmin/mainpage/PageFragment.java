@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +35,6 @@ import org.json.JSONObject;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import handong.cconma.cconmaadmin.board.BoardAdapter;
@@ -95,6 +95,7 @@ public class PageFragment extends Fragment {
         btn_board_search_view.setChecked(false);
         layout_board_search.setVisibility(View.GONE);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -152,6 +153,24 @@ public class PageFragment extends Fragment {
         list_board.setOnTouchListener(touchListener);
 
         jsonParser();
+        /*final Handler handler = new Handler();
+        getActivity().runOnUiThread(new Runnable() {
+            public void run(){
+                final ProgressBar progressBar = (ProgressBar)view.findViewById(R.id.progress_list_update);
+                progressBar.setVisibility(View.VISIBLE);
+
+                handler.post(new Runnable(){
+                    public void run(){
+                        try {
+                            jsonParser();
+                        }finally{
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                });
+                }
+            });*/
+
 
 
 

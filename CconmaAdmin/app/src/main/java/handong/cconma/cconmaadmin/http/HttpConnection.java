@@ -48,7 +48,7 @@ public class HttpConnection  {
         try {
             conn = (HttpURLConnection) url.openConnection();
             Log.d(TAG, "Connection start");
-            conn.setConnectTimeout(10000);
+            conn.setConnectTimeout(2000);
             conn.setRequestProperty("Content-Language", "en-US");
             conn.setRequestProperty("Cookie", Cookies.getInstance().getCurrentCookies());
             conn.setRequestMethod(method);
