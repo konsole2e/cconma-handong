@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="handong.cconma.cconmaadmin">
+    package="handong.cconma.cconmaadmin" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -14,66 +14,57 @@
     <permission
         android:name="com.example.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".mainpage.StartPage"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".mainpage.MainActivity"/>
-
-        <activity
-            android:name=".etc.MyWebView">
+        <activity android:name=".mainpage.MainActivity" />
+        <activity android:name=".etc.MyWebView" >
         </activity>
-        <activity
-            android:name=".etc.SettingActivity">
+        <activity android:name=".etc.SettingActivity" >
         </activity>
-
         <activity
             android:name=".board.BoardWriteActivity"
-            android:parentActivityName=".mainpage.MainActivity">
+            android:parentActivityName=".mainpage.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".mainpage.MainActivity" />
         </activity>
-
-
-
         <activity
             android:name=".board.BoardModifyActivity"
-            android:parentActivityName=".board.BoardViewActivity">
+            android:parentActivityName=".board.BoardViewActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".board.BoardViewActivity" />
         </activity>
-
         <activity
             android:name=".board.BoardViewActivity"
             android:parentActivityName=".mainpage.MainActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".mainpage.MainActivity" />
         </activity>
-
         <activity
             android:name=".board.BoardMarkedActivity"
-            android:parentActivityName=".mainpage.MainActivity">
-
+            android:parentActivityName=".mainpage.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".mainpage.MainActivity" />
         </activity>
-
         <activity android:name=".push.PushView" />
         <activity android:name=".statics.StaticsMain_B" />
         <activity
@@ -95,7 +86,7 @@
             android:name=".statics.StaticsMemberRecent"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
-        <service android:name="etc.IconService">
+        <service android:name="etc.IconService" >
             <intent-filter>
                 <action android:name="iconservice" />
             </intent-filter>
@@ -105,32 +96,37 @@
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="net.saltfactory.demo.gcm" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name="handong.cconma.cconmaadmin.gcm.MyGcmListenerService"
-            android:exported="false">
+            android:name=".gcm.MyGcmListenerService"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
         <service
-            android:name="handong.cconma.cconmaadmin.gcm.MyInstanceIDListenerService"
-            android:exported="false">
+            android:name=".gcm.MyInstanceIDListenerService"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-
         <service
-            android:name="handong.cconma.cconmaadmin.gcm.RegistrationIntentService"
-            android:exported="false"></service>
-        <!-- end of GCM-->
+            android:name=".gcm.RegistrationIntentService"
+            android:exported="false" />
+        <!-- end of GCM -->
+        <activity
+            android:name=".statics.StaticsTest"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_statics_test" >
+        </activity>
     </application>
+
 </manifest>

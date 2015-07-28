@@ -80,6 +80,8 @@ public class HTTPConnector extends AsyncTask<String, Void, Boolean> {
                 String appended = "";
 
                 HttpURLConnection con = (HttpURLConnection) (new URL(s)).openConnection();
+                con.setConnectTimeout(5000);
+                con.setReadTimeout(5000);
                 con.setRequestMethod(method);
                 con.setDoOutput(true);
                 con.setDoInput(true);

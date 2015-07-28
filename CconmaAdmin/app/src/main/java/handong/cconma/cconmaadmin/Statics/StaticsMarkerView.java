@@ -1,12 +1,18 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
@@ -18,54 +24,44 @@ public class StaticsMarkerView extends MarkerView {
     private LineChart lineChart = null;
     private BarChart barChart = null;
     private CombinedChart combinedChart = null;
-    /*    private TextView tv1;
-        private TextView tv2;
-        private TextView tv3;
-        private TextView tv4;
-        private TextView tv5;
-        private TextView tv6;*/
-    private ArrayList<TextView> tvs;
-    private String unit;
+    private Context con;
+    private LinearLayout ll;
+    private int dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()); // 1dp
+    private String unit = "";
     private Entry entry;
+    private String left = "LABEL";
+    private String skipZero = "";
+    private int textSize;
 
     public StaticsMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
-        // this markerview only displays a textview
-     /*   tv1 = (TextView) findViewById(R.id.marker_tv1);
-        tv2 = (TextView) findViewById(R.id.marker_tv2);
-        tv3 = (TextView) findViewById(R.id.marker_tv3);
-        tv4 = (TextView) findViewById(R.id.marker_tv4);
-        tv5 = (TextView) findViewById(R.id.marker_tv5);
-        tv6 = (TextView) findViewById(R.id.marker_tv6);*/
-        tvs = new ArrayList<>();
-        tvs.add((TextView) findViewById(R.id.marker_tv1));
-        tvs.add((TextView) findViewById(R.id.marker_tv2));
-        tvs.add((TextView) findViewById(R.id.marker_tv3));
-        tvs.add((TextView) findViewById(R.id.marker_tv4));
-        tvs.add((TextView) findViewById(R.id.marker_tv5));
-        tvs.add((TextView) findViewById(R.id.marker_tv6));
+        con = context;
+        ll = (LinearLayout) findViewById(R.id.marker_ll);
     }
 
-    public void attachChart(LineChart line, String str) {
+    public void attachChart(LineChart line, String leftSide, String u, String skip, int size) {
         lineChart = line;
-        unit = str;
+        left = leftSide;
+        unit = u;
+        skipZero = skip;
+        textSize = size;
     }
 
-    public void attachChart(BarChart bar, String str) {
+    public void attachChart(BarChart bar, String leftSide, String u, String skip, int size) {
         barChart = bar;
-        unit = str;
+        left = leftSide;
+        unit = u;
+        skipZero = skip;
+        textSize = size;
     }
 
-    public void attachChart(CombinedChart combine, String str) {
+    public void attachChart(CombinedChart combine, String leftSide, String u, String skip, int size) {
         combinedChart = combine;
-        unit = str;
+        left = leftSide;
+        unit = u;
+        skipZero = skip;
+        textSize = size;
     }
-/*
-    public void invisible(){
-        for(int i = 0; i < tvs.size(); i++){
-            tvs.get(i).setVisibility(GONE);
-        }
-    }*/
 
     // callbacks everytime the MarkerView is redrawn, can be used to update the
     // content (user-interface)
@@ -73,43 +69,91 @@ public class StaticsMarkerView extends MarkerView {
     public void refreshContent(Entry e, int dataSetIndex) {
         entry = e;
         int eXIndex = e.getXIndex();
-        //    invisible();
+        ll.removeAllViews();
         if (lineChart != null) {
             List<Entry> set = lineChart.getEntriesAtIndex(eXIndex);
             for (int i = 0; i < set.size(); i++) {
-                TextView tv = tvs.get(i);
-                tv.setVisibility(VISIBLE);
+                if ((long) set.get(i).getVal() == 0) {
+                    if (skipZero.equals("all")) {
+                        continue;
+                    } else if (skipZero.equals("line")) {
+                        continue;
+                    } else if (skipZero.equals("bar") && set.get(i) instanceof BarEntry) {
+                        continue;
+                    }
+                }
+                TextView tv = new TextView(con);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+                tv.setEllipsize(TextUtils.TruncateAt.END);
+                tv.setPadding(dpInPx, dpInPx, 0, dpInPx);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.CENTER;
+                tv.setLayoutParams(params);
                 tv.setTextColor(lineChart.getLineData().getDataSetByIndex(i).getColor());
-                tv.setText(lineChart.getLineData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
+                if (left.equals("INDEX")) {
+                    tv.setText(lineChart.getXValue(eXIndex) + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
+                } else {
+                    tv.setText(lineChart.getLineData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
+                }
+                ll.addView(tv);
             }
         } else if (barChart != null) {
             List<Entry> set = barChart.getEntriesAtIndex(eXIndex);
             for (int i = 0; i < set.size(); i++) {
-                TextView tv = tvs.get(i);
-                tv.setVisibility(VISIBLE);
+                if ((long) set.get(i).getVal() == 0) {
+                    if (skipZero.equals("all")) {
+                        continue;
+                    } else if (skipZero.equals("line")) {
+                        continue;
+                    } else if (skipZero.equals("bar") && set.get(i) instanceof BarEntry) {
+                        continue;
+                    }
+                }
+                TextView tv = new TextView(con);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+                tv.setEllipsize(TextUtils.TruncateAt.END);
+                tv.setPadding(dpInPx, dpInPx, 0, dpInPx);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.CENTER;
+                tv.setLayoutParams(params);
                 tv.setTextColor(barChart.getBarData().getDataSetByIndex(i).getColor());
-                tv.setText(barChart.getBarData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
+                if (left.equals("INDEX")) {
+                    tv.setText(barChart.getXValue(eXIndex) + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
+                } else {
+                    tv.setText(barChart.getBarData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
+                }
+                ll.addView(tv);
             }
         } else if (combinedChart != null) {
             List<Entry> set = combinedChart.getEntriesAtIndex(eXIndex);
             for (int i = 0; i < set.size(); i++) {
-                TextView tv = tvs.get(i);
-                if (combinedChart.getData().getDataSetByIndex(i).getLabel().equals("현재 시각") && (long) set.get(i).getVal() == 0) {
-                    tv.setVisibility(GONE);
-                    continue;
+                if ((long) set.get(i).getVal() == 0) {
+                    if (skipZero.equals("all")) {
+                        continue;
+                    } else if (skipZero.equals("line")) {
+                        continue;
+                    } else if (skipZero.equals("bar") && set.get(i) instanceof BarEntry) {
+                        continue;
+                    }
                 }
-                tv.setVisibility(VISIBLE);
+                TextView tv = new TextView(con);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+                tv.setEllipsize(TextUtils.TruncateAt.END);
+                tv.setPadding(dpInPx, dpInPx, 0, dpInPx);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.CENTER;
+                tv.setLayoutParams(params);
                 tv.setTextColor(combinedChart.getData().getDataSetByIndex(i).getColor());
-                tv.setText(combinedChart.getData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
+                if (left.equals("INDEX")) {
+                    tv.setText(combinedChart.getXValue(eXIndex) + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
+                } else {
+                    tv.setText(combinedChart.getData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
+                }
+                ll.addView(tv);
             }
         } else {
             return;
         }
-    /*    tv1.setText("" + e.getVal()); // set the entry-value as the display text
-        tv2.setText("" + e.getVal());
-        tv3.setText("" + e.getVal());
-        tv4.setText("" + e.getVal());
-        tv5.setText("" + e.getVal());*/
     }
 
     @Override

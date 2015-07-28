@@ -24,7 +24,7 @@ public class StaticsMarkerViewRecent extends MarkerView {
     public StaticsMarkerViewRecent(Context context, int layoutResource) {
         super(context, layoutResource);
         // this markerview only displays a textview
-        tv1 = (TextView) findViewById(R.id.marker_tv1);
+      //  tv1 = (TextView) findViewById(R.id.marker_tv1);
      /*
         tv2 = (TextView) findViewById(R.id.marker_tv2);
         tv3 = (TextView) findViewById(R.id.marker_tv3);

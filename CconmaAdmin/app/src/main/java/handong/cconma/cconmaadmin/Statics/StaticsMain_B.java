@@ -12,6 +12,8 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.LineChart;
+
 import net.htmlparser.jericho.Source;
 
 import org.json.JSONObject;
@@ -40,8 +42,6 @@ public class StaticsMain_B extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.statics_main_b);
-
         orderH = (Button) findViewById(R.id.order_hourly_btn);
         orderH.setOnClickListener(this);
         orderRcnt = (Button) findViewById(R.id.order_recent_btn);

@@ -6,7 +6,7 @@
     android:id="@+id/drawer_layout"
     android:background="@color/ColorPanel">
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+          <!--  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -80,5 +80,10 @@
         android:id="@+id/main_b_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </WebView>
+    </WebView>-->
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/like_line_b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.github.mikephil.charting.charts.LineChart>
 </LinearLayout>

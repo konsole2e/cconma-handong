@@ -1,12 +1,8 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,9 +59,9 @@ public class StaticsMember extends Activity implements JSONResponse {
         setting.commonSetting(weeklyChart);
         setting.commonSetting(monthlyChart);
 
-        mvD.attachChart(dailyChart, "명");
-        mvW.attachChart(weeklyChart, "명");
-        mvM.attachChart(monthlyChart, "명");
+        mvD.attachChart(dailyChart, "", "명", "", 9);
+        mvW.attachChart(weeklyChart, "", "명", "", 9);
+        mvM.attachChart(monthlyChart, "", "명", "", 9);
 
         dailyChart.setMarkerView(mvD);
         weeklyChart.setMarkerView(mvW);

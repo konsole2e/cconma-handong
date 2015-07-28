@@ -1,12 +1,8 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +10,6 @@ import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
-
-import net.htmlparser.jericho.Source;
 
 import org.json.JSONObject;
 
@@ -54,8 +48,8 @@ public class StaticsOrderH extends Activity implements JSONResponse {
         pcChart = (LineChart) findViewById(R.id.order_hourly_pc_chart);
         mobChart = (LineChart) findViewById(R.id.order_hourly_mobile_chart);
 
-        mvPc.attachChart(pcChart, "건");
-        mvMob.attachChart(mobChart, "건");
+        mvPc.attachChart(pcChart, "", "건", "", 9);
+        mvMob.attachChart(mobChart, "", "건", "", 9);
 
         setting.commonSetting(pcChart);
         setting.commonSetting(mobChart);
@@ -194,7 +188,6 @@ public class StaticsOrderH extends Activity implements JSONResponse {
             } else {
                 activity.finish();
             }
-
         }
     }
 /*

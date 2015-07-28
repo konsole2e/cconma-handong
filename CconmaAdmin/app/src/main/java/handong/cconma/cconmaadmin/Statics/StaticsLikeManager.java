@@ -1,8 +1,12 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -20,16 +24,42 @@ import javax.xml.transform.Source;
 import handong.cconma.cconmaadmin.R;
 
 public class StaticsLikeManager {
+    LineChart line1;
+    LineChart line2;
+    CombinedChart combined;
+    BarChart bar;
     Context con;
 
     public StaticsLikeManager(Context context) {
         con = context;
     }
 
-    public BarData dailyChartSetting(JSONObject json) {
+    public StaticsLikeManager(LineChart p, LineChart m, Context context) {
+        line1 = p;
+        line2 = m;
+        con = context;
+    }
+
+    public StaticsLikeManager(CombinedChart c, BarChart b, LineChart w, LineChart m, Context context) {
+        combined = c;
+        bar = b;
+        line1 = w;
+        line2 = m;
+        con = context;
+    }
+
+    public StaticsLikeManager(BarChart b, LineChart w, LineChart m, Context context){
+        bar = b;
+        line1 = w;
+        line2 = m;
+        con = context;
+    }
+
+
+    public BarData dailyChartSetting( JSONObject json) {
         BarData data = new BarData(generateDailyXVals(), generateDailyBarData(json));
         //data.setData(generateDailyLineData());
-        data.setGroupSpace(80f);
+        data.setGroupSpace(200f);
         data.setValueFormatter(new StaticsValueFormatter());
 
         return data;
@@ -95,43 +125,6 @@ public class StaticsLikeManager {
         return ll;
     }
 
-/*
-    public CombinedData dailyChartSetting() {
-        CombinedData data = new CombinedData(generateXValues());
-        data.setData(generateDailyLineData());
-        data.setData(generateDailyBarData());
-
-        return data;
-    }
-   private LineData generateDailyLineData() {
-            LineData d = new LineData();
-
-            ArrayList<Entry> e = new ArrayList<>();
-
-            for (int i = 0; i < 7; i++) {
-                e.add(new Entry((float) Math.random() * 50, i));
-            }
-
-            LineDataSet set = new LineDataSet(e, "Line DataSet");
-
-            set.setLineWidth(2.5f);
-            set.setHighLightColor(Color.rgb(244, 117, 117));
-            set.setColor(con.getResources().getColor(R.color.statics_color_gray));
-            set.setCircleColor(Color.rgb(240, 238, 70));
-            set.setCircleSize(5f);
-            set.setFillColor(Color.rgb(240, 238, 70));
-            set.setDrawCubic(true);
-            set.setDrawValues(true);
-            set.setValueTextSize(10f);
-            set.setValueTextColor(Color.rgb(240, 238, 70));
-
-            set.setAxisDependency(YAxis.AxisDependency.LEFT);
-
-            d.addDataSet(set);
-
-            return d;
-        }*/
-
     private String[] generateDailyXVals() {
         String[] xVals = {"일", "월", "화", "수", "목", "금", "토"};
 
@@ -185,7 +178,44 @@ public class StaticsLikeManager {
 
         return dataSets;
     }
+}
 
+/*
+    public CombinedData dailyChartSetting() {
+        CombinedData data = new CombinedData(generateXValues());
+        data.setData(generateDailyLineData());
+        data.setData(generateDailyBarData());
+
+        return data;
+    }
+   private LineData generateDailyLineData() {
+            LineData d = new LineData();
+
+            ArrayList<Entry> e = new ArrayList<>();
+
+            for (int i = 0; i < 7; i++) {
+                e.add(new Entry((float) Math.random() * 50, i));
+            }
+
+            LineDataSet set = new LineDataSet(e, "Line DataSet");
+
+            set.setLineWidth(2.5f);
+            set.setHighLightColor(Color.rgb(244, 117, 117));
+            set.setColor(con.getResources().getColor(R.color.statics_color_gray));
+            set.setCircleColor(Color.rgb(240, 238, 70));
+            set.setCircleSize(5f);
+            set.setFillColor(Color.rgb(240, 238, 70));
+            set.setDrawCubic(true);
+            set.setDrawValues(true);
+            set.setValueTextSize(10f);
+            set.setValueTextColor(Color.rgb(240, 238, 70));
+
+            set.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+            d.addDataSet(set);
+
+            return d;
+        }*/
 
   /*  class ConnectToUrl extends AsyncTask<String, String, String> {
 
@@ -284,5 +314,3 @@ public class StaticsLikeManager {
         return true;
     }
 */
-
-}

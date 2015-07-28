@@ -19,6 +19,7 @@ import handong.cconma.cconmaadmin.statics.StaticsMember;
 import handong.cconma.cconmaadmin.statics.StaticsMemberRecent;
 import handong.cconma.cconmaadmin.statics.StaticsOrderH;
 import handong.cconma.cconmaadmin.statics.StaticsOrderRecent;
+import handong.cconma.cconmaadmin.statics.StaticsTest;
 import handong.cconma.cconmaadmin.statics.StaticsTrade;
 
 /**
@@ -56,6 +57,8 @@ public class MainFragment extends Fragment implements View.OnClickListener{
             member.setOnClickListener(this);
             Button memberRcnt = (Button)rootView.findViewById(R.id.member_recent_btn);
             memberRcnt.setOnClickListener(this);
+            Button test = (Button) rootView.findViewById(R.id.test_btn);
+            test.setOnClickListener(this);
         }
         else {
             rootView = inflater.inflate(R.layout.webview, container, false);
@@ -113,6 +116,9 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.member_recent_btn:
                 startActivity(new Intent(getActivity(), StaticsMemberRecent.class));
+                break;
+            case R.id.test_btn :
+                startActivity(new Intent(getActivity(), StaticsTest.class));
                 break;
         }
     }

@@ -1,21 +1,16 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.LineData;
 
 import org.json.JSONObject;
 
@@ -29,9 +24,10 @@ import handong.cconma.cconmaadmin.etc.JSONResponse;
 
 public class StaticsLike extends Activity implements JSONResponse {
     //Combine Chart private CombinedChart dailyChart;
-    private BarChart dailyChart;
-    private LineChart weeklyChart;
-    private LineChart monthlyChart;
+    private View dailyChart;
+    private View weeklyChart;
+    private View monthlyChart;
+    private LineData data;
     private boolean mode = false;
     private BackPressCloseHandler backPressCloseHandler;
     private StaticsCommonSetting setting;
@@ -53,9 +49,9 @@ public class StaticsLike extends Activity implements JSONResponse {
         StaticsMarkerView mvM = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
 
 //        dailyChart = (CombinedChart) findViewById(R.id.member_daily_combineChart);
-        RelativeLayout dTag = (RelativeLayout)findViewById(R.id.like_daily_rl);
-        RelativeLayout wTag = (RelativeLayout)findViewById(R.id.like_weekly_rl);
-        RelativeLayout mTag = (RelativeLayout)findViewById(R.id.like_monthly_rl);
+        RelativeLayout dTag = (RelativeLayout) findViewById(R.id.like_daily_rl);
+        RelativeLayout wTag = (RelativeLayout) findViewById(R.id.like_weekly_rl);
+        RelativeLayout mTag = (RelativeLayout) findViewById(R.id.like_monthly_rl);
         dailyChart = (BarChart) findViewById(R.id.like_daily_barChart);
         weeklyChart = (LineChart) findViewById(R.id.like_weekly_lineChart);
         monthlyChart = (LineChart) findViewById(R.id.like_monthly_lineChart);
@@ -69,24 +65,24 @@ public class StaticsLike extends Activity implements JSONResponse {
 
 //        dailyChart.setDrawOrder(new DrawOrder[]{  DrawOrder.LINE, DrawOrder.BAR});
 
-        setting.commonSetting(dailyChart);
-        setting.commonSetting(weeklyChart);
-        setting.commonSetting(monthlyChart);
+        setting.commonSetting((BarChart) dailyChart);
+        setting.commonSetting((LineChart) weeklyChart);
+        setting.commonSetting((LineChart) monthlyChart);
 
-        mvD.attachChart(dailyChart, "명");
-        mvW.attachChart(weeklyChart, "명");
-        mvM.attachChart(monthlyChart, "명");
+        mvD.attachChart((BarChart) dailyChart, "", "명", "", 9);
+        mvW.attachChart((LineChart) weeklyChart, "", "명", "", 9);
+        mvM.attachChart((LineChart) monthlyChart, "", "명", "", 9);
 
-        dailyChart.setMarkerView(mvD);
-        weeklyChart.setMarkerView(mvW);
-        monthlyChart.setMarkerView(mvM);
+        ((BarChart) dailyChart).setMarkerView(mvD);
+        ((LineChart) weeklyChart).setMarkerView(mvW);
+        ((LineChart) monthlyChart).setMarkerView(mvM);
 
         HTTPConnector hc = new HTTPConnector(this);
         hc.setProgressMessage("차트를 그리고 있습니다.");
         hc.execute(
-                "http://api.androidhive.info/contacts",
-                "http://api.androidhive.info/contacts",
-                "http://api.androidhive.info/contacts"
+                "http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo",
+                "http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo",
+                "http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo"
         );
 
 /*       dailyChart.setDescription("");
@@ -133,7 +129,7 @@ public class StaticsLike extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //dailyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting(dailyChart);
+                    setting.zoomSetting((BarChart) dailyChart);
                 }
             }
         });
@@ -146,7 +142,7 @@ public class StaticsLike extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     // weeklyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting(weeklyChart);
+                    setting.zoomSetting((LineChart) weeklyChart);
                 }
             }
         });
@@ -159,7 +155,7 @@ public class StaticsLike extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting(monthlyChart);
+                    setting.zoomSetting((LineChart) monthlyChart);
                 }
             }
         });
@@ -173,7 +169,7 @@ public class StaticsLike extends Activity implements JSONResponse {
     }
 
     public void visible() {
-        for (Map.Entry<View, ViewGroup.LayoutParams> e : views.entrySet()){
+        for (Map.Entry<View, ViewGroup.LayoutParams> e : views.entrySet()) {
             View v = e.getKey();
             v.setVisibility(View.VISIBLE);
             v.setLayoutParams(e.getValue());
@@ -181,7 +177,7 @@ public class StaticsLike extends Activity implements JSONResponse {
     }
 
     public void gone() {
-        for (Map.Entry<View, ViewGroup.LayoutParams> e : views.entrySet()){
+        for (Map.Entry<View, ViewGroup.LayoutParams> e : views.entrySet()) {
             View v = e.getKey();
             v.setVisibility(View.GONE);
         }
@@ -194,12 +190,13 @@ public class StaticsLike extends Activity implements JSONResponse {
 
     @Override
     public void processFinish(ArrayList<JSONObject> output) {
+
         int i = 0;
-        dailyChart.setData(manager.dailyChartSetting(output.get(i++)));
-        weeklyChart.setData(manager.weeklyChartSetting(output.get(i)));
-        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG(output.get(i++)));
-        monthlyChart.setData(manager.monthlyChartSetting(output.get(i)));
-        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG(output.get(i++)));
+        ((BarChart) dailyChart).setData(manager.dailyChartSetting(output.get(i++)));
+        ((LineChart) weeklyChart).setData(manager.weeklyChartSetting(output.get(i)));
+        ((LineChart) weeklyChart).getAxisLeft().addLimitLine(manager.weeklkyAVG(output.get(i++)));
+        ((LineChart) monthlyChart).setData(manager.monthlyChartSetting(output.get(i)));
+        ((LineChart) monthlyChart).getAxisLeft().addLimitLine(manager.monthlyAVG(output.get(i++)));
         refresh();
         return;
     }
