@@ -46,12 +46,13 @@ import handong.cconma.cconmaadmin.etc.SettingActivity;
 import handong.cconma.cconmaadmin.push.PushView;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
 import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
+import handong.cconma.cconmaadmin.statics.StaticsTest;
 
 /**
  * Created by YoungBinKim on 2015-07-06.
  */
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -72,8 +73,8 @@ public class MainActivity extends AppCompatActivity{
     private int ICONSUSER[] = {R.drawable.ic_setting_selector,
             R.drawable.ic_logout_selector};
 
-    private CharSequence TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
-    private int ICONS[] = {R.drawable.ic_board_selector, R.drawable.ic_chart_selector, R.drawable.ic_question_selector, R.drawable.ic_search_grey600_48dp, R.drawable.ic_shopping_cart_grey600_48dp, R.drawable.ic_home_selector };
+    private CharSequence TITLES[] = {"게시판", "통계", "1:1문의", "회원정보 조회", "주문조회", "마을지기 홈페이지"};
+    private int ICONS[] = {R.drawable.ic_board_selector, R.drawable.ic_chart_selector, R.drawable.ic_question_selector, R.drawable.ic_search_grey600_48dp, R.drawable.ic_shopping_cart_grey600_48dp, R.drawable.ic_home_selector};
     private int status = 0;
     private String user_name = "개발";
 
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity{
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
-        circularProgressBar = (CircularProgressBar)findViewById(R.id.progressbar_circular);
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.progressbar_circular);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
@@ -119,15 +120,17 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-                if(menuItem.isChecked()) {
+                if (menuItem.isChecked()) {
                     menuItem.setChecked(false);
-                }
-                else {
+                } else {
                     menuItem.setChecked(true);
                     mDrawerLayout.closeDrawers();
                     Log.d(TAG, String.valueOf(menuItem.getGroupId()));
-                    switch (menuItem.getItemId()){
+                    switch (menuItem.getItemId()) {
                         case 1:
+                            break;
+                        case R.id.chart:
+                            selectItem(2);
                             break;
                     }
                 }
@@ -259,7 +262,7 @@ public class MainActivity extends AppCompatActivity{
         } else if (id == R.id.notification) {
             Intent intent = new Intent(this, PushView.class);
             startActivity(intent);
-    }
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -313,51 +316,51 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void selectItem(final int position) {
-            if (position == 1) {
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
-                if (fragment != null) {
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.remove(fragment).commit();
-                }
-
-                // View Page Adapter
-                viewPager = (ViewPager) findViewById(R.id.viewPager);
-                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
-                        MainActivity.this);
-                viewPager.setAdapter(viewPagerAdapter);
-
-                // ViewPager setting
-                tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-                tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-                tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-                tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
-                tabLayout.setupWithViewPager(viewPager);
-                tabLayout.setVisibility(tabLayout.VISIBLE);
-
-                floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-                floatingActionButton.setVisibility(floatingActionButton.VISIBLE);
-                floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, BoardWriteActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-                getSupportActionBar().setTitle(TITLES[position - 1]);
-            } else {
-                tabLayout.setVisibility(findViewById(R.id.tabLayout).GONE);
-                floatingActionButton.setVisibility(findViewById(R.id.fab).GONE);
-                Fragment fragment = new MainFragment();
-                Bundle args = new Bundle();
-                args.putInt(MainFragment.POSITION, position);
-                fragment.setArguments(args);
-
-                fragmentManager = getSupportFragmentManager();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.replace(R.id.main_content_frame, fragment, "fragment");
-                ft.commit();
+        if (position == 1) {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
+            if (fragment != null) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.remove(fragment).commit();
             }
+
+            // View Page Adapter
+            viewPager = (ViewPager) findViewById(R.id.viewPager);
+            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
+                    MainActivity.this);
+            viewPager.setAdapter(viewPagerAdapter);
+
+            // ViewPager setting
+            tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
+            tabLayout.setupWithViewPager(viewPager);
+            tabLayout.setVisibility(tabLayout.VISIBLE);
+
+            floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+            floatingActionButton.setVisibility(floatingActionButton.VISIBLE);
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, BoardWriteActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            getSupportActionBar().setTitle(TITLES[position - 1]);
+        } else {
+            tabLayout.setVisibility(findViewById(R.id.tabLayout).GONE);
+            floatingActionButton.setVisibility(findViewById(R.id.fab).GONE);
+            Fragment fragment = new MainFragment();
+            Bundle args = new Bundle();
+            args.putInt(MainFragment.POSITION, position);
+            fragment.setArguments(args);
+
+            fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.main_content_frame, fragment, "fragment");
+            ft.commit();
+        }
     }
 
    /* class init extends AsyncTask<Void, Void, Void>{
@@ -415,7 +418,7 @@ public class MainActivity extends AppCompatActivity{
         }
     }*/
 
-    private void setSwipeToRefresh(){
+    private void setSwipeToRefresh() {
         //set SwipeToRefresh on the activity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SwipeToRefresh swipe = new SwipeToRefresh();

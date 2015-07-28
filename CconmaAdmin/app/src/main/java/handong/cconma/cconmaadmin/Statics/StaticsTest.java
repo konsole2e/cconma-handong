@@ -106,7 +106,7 @@ public class StaticsTest extends Activity implements JSONResponse {
             public void onClick(View v) {
                 if (mode == false) {
                     mode = true;
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // 가로전환
                     gone();
                     if (chart instanceof PieChart) {
                         setting.zoomSetting((PieChart) chart);
@@ -574,13 +574,13 @@ public class StaticsTest extends Activity implements JSONResponse {
                     "            \"토72\"" +
                     "          ]," +
                     "          \"yValues\": [" +
-                    "            \"10\"," +
-                    "            \"10\"," +
-                    "            \"20\"," +
+                    "            \"1\"," +
+                    "            \"15\"," +
                     "            \"25\"," +
-                    "            \"30\"," +
-                    "            \"40\"," +
-                    "            \"50\"" +
+                    "            \"29\"," +
+                    "            \"35\"," +
+                    "            \"45\"," +
+                    "            \"55\"" +
                     "          ]," +
                     "          \"label\": \"테스트6\"," +
                     "          \"axisDepend\": \"LEFT\"," +
@@ -588,7 +588,7 @@ public class StaticsTest extends Activity implements JSONResponse {
                     "          \"textColor\": \"#ff0000\"," +
                     "          \"textSize\": \"5\"," +
                     "          \"unit\": \"비\"," +
-                    "          \"color\": \"#ff00ff\"," +
+                    "          \"color\": \"#0910c1\"," +
                     "          \"bar_space\": \"15\"," +
                     "          \"bar_groupSpace\": \"80\"" +
                     "        }," +
@@ -892,7 +892,7 @@ public class StaticsTest extends Activity implements JSONResponse {
                 mode = false;
                 visible();
             } else if (mode && config.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // 가로전환
                 mode = false;
                 visible();
             } else {
