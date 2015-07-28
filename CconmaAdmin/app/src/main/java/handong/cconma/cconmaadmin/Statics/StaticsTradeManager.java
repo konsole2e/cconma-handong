@@ -176,7 +176,7 @@ public class StaticsTradeManager {
     private BarData generateHourlyBarData(JSONObject json) {
         ArrayList<BarEntry> e1 = new ArrayList<BarEntry>();
 
-        for (int i = 0; i < 24; i++) {
+        for (int i = 0; i < 23; i++) {
             e1.add(new BarEntry(0, i));
         }
 

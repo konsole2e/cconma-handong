@@ -3,12 +3,10 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    android:layout_marginBottom="56dp"
     android:id="@+id/drawer_layout"
-    android:clickable="true"
     android:background="@color/ColorPanel">
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+          <!--  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -71,17 +69,21 @@
                     android:text="주민되기" />
 
                 <Button
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="New Button"
-                    android:id="@+id/test_btn"
-                    android:layout_weight="1" />
-
-                <Button
                     android:id="@+id/member_recent_btn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="최근 30일 주민수" />
             </LinearLayout>
+
+    <WebView
+        android:id="@+id/main_b_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </WebView>-->
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/like_line_b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.github.mikephil.charting.charts.LineChart>
 </LinearLayout>

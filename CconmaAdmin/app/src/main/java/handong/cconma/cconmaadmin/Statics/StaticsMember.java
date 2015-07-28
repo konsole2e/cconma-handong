@@ -1,14 +1,12 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -16,12 +14,14 @@ import com.github.mikephil.charting.charts.LineChart;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.etc.HTTPConnector;
 import handong.cconma.cconmaadmin.etc.JSONResponse;
 
-public class StaticsMember extends Activity implements JSONResponse{
+public class StaticsMember extends Activity implements JSONResponse {
     //Combine Chart private CombinedChart dailyChart;
     private BarChart dailyChart;
     private LineChart weeklyChart;
@@ -30,6 +30,7 @@ public class StaticsMember extends Activity implements JSONResponse{
     private BackPressCloseHandler backPressCloseHandler;
     private StaticsCommonSetting setting;
     private StaticsMemberManager manager;
+    private HashMap<View, ViewGroup.LayoutParams> views = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,9 @@ public class StaticsMember extends Activity implements JSONResponse{
         StaticsMarkerView mvW = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
         StaticsMarkerView mvM = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
 
+        RelativeLayout dTag = (RelativeLayout) findViewById(R.id.member_daily_rl);
+        RelativeLayout wTag = (RelativeLayout) findViewById(R.id.member_weekly_rl);
+        RelativeLayout mTag = (RelativeLayout) findViewById(R.id.member_monthly_rl);
 //        dailyChart = (CombinedChart) findViewById(R.id.member_daily_combineChart);
         dailyChart = (BarChart) findViewById(R.id.member_daily_barChart);
         weeklyChart = (LineChart) findViewById(R.id.member_weekly_lineChart);
@@ -55,14 +59,20 @@ public class StaticsMember extends Activity implements JSONResponse{
         setting.commonSetting(weeklyChart);
         setting.commonSetting(monthlyChart);
 
-
-        mvD.attachChart(dailyChart, "명");
-        mvW.attachChart(weeklyChart, "명");
-        mvM.attachChart(monthlyChart, "명");
+        mvD.attachChart(dailyChart, "", "명", "", 9);
+        mvW.attachChart(weeklyChart, "", "명", "", 9);
+        mvM.attachChart(monthlyChart, "", "명", "", 9);
 
         dailyChart.setMarkerView(mvD);
         weeklyChart.setMarkerView(mvW);
         monthlyChart.setMarkerView(mvM);
+
+        views.put(dTag, dTag.getLayoutParams());
+        views.put(dailyChart, dailyChart.getLayoutParams());
+        views.put(wTag, wTag.getLayoutParams());
+        views.put(weeklyChart, weeklyChart.getLayoutParams());
+        views.put(mTag, mTag.getLayoutParams());
+        views.put(monthlyChart, monthlyChart.getLayoutParams());
 
         HTTPConnector hc = new HTTPConnector(this);
         hc.setProgressMessage("차트를 그리고 있습니다.");
@@ -118,12 +128,8 @@ public class StaticsMember extends Activity implements JSONResponse{
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     // dailyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    gone();
                     setting.zoomSetting(dailyChart);
-                    weeklyChart.setVisibility(View.GONE);
-                    monthlyChart.setVisibility(View.GONE);
-                    (findViewById(R.id.member_daily_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.member_weekly_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.member_monthly_rl)).setVisibility(View.GONE);
                 }
             }
         });
@@ -135,12 +141,8 @@ public class StaticsMember extends Activity implements JSONResponse{
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //weeklyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    gone();
                     setting.zoomSetting(weeklyChart);
-                    dailyChart.setVisibility(View.GONE);
-                    monthlyChart.setVisibility(View.GONE);
-                    (findViewById(R.id.member_daily_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.member_weekly_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.member_monthly_rl)).setVisibility(View.GONE);
                 }
             }
         });
@@ -152,23 +154,34 @@ public class StaticsMember extends Activity implements JSONResponse{
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    gone();
                     setting.zoomSetting(monthlyChart);
-                    dailyChart.setVisibility(View.GONE);
-                    weeklyChart.setVisibility(View.GONE);
-                    (findViewById(R.id.member_daily_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.member_weekly_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.member_monthly_rl)).setVisibility(View.GONE);
                 }
             }
         });
 
     }
 
-    public void refresh(){
+    public void refresh() {
         dailyChart.invalidate();
         weeklyChart.invalidate();
         monthlyChart.invalidate();
         return;
+    }
+
+    public void visible() {
+        for (Map.Entry<View, ViewGroup.LayoutParams> e : views.entrySet()) {
+            View v = e.getKey();
+            v.setVisibility(View.VISIBLE);
+            v.setLayoutParams(e.getValue());
+        }
+    }
+
+    public void gone() {
+        for (Map.Entry<View, ViewGroup.LayoutParams> e : views.entrySet()) {
+            View v = e.getKey();
+            v.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -201,11 +214,11 @@ public class StaticsMember extends Activity implements JSONResponse{
             if (mode && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 가로전환
                 mode = false;
-                activity.recreate();
+                visible();
             } else if (mode && config.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 세로전환
                 mode = false;
-                activity.recreate();
+                visible();
             } else {
                 activity.finish();
             }

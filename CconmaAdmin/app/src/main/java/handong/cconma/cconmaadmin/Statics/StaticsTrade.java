@@ -1,14 +1,12 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -17,6 +15,8 @@ import com.github.mikephil.charting.charts.LineChart;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.etc.HTTPConnector;
@@ -31,6 +31,7 @@ public class StaticsTrade extends Activity implements JSONResponse {
     private BackPressCloseHandler backPressCloseHandler;
     private StaticsCommonSetting setting;
     private StaticsTradeManager manager;
+    private HashMap<View, ViewGroup.LayoutParams> views = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,11 @@ public class StaticsTrade extends Activity implements JSONResponse {
         StaticsMarkerView mvW = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
         StaticsMarkerView mvM = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
 
+        RelativeLayout hTag = (RelativeLayout)findViewById(R.id.trade_hourly_rl);
+        RelativeLayout dTag = (RelativeLayout)findViewById(R.id.trade_daily_rl);
+        RelativeLayout wTag = (RelativeLayout)findViewById(R.id.trade_weekly_rl);
+        RelativeLayout mTag = (RelativeLayout)findViewById(R.id.trade_monthly_rl);
+
         hourlyChart = (CombinedChart) findViewById(R.id.trade_hourly_combineChart);
         dailyChart = (BarChart) findViewById(R.id.trade_daily_barChart);
         weeklyChart = (LineChart) findViewById(R.id.trade_weekly_lineChart);
@@ -57,16 +63,24 @@ public class StaticsTrade extends Activity implements JSONResponse {
         setting.commonSetting(weeklyChart);
         setting.commonSetting(monthlyChart);
 
-
-        mvH.attachChart(hourlyChart, "원");
-        mvD.attachChart(dailyChart, "원");
-        mvW.attachChart(weeklyChart, "원");
-        mvM.attachChart(monthlyChart, "원");
+        mvH.attachChart(hourlyChart, "", "원", "", 9);
+        mvD.attachChart(dailyChart,"", "원","",9);
+        mvW.attachChart(weeklyChart,"", "원","",9);
+        mvM.attachChart(monthlyChart,"", "원","",9);
 
         hourlyChart.setMarkerView(mvH);
         dailyChart.setMarkerView(mvD);
         weeklyChart.setMarkerView(mvW);
         monthlyChart.setMarkerView(mvM);
+
+        views.put(hTag, hTag.getLayoutParams());
+        views.put(hourlyChart, hourlyChart.getLayoutParams());
+        views.put(dTag, dTag.getLayoutParams());
+        views.put(dailyChart, dailyChart.getLayoutParams());
+        views.put(wTag, wTag.getLayoutParams());
+        views.put(weeklyChart, weeklyChart.getLayoutParams());
+        views.put(mTag, mTag.getLayoutParams());
+        views.put(monthlyChart, monthlyChart.getLayoutParams());
 
         HTTPConnector hc = new HTTPConnector(this);
         hc.setProgressMessage("차트를 그리고 있습니다.");
@@ -175,14 +189,8 @@ public class StaticsTrade extends Activity implements JSONResponse {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     // weeklyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    gone();
                     setting.zoomSetting(weeklyChart);
-                    hourlyChart.setVisibility(View.GONE);
-                    dailyChart.setVisibility(View.GONE);
-                    monthlyChart.setVisibility(View.GONE);
-                    (findViewById(R.id.trade_hourly_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.trade_daily_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.trade_weekly_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.trade_monthly_rl)).setVisibility(View.GONE);
                 }
             }
         });
@@ -194,14 +202,8 @@ public class StaticsTrade extends Activity implements JSONResponse {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //   monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    gone();
                     setting.zoomSetting(monthlyChart);
-                    hourlyChart.setVisibility(View.GONE);
-                    dailyChart.setVisibility(View.GONE);
-                    weeklyChart.setVisibility(View.GONE);
-                    (findViewById(R.id.trade_hourly_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.trade_daily_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.trade_weekly_rl)).setVisibility(View.GONE);
-                    (findViewById(R.id.trade_monthly_rl)).setVisibility(View.GONE);
                 }
             }
         });
@@ -214,6 +216,21 @@ public class StaticsTrade extends Activity implements JSONResponse {
         weeklyChart.invalidate();
         monthlyChart.invalidate();
         return;
+    }
+
+    public void visible() {
+        for (Map.Entry<View, ViewGroup.LayoutParams> e : views.entrySet()) {
+            View v = e.getKey();
+            v.setVisibility(View.VISIBLE);
+            v.setLayoutParams(e.getValue());
+        }
+    }
+
+    public void gone() {
+        for (Map.Entry<View, ViewGroup.LayoutParams> e : views.entrySet()) {
+            View v = e.getKey();
+            v.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -246,11 +263,11 @@ public class StaticsTrade extends Activity implements JSONResponse {
             if (mode && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 가로전환
                 mode = false;
-                activity.recreate();
+                visible();
             } else if (mode && config.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 세로전환
                 mode = false;
-                activity.recreate();
+                visible();
             } else {
                 activity.finish();
             }
