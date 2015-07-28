@@ -127,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
                     mDrawerLayout.closeDrawers();
                     Log.d(TAG, String.valueOf(menuItem.getGroupId()));
                     switch (menuItem.getItemId()) {
-                        case 1:
+                        case R.id.board:
+                            selectItem(1);
                             break;
                         case R.id.chart:
                             selectItem(2);
