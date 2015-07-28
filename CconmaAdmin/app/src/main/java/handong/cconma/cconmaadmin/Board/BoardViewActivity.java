@@ -195,7 +195,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                                     + "&boardarticle_no=" + boardarticle_no
                                     +"&content=" + edit_board_view_comment.getText().toString();
                             try{
-                                new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
+                                new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
                                         +board_no+"/articles/" + boardarticle_no + "/comments", "POST", requestBody).execute().get();
                             }catch(Exception e){
 
@@ -545,7 +545,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     public void jsonParser(){
         try{
 
-            JSONObject json = new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
+            JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
                     +Integer.parseInt(board_no)+"/articles/"
                     +Integer.parseInt(boardarticle_no), "GET", "").execute().get();
 

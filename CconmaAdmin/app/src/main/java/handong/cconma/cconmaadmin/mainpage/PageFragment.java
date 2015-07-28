@@ -266,7 +266,7 @@ public class PageFragment extends Fragment {
         jsonPage = jsonPage + 1;
         try{
 
-            JSONObject jason = new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"+mPage_no+"/writers/all"
+            JSONObject jason = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"+mPage_no+"/writers/all"
                     +"?page="+jsonPage+"&n=20", "GET", "").execute().get();
 
             JSONArray jsonArray = jason.getJSONArray("articles");
