@@ -266,10 +266,10 @@ public class PageFragment extends Fragment {
         jsonPage = jsonPage + 1;
         try{
 
-            JSONObject jason = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/board_no/"+mPage_no+"/writer/all"
+            JSONObject jason = new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"+mPage_no+"/writers/all"
                     +"?page="+jsonPage+"&n=20", "GET", "").execute().get();
 
-            JSONArray jsonArray = jason.getJSONArray("article_list");
+            JSONArray jsonArray = jason.getJSONArray("articles");
 
             for(int i=0; i<jsonArray.length(); i++){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -314,7 +314,7 @@ public class PageFragment extends Fragment {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
-            if(event.getAction() == MotionEvent.ACTION_DOWN){
+            /*if(event.getAction() == MotionEvent.ACTION_DOWN){
                 prevY = (int)event.getY();
             }else if(event.getAction() == MotionEvent.ACTION_MOVE){
                 curY = (int)event.getY();
@@ -331,7 +331,7 @@ public class PageFragment extends Fragment {
                     }
                 }
 
-            }
+            }*/
 
             return false;
         }

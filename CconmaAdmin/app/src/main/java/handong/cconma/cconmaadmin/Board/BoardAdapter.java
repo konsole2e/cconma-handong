@@ -184,7 +184,7 @@ public class BoardAdapter extends BaseAdapter{
             holder.img_board_file.setVisibility(View.GONE);
 
 
-        Pattern pattern = Pattern.compile("[완료]");
+        Pattern pattern = Pattern.compile("\\[완료\\]");
         Matcher matcher = pattern.matcher(data.subject);
         if(matcher.find()){
             holder.text_board_title.setTextColor(Color.LTGRAY);
