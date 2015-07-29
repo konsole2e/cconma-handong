@@ -44,6 +44,8 @@ public class LoginWebView extends AppCompatActivity {
         url = "http://www.cconma.com/mobile/auth/index.pmv?path=http://www.cconma.com%2Fmobile%2Findex.pmv";
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
         webview.getSettings().setBuiltInZoomControls(true);
+        String userAgent = webview.getSettings().getUserAgentString();
+        webview.getSettings().setUserAgentString(userAgent + "com.cconma.app");
         webview.loadUrl(url);
         webview.setWebViewClient(new WebClient());
     }

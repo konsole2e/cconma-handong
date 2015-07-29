@@ -30,8 +30,7 @@
                 android:layout_height="48dp"
                 android:fillViewport="true"
                 app:tabIndicatorColor="#FFFFFF"
-                app:tabTextAppearance="?android:attr/textAppearanceSmall"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                app:tabTextAppearance="?android:attr/textAppearanceSmall"/>
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
@@ -39,13 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPager"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:background="@color/ColorPanel"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         </FrameLayout>
 
@@ -80,7 +72,6 @@
         android:id="@+id/navigation_view"
         android:layout_gravity="start"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:background="@color/ColorPanel"
         app:itemTextColor="#000000"
         app:itemIconTint="#9E9E9E"
         app:headerLayout="@layout/drawer_header"
