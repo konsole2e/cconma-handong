@@ -108,14 +108,13 @@ public class BaseActivity extends AppCompatActivity {
 
         final View snackbar = findViewById(R.id.snackbarPosition);
 
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
                 View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
-
                 if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
                     Intent intent = new Intent(getApplicationContext(), MyWebView.class);
-                    switch (recyclerView.getChildPosition(child)) {
+                    switch (recyclerView.getChildAdapterPosition(child)) {
                         case 0:
                             if (status == 0) {
                                 recyclerAdapter = new RecyclerViewAdapter(TITLESUSER, ICONSUSER, user_name, 1);

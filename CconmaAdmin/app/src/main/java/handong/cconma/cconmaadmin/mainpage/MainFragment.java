@@ -2,7 +2,9 @@ package handong.cconma.cconmaadmin.mainpage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +47,21 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         View rootView = null;
 
         int position = getArguments().getInt(POSITION);
-        if(position == 2){
+
+        if(position == 1){
+            rootView = inflater.inflate(R.layout.viewpager_b, container, false);
+
+            ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
+            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(),
+                    getActivity().getApplicationContext());
+            viewPager.setAdapter(viewPagerAdapter);
+
+            TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            tabLayout.setupWithViewPager(viewPager);
+        }
+        else if(position == 2){
             rootView = inflater.inflate(R.layout.statics_main, container, false);
 
             Button orderH = (Button)rootView.findViewById(R.id.order_hourly_btn);

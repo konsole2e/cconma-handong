@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
-        circularProgressBar = (CircularProgressBar) findViewById(R.id.progressbar_circular);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
@@ -133,81 +132,21 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.chart:
                             selectItem(2);
                             break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                        case 5:
+                            break;
+                        case 6:
+                            break;
                     }
                 }
                 return true;
             }
         });
-        //recyclerView = (RecyclerView)findViewById(R.id.RecyclerView);
-        //recyclerView.setHasFixedSize(true);
-
-        //layoutManager = new LinearLayoutManager(this);
-        //recyclerView.setLayoutManager(layoutManager);
-
-        //recyclerAdapter = new RecyclerViewAdapter(TITLES, ICONS, user_name, 0);
-
-        //recyclerView.setAdapter(recyclerAdapter);
-
-        /*final GestureDetector mGestureDetector = new GestureDetector(getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                return true;
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return true;
-            }
-        });
-
-        final View snackbar = findViewById(R.id.snackbarPosition);
-
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-                View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
-
-                if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
-                    position = recyclerView.getChildPosition(child);
-                    if (position == 0) {
-                        if (status == 0) {
-                            recyclerAdapter = new RecyclerViewAdapter(TITLESUSER, ICONSUSER, user_name, 1);
-                            recyclerView.setAdapter(recyclerAdapter);
-                            status = 1;
-                        } else if (status == 1) {
-                            recyclerAdapter = new RecyclerViewAdapter(TITLES, ICONS, user_name, 0);
-                            recyclerView.setAdapter(recyclerAdapter);
-                            status = 0;
-                        }
-                    } else if(position != 0 && status == 0){
-                        mDrawerLayout.closeDrawers();
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                setTitle(TITLES[position - 1]);
-                                selectItem(position);
-                            }
-                        }, 350);
-                    } else if(position != 0 && status == 1){
-                        switch(position){
-                            case 1:
-                                startActivity(new Intent(getApplicationContext(), SettingActivity.class));
-                                break;
-                            case 2:
-                                //logout
-                                break;
-                        }
-                    }
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-            }
-        });*/
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -317,51 +256,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectItem(final int position) {
-        if (position == 1) {
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
-            if (fragment != null) {
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.remove(fragment).commit();
-            }
-
-            // View Page Adapter
-            viewPager = (ViewPager) findViewById(R.id.viewPager);
-            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
-                    MainActivity.this);
-            viewPager.setAdapter(viewPagerAdapter);
-
-            // ViewPager setting
-            tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-            tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
-            tabLayout.setupWithViewPager(viewPager);
-            tabLayout.setVisibility(tabLayout.VISIBLE);
-
-            floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-            floatingActionButton.setVisibility(floatingActionButton.VISIBLE);
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, BoardWriteActivity.class);
-                    startActivity(intent);
+            /*if (position == 1) {
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
+                if (fragment != null) {
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.remove(fragment).commit();
                 }
-            });
 
-            getSupportActionBar().setTitle(TITLES[position - 1]);
-        } else {
-            tabLayout.setVisibility(findViewById(R.id.tabLayout).GONE);
-            floatingActionButton.setVisibility(findViewById(R.id.fab).GONE);
-            Fragment fragment = new MainFragment();
-            Bundle args = new Bundle();
-            args.putInt(MainFragment.POSITION, position);
-            fragment.setArguments(args);
+                // View Page Adapter
+                viewPager = (ViewPager) findViewById(R.id.viewPager);
+                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
+                        MainActivity.this);
+                viewPager.setAdapter(viewPagerAdapter);
 
-            fragmentManager = getSupportFragmentManager();
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.replace(R.id.main_content_frame, fragment, "fragment");
-            ft.commit();
-        }
+                // ViewPager setting
+                tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+                tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+                tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
+                tabLayout.setupWithViewPager(viewPager);
+                tabLayout.setVisibility(View.VISIBLE);
+
+                floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+                floatingActionButton.setVisibility(View.VISIBLE);
+                floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, BoardWriteActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+                getSupportActionBar().setTitle(TITLES[position - 1]);
+            } else {*/
+               // tabLayout.setVisibility(View.GONE);
+               // floatingActionButton.setVisibility(View.GONE);
+                Fragment fragment = new MainFragment();
+                Bundle args = new Bundle();
+                args.putInt(MainFragment.POSITION, position);
+                fragment.setArguments(args);
+
+                fragmentManager = getSupportFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.main_content_frame, fragment, "fragment");
+                ft.commit();
+            //}
     }
 
    /* class init extends AsyncTask<Void, Void, Void>{

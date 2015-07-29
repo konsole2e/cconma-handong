@@ -3,6 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/ColorPrimary"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:elevation="4dp"/>
+    android:elevation="4dp"
+    android:titleTextAppearance="?android:textAppearanceSmall"
+    app:layout_scrollFlags="scroll|enterAlways"/>
