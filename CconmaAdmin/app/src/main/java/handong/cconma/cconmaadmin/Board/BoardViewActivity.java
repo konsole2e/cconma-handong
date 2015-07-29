@@ -36,6 +36,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -383,7 +385,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final ViewHolder holder;
-            if(convertView == null){
+            //if(convertView == null){
                 holder = new ViewHolder();
                 LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.board_comment_list_item, null);
@@ -399,9 +401,9 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 holder.text_comment_notice6 = (TextView)convertView.findViewById(R.id.text_comment_notice6);
 
                 convertView.setTag(holder);
-            }else{
-                holder = (ViewHolder)convertView.getTag();
-            }
+            //}else{
+            //    holder = (ViewHolder)convertView.getTag();
+            //}
 
             final BoardCommentData data = board_comment_list_data.get(position);
             holder.text_board_view_comment_writer.setText(data.commnet_writer);
