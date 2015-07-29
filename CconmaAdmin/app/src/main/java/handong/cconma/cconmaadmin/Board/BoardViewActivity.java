@@ -69,14 +69,9 @@ import handong.cconma.cconmaadmin.etc.MainAsyncTask;
  */
 public class BoardViewActivity extends AppCompatActivity implements Html.ImageGetter{
     private Toolbar toolbar;
-
+    int width_notice=0;
     TextView text_board_view_title;
-    TextView text_board_view_notice1;
-    TextView text_board_view_notice2;
-    TextView text_board_view_notice3;
-    TextView text_board_view_notice4;
-    TextView text_board_view_notice5;
-    TextView text_board_view_notice6;
+    LinearLayout layout_view_notice;
     TextView text_board_view_writer;
     TextView text_board_view_date;
     CheckBox check_board_view_complete;
@@ -107,6 +102,9 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         board_no = this.getIntent().getStringExtra("board_no");
         boardarticle_no = this.getIntent().getStringExtra("boardarticle_no");
 
+
+        Display dis = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        width_notice = dis.getWidth()*9/14;
         View header = getLayoutInflater().inflate(R.layout.board_list_header, null, false);
 
         header.setLongClickable(false);
@@ -125,19 +123,13 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
 
         list_board_view_comment.setFocusable(false);
 
-        layout_board_view_comment = (LinearLayout)findViewById(R.id.layout_board_view_comment);
+        layout_view_notice = (LinearLayout)findViewById(R.id.layout_view_notice);
         edit_board_view_comment = (EditText)findViewById(R.id.edit_board_view_comment);
         edit_board_view_comment.setOnClickListener(clickListener);
         btn_board_view_comment = (Button)findViewById(R.id.btn_board_view_comment);
         btn_board_view_comment.setOnClickListener(clickListener);
 
         text_board_view_title = (TextView)header.findViewById(R.id.text_board_view_title);
-        text_board_view_notice1 = (TextView)header.findViewById(R.id.text_board_view_notice1);
-        text_board_view_notice2 = (TextView)header.findViewById(R.id.text_board_view_notice2);
-        text_board_view_notice3 = (TextView)header.findViewById(R.id.text_board_view_notice3);
-        text_board_view_notice4 = (TextView)header.findViewById(R.id.text_board_view_notice4);
-        text_board_view_notice5 = (TextView)header.findViewById(R.id.text_board_view_notice5);
-        text_board_view_notice6 = (TextView)header.findViewById(R.id.text_board_view_notice6);
         text_board_view_writer = (TextView)header.findViewById(R.id.text_board_view_writer);
         text_board_view_date = (TextView)header.findViewById(R.id.text_board_view_date);
         check_board_view_complete = (CheckBox)header.findViewById(R.id.check_board_view_complete);
@@ -361,10 +353,13 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
 
         public Context context = null;
         public ArrayList<BoardCommentData> board_comment_list_data = new ArrayList<BoardCommentData>();
-
+        int width_comment=0;
         public BoardCommentAdapter(Context context){
             super();
             this.context = context;
+
+            Display dis = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+            width_comment = dis.getWidth()*2/3;
         }
 
         @Override
@@ -385,25 +380,17 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final ViewHolder holder;
-            //if(convertView == null){
-                holder = new ViewHolder();
-                LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.board_comment_list_item, null);
+            holder = new ViewHolder();
+            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.board_comment_list_item, null);
 
-                holder.text_board_view_comment_writer = (TextView)convertView.findViewById(R.id.text_board_view_comment_writer);
-                holder.text_board_view_comment = (TextView)convertView.findViewById(R.id.text_board_view_comment);
-                holder.text_board_view_comment_date = (TextView)convertView.findViewById(R.id.text_board_view_comment_date);
-                holder.text_comment_notice1 = (TextView)convertView.findViewById(R.id.text_comment_notice1);
-                holder.text_comment_notice2 = (TextView)convertView.findViewById(R.id.text_comment_notice2);
-                holder.text_comment_notice3 = (TextView)convertView.findViewById(R.id.text_comment_notice3);
-                holder.text_comment_notice4 = (TextView)convertView.findViewById(R.id.text_comment_notice4);
-                holder.text_comment_notice5 = (TextView)convertView.findViewById(R.id.text_comment_notice5);
-                holder.text_comment_notice6 = (TextView)convertView.findViewById(R.id.text_comment_notice6);
+            holder.text_board_view_comment_writer = (TextView)convertView.findViewById(R.id.text_board_view_comment_writer);
+            holder.text_board_view_comment = (TextView)convertView.findViewById(R.id.text_board_view_comment);
+            holder.text_board_view_comment_date = (TextView)convertView.findViewById(R.id.text_board_view_comment_date);
+            holder.layout_comment_notice = (LinearLayout)convertView.findViewById(R.id.layout_comment_notice);
 
-                convertView.setTag(holder);
-            //}else{
-            //    holder = (ViewHolder)convertView.getTag();
-            //}
+            convertView.setTag(holder);
+
 
             final BoardCommentData data = board_comment_list_data.get(position);
             holder.text_board_view_comment_writer.setText(data.commnet_writer);
@@ -429,33 +416,50 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 }
             });
 
-            String tag="";
             if(data.comment_hashMap.size() != 0){
+                int sum_of_width_notice = 0;
+                int addingCount = 0;
+                int layout_num = 0;
+                LinearLayout l1 = new LinearLayout(convertView.getContext());
+                LinearLayout l2 = new LinearLayout(convertView.getContext());
+                LinearLayout l3 = new LinearLayout(convertView.getContext());
                 for(int i=0; i < data.comment_hashMap.size()/2; i++)
                 {
                     String hash_tag = data.comment_hashMap.get("hash_tag"+i).toString();
                     String hash_tag_type = data.comment_hashMap.get("hash_tag_type"+i).toString();
 
-                    switch (i) {
+                    TextView textView = new TextView(convertView.getContext());
+                    color(textView, hash_tag, hash_tag_type);
+
+                    textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                    sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth() + 5;
+
+                    if(sum_of_width_notice > width_comment){
+                        addingCount = 0;
+                        layout_num++;
+                        sum_of_width_notice = textView.getMeasuredWidth() + 5;
+                    }
+
+                    if(layout_num == 0 && addingCount == 0){
+                        holder.layout_comment_notice.addView(l1);
+                    }else if(layout_num == 1 && addingCount == 0){
+                        holder.layout_comment_notice.addView(l2);
+                    }else if(layout_num == 2 && addingCount == 0){
+                        holder.layout_comment_notice.addView(l3);
+                    }
+
+                    switch(layout_num){
                         case 0:
-                            color(holder.text_comment_notice1, hash_tag, hash_tag_type);
+                            l1.addView(textView);
                             break;
                         case 1:
-                            color(holder.text_comment_notice2, hash_tag, hash_tag_type);
+                            l2.addView(textView);
                             break;
                         case 2:
-                            color(holder.text_comment_notice3, hash_tag, hash_tag_type);
-                            break;
-                        case 3:
-                            color(holder.text_comment_notice4, hash_tag, hash_tag_type);
-                            break;
-                        case 4:
-                            color(holder.text_comment_notice5, hash_tag, hash_tag_type);
-                            break;
-                        case 5:
-                            color(holder.text_comment_notice6, hash_tag, hash_tag_type);
+                            l3.addView(textView);
                             break;
                     }
+                    addingCount++;
                 }
             }
             holder.text_board_view_comment.setText(Html.fromHtml(data.comment));
@@ -487,12 +491,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             public TextView text_board_view_comment;
             public TextView text_board_view_comment_date;
 
-            public TextView text_comment_notice1;
-            public TextView text_comment_notice2;
-            public TextView text_comment_notice3;
-            public TextView text_comment_notice4;
-            public TextView text_comment_notice5;
-            public TextView text_comment_notice6;
+            public LinearLayout layout_comment_notice;
         }
 
         public void dialog(final int index, final int position){
@@ -557,29 +556,51 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             String content = json.getString("content");
 
             JSONArray noticeArr = json.getJSONArray("article_hash_tags");
-            for(int k=0; k<noticeArr.length(); k++){
-                JSONObject noticeObj = noticeArr.getJSONObject(k);
-                String notice_tag = noticeObj.getString("hash_tag");
-                String notice_tag_type = noticeObj.getString("hash_tag_type");
-                switch(k){
-                    case 0:
-                        color(text_board_view_notice1, notice_tag, notice_tag_type);
-                        break;
-                    case 1:
-                        color(text_board_view_notice2, notice_tag, notice_tag_type);
-                        break;
-                    case 2:
-                        color(text_board_view_notice3, notice_tag, notice_tag_type);
-                        break;
-                    case 3:
-                        color(text_board_view_notice4, notice_tag, notice_tag_type);
-                        break;
-                    case 4:
-                        color(text_board_view_notice5, notice_tag, notice_tag_type);
-                        break;
-                    case 5:
-                        color(text_board_view_notice6, notice_tag, notice_tag_type);
-                        break;
+            if(noticeArr.length()!=0) {
+                int sum_of_width_notice = 0;
+                int addingCount = 0;
+                int layout_num = 0;
+                LinearLayout l1 = new LinearLayout(getApplicationContext());
+                LinearLayout l2 = new LinearLayout(getApplicationContext());
+                LinearLayout l3 = new LinearLayout(getApplicationContext());
+                for (int k = 0; k < noticeArr.length(); k++) {
+                    JSONObject noticeObj = noticeArr.getJSONObject(k);
+                    String notice_tag = noticeObj.getString("hash_tag");
+                    String notice_tag_type = noticeObj.getString("hash_tag_type");
+
+                    TextView textView = new TextView(getApplicationContext());
+                    color(textView, notice_tag, notice_tag_type);
+
+                    textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                    sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth() + 5;
+
+                    if(sum_of_width_notice > width_notice){
+                        addingCount = 0;
+                        layout_num++;
+                        sum_of_width_notice = textView.getMeasuredWidth() + 5;
+                    }
+
+                    if(layout_num == 0 && addingCount == 0){
+                        layout_view_notice.addView(l1);
+                    }else if(layout_num == 1 && addingCount == 0){
+                        layout_view_notice.addView(l2);
+                    }else if(layout_num == 2 && addingCount == 0){
+                        layout_view_notice.addView(l3);
+                    }
+
+                    switch(layout_num){
+                        case 0:
+                            l1.addView(textView);
+                            break;
+                        case 1:
+                            l2.addView(textView);
+                            break;
+                        case 2:
+                            l3.addView(textView);
+                            break;
+                    }
+                    addingCount++;
+
                 }
             }
 
@@ -643,6 +664,10 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
 
     public void color(final TextView textView, String tag, String type){
         textView.setText(" " + tag + " ");
+
+        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        llp.setMargins(0, 0, 5, 2); // llp.setMargins(left, top, right, bottom);
+        textView.setLayoutParams(llp);
         textView.setVisibility(View.VISIBLE);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -115,11 +115,7 @@ public class BoardAdapter extends BaseAdapter{
         }
         holder.text_board_date.setText(date);
 
-        holder.layout_notice.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.AT_MOST);
-
-        //Log.d("width", "layout width = " + width_notice);
         int sum_of_width_notice = 0;
-        //Log.d("list", "position = " + position + "    ::    notice = "+data.notice);
         if(data.hashMap.size() != 0) {
             int addingCount = 0;
             int layout_num = 0;
@@ -132,7 +128,6 @@ public class BoardAdapter extends BaseAdapter{
 
                 textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
                 sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth() + 5;
-
 
                 if(sum_of_width_notice > width_notice){
                     addingCount = 0;

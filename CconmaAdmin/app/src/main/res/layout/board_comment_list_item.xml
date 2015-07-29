@@ -25,45 +25,10 @@
             android:layout_marginRight="10dp"
             android:orientation="vertical">
             <LinearLayout
+                android:id="@+id/layout_comment_notice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/text_comment_notice1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
-                <TextView
-                    android:id="@+id/text_comment_notice2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
-                <TextView
-                    android:id="@+id/text_comment_notice3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
-                <TextView
-                    android:id="@+id/text_comment_notice4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/text_comment_notice5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
-                <TextView
-                    android:id="@+id/text_comment_notice6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
-            </LinearLayout>
+                android:orientation="vertical"/>
             <TextView
                 android:id="@+id/text_board_view_comment"
                 android:layout_width="fill_parent"
