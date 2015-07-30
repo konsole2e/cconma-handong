@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.LogRecord;
@@ -47,6 +48,7 @@ import handong.cconma.cconmaadmin.etc.MainAsyncTask;
  * Created by Young Bin Kim on 2015-07-08.
  */
 public class PageFragment extends Fragment {
+
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String ARG_PAGE_NO = "ARG_PAGE_NO";
     private int mPage;
@@ -132,13 +134,71 @@ public class PageFragment extends Fragment {
         btn_board_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity().getApplicationContext(), spinner_board_condition.getSelectedItem().toString()
-                        + " " + edit_board_search.getText(), Toast.LENGTH_SHORT).show();
+                String search_cond = "";
+                adapter_board.board_list_data.clear();
+                if(spinner_board_condition.getSelectedItem().equals("작성자"))
+                    search_cond = "/writers/all?search_field=name&keyword=";
+                else if(spinner_board_condition.getSelectedItem().equals("내용"))
+                    search_cond = "/writers/all?search_field=content&keyword=";
+                else if(spinner_board_condition.getSelectedItem().equals("제목"))
+                    search_cond = "/writers/all?search_field=subject&keyword=";
+
+                Log.d("test", search_cond);
+                try{
+
+                    //String url = URLDecoder.decode("http://www.cconma.com/admin/api/board/v1/boards/" + mPage_no + search_cond, "EUC-KR");
+                    //JSONObject jason = new MainAsyncTask(url, "GET", "").execute().get();
+
+                    JSONObject jason = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                            + mPage_no + search_cond + edit_board_search.getText().toString(), "GET", "").execute().get();
+                    JSONArray jsonArray = jason.getJSONArray("articles");
+
+                    for(int i=0; i<jsonArray.length(); i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                        String notice_type = jsonObject.getString("notice_type");
+                        String board_no = jsonObject.getString("board_no");
+                        String boardarticle_no = jsonObject.getString("boardarticle_no");
+                        String name = jsonObject.getString("name");
+                        String subject = jsonObject.getString("subject");
+                        String mem_no = jsonObject.getString("mem_no");
+                        String reg_date = jsonObject.getString("reg_date");
+                        String ip = jsonObject.getString("ip");
+                        String hit = jsonObject.getString("hit");
+                        String board_short_name = jsonObject.getString("board_short_name");
+                        String hash_tag="";
+                        JSONArray hashArr = jsonObject.getJSONArray("article_hash_tags");
+                        HashMap hashMap = new HashMap();
+                        if(hashArr.length()!=0) {
+                            for (int j = 0; j < hashArr.length(); j++) {
+                                JSONObject hashObj = hashArr.getJSONObject(j);
+                                hashMap.put("hash_tag"+j, hashObj.getString("hash_tag"));
+                                hashMap.put("hash_tag_type"+j, hashObj.getString("hash_tag_type"));
+                            }
+                        }
+                        String comment_nicknames = jsonObject.getString("comment_nicknames");
+
+                        adapter_board.addItem(notice_type, board_no, boardarticle_no, name,
+                                subject, mem_no, reg_date, ip, hit,
+                                board_short_name, hashMap, comment_nicknames);
+                    }
+
+
+
+                }catch(Exception e){
+
+                }
+
+                adapter_board.notifyDataSetChanged();
+
+                /*Toast.makeText(getActivity().getApplicationContext(), spinner_board_condition.getSelectedItem().toString()
+                        + " " + edit_board_search.getText(), Toast.LENGTH_SHORT).show();*/
                 edit_board_search.setText("");
                 input_manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
                 layout_board_search.setVisibility(View.GONE);
                 btn_board_search_view.setChecked(false);
+
             }
         });
 
@@ -266,7 +326,7 @@ public class PageFragment extends Fragment {
         jsonPage = jsonPage + 1;
         try{
 
-            JSONObject jason = new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"+mPage_no+"/writers/all"
+            JSONObject jason = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"+mPage_no+"/writers/all"
                     +"?page="+jsonPage+"&n=20", "GET", "").execute().get();
 
             JSONArray jsonArray = jason.getJSONArray("articles");
