@@ -149,7 +149,7 @@ public class PageFragment extends Fragment {
                     //String url = URLDecoder.decode("http://www.cconma.com/admin/api/board/v1/boards/" + mPage_no + search_cond, "EUC-KR");
                     //JSONObject jason = new MainAsyncTask(url, "GET", "").execute().get();
 
-                    JSONObject jason = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                    JSONObject jason = new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
                             + mPage_no + search_cond + edit_board_search.getText().toString(), "GET", "").execute().get();
                     JSONArray jsonArray = jason.getJSONArray("articles");
 
@@ -326,7 +326,7 @@ public class PageFragment extends Fragment {
         jsonPage = jsonPage + 1;
         try{
 
-            JSONObject jason = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"+mPage_no+"/writers/all"
+            JSONObject jason = new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"+mPage_no+"/writers/all"
                     +"?page="+jsonPage+"&n=20", "GET", "").execute().get();
 
             JSONArray jsonArray = jason.getJSONArray("articles");

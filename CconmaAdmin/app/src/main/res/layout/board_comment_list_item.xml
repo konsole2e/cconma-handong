@@ -34,8 +34,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
-                android:autoLink="web"
-                android:hint="댓글입니다."/>
+                android:autoLink="web"/>
         </LinearLayout>
         <TextView
             android:id="@+id/text_board_view_comment_date"

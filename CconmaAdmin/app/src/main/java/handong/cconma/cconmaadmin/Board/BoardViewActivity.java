@@ -69,6 +69,7 @@ import handong.cconma.cconmaadmin.etc.MainAsyncTask;
  */
 public class BoardViewActivity extends AppCompatActivity implements Html.ImageGetter{
     private Toolbar toolbar;
+    boolean firstTime=true;
     int width_notice=0;
     TextView text_board_view_title;
     LinearLayout layout_view_notice;
@@ -182,7 +183,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                                         + "&boardarticle_no=" + boardarticle_no
                                         + "&comment_no=" + edit_board_view_comment.getTag()
                                         + "&content=" + edit_board_view_comment.getText().toString();
-                                new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                                new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
                                         +board_no+"/articles/" + boardarticle_no + "/comments/"
                                         + edit_board_view_comment.getTag(), "POST", requestBody).execute().get();
                                 Log.d("test", requestBody);
@@ -207,7 +208,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                                     + "&boardarticle_no=" + boardarticle_no
                                     +"&content=" + edit_board_view_comment.getText().toString();
                             try{
-                                new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                                new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
                                         +board_no+"/articles/" + boardarticle_no + "/comments", "POST", requestBody).execute().get();
                             }catch(Exception e){
 
@@ -272,7 +273,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                             //게시글 삭제하는 코드.
 
                             try{
-                                new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                                new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
                                         +board_no+"/articles/" + boardarticle_no, "DELETE", "").execute().get();
                             }catch(Exception e){
 
@@ -552,7 +553,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                             else {
 
                                 try{
-                                    new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                                    new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
                                             +board_no+"/articles/" + boardarticle_no + "/comments/"
                                             + board_comment_list_data.get(position).boardcomment_no, "DELETE", "").execute().get();
                                 }catch(Exception e){
@@ -580,74 +581,76 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     public void jsonParser(){
         try{
 
-            JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+            JSONObject json = new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
                     +Integer.parseInt(board_no)+"/articles/"
                     +Integer.parseInt(boardarticle_no), "GET", "").execute().get();
 
-            String subject = json.getString("subject");
-            String name = json.getString("name");
-            String reg_date = json.getString("reg_date");
-            String content = json.getString("content");
+            if(firstTime) {
+                String subject = json.getString("subject");
+                String name = json.getString("name");
+                String reg_date = json.getString("reg_date");
+                String content = json.getString("content");
 
-            JSONArray noticeArr = json.getJSONArray("article_hash_tags");
-            if(noticeArr.length()!=0) {
-                int sum_of_width_notice = 0;
-                int addingCount = 0;
-                int layout_num = 0;
-                LinearLayout l1 = new LinearLayout(getApplicationContext());
-                LinearLayout l2 = new LinearLayout(getApplicationContext());
-                LinearLayout l3 = new LinearLayout(getApplicationContext());
-                for (int k = 0; k < noticeArr.length(); k++) {
-                    JSONObject noticeObj = noticeArr.getJSONObject(k);
-                    String notice_tag = noticeObj.getString("hash_tag");
-                    String notice_tag_type = noticeObj.getString("hash_tag_type");
+                JSONArray noticeArr = json.getJSONArray("article_hash_tags");
+                if (noticeArr.length() != 0) {
+                    int sum_of_width_notice = 0;
+                    int addingCount = 0;
+                    int layout_num = 0;
+                    LinearLayout l1 = new LinearLayout(getApplicationContext());
+                    LinearLayout l2 = new LinearLayout(getApplicationContext());
+                    LinearLayout l3 = new LinearLayout(getApplicationContext());
+                    for (int k = 0; k < noticeArr.length(); k++) {
+                        JSONObject noticeObj = noticeArr.getJSONObject(k);
+                        String notice_tag = noticeObj.getString("hash_tag");
+                        String notice_tag_type = noticeObj.getString("hash_tag_type");
 
-                    TextView textView = new TextView(getApplicationContext());
-                    color(textView, notice_tag, notice_tag_type);
+                        TextView textView = new TextView(getApplicationContext());
+                        color(textView, notice_tag, notice_tag_type);
 
-                    textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                    sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth() + 5;
+                        textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                        sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth() + 5;
 
-                    if(sum_of_width_notice > width_notice){
-                        addingCount = 0;
-                        layout_num++;
-                        sum_of_width_notice = textView.getMeasuredWidth() + 5;
+                        if (sum_of_width_notice > width_notice) {
+                            addingCount = 0;
+                            layout_num++;
+                            sum_of_width_notice = textView.getMeasuredWidth() + 5;
+                        }
+
+                        if (layout_num == 0 && addingCount == 0) {
+                            layout_view_notice.addView(l1);
+                        } else if (layout_num == 1 && addingCount == 0) {
+                            layout_view_notice.addView(l2);
+                        } else if (layout_num == 2 && addingCount == 0) {
+                            layout_view_notice.addView(l3);
+                        }
+
+                        switch (layout_num) {
+                            case 0:
+                                l1.addView(textView);
+                                break;
+                            case 1:
+                                l2.addView(textView);
+                                break;
+                            case 2:
+                                l3.addView(textView);
+                                break;
+                        }
+                        addingCount++;
+
                     }
-
-                    if(layout_num == 0 && addingCount == 0){
-                        layout_view_notice.addView(l1);
-                    }else if(layout_num == 1 && addingCount == 0){
-                        layout_view_notice.addView(l2);
-                    }else if(layout_num == 2 && addingCount == 0){
-                        layout_view_notice.addView(l3);
-                    }
-
-                    switch(layout_num){
-                        case 0:
-                            l1.addView(textView);
-                            break;
-                        case 1:
-                            l2.addView(textView);
-                            break;
-                        case 2:
-                            l3.addView(textView);
-                            break;
-                    }
-                    addingCount++;
-
+                    firstTime = false;
                 }
+
+                text_board_view_date.setText(reg_date);
+                text_board_view_title.setText(subject);
+                text_board_view_title.setPaintFlags(text_board_view_title.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+                text_board_view_writer.setText(name);
+                text_board_view_writer.setPaintFlags(text_board_view_writer.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+
+                Spanned spanned = Html.fromHtml(content, this, null);
+                text_board_view_content.setText(spanned);
+                text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
             }
-
-            text_board_view_date.setText(reg_date);
-            text_board_view_title.setText(subject);
-            text_board_view_title.setPaintFlags(text_board_view_title.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-            text_board_view_writer.setText(name);
-            text_board_view_writer.setPaintFlags(text_board_view_writer.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-
-            Spanned spanned = Html.fromHtml(content, this, null);
-            text_board_view_content.setText(spanned);
-            text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
-
 
             JSONArray jsonArray = json.getJSONArray("comments");
             for(int i=0; i<jsonArray.length(); i++){
