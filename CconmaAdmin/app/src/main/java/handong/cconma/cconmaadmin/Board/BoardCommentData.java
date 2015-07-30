@@ -7,7 +7,7 @@ import java.util.HashMap;
  */
 public class BoardCommentData {
 
-    public String comment_no;
+    public String boardcomment_no;
     public String comment_mem_no;
     public String commnet_writer;
     public String comment;

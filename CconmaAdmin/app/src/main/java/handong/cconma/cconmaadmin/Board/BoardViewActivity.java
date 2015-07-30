@@ -175,10 +175,28 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                         String strNow = sdfNow.format(date);
 
                         if(edit_board_view_comment.getTag() != null){
-                            adapter_comment.updateComment((Integer) edit_board_view_comment.getTag(),
-                                    edit_board_view_comment.getText().toString());
-                            adapter_comment.notifyDataSetChanged();
+
+                            try{
+                                String requestBody = "_METHOD=" + "PUT"
+                                        + "&board_no=" + board_no
+                                        + "&boardarticle_no=" + boardarticle_no
+                                        + "&comment_no=" + edit_board_view_comment.getTag()
+                                        + "&content=" + edit_board_view_comment.getText().toString();
+                                new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
+                                        +board_no+"/articles/" + boardarticle_no + "/comments/"
+                                        + edit_board_view_comment.getTag(), "POST", requestBody).execute().get();
+                                Log.d("test", requestBody);
+                            }catch(Exception e){
+
+                            }
+
+                            //adapter_comment.updateComment((Integer) edit_board_view_comment.getTag(),
+                                    //edit_board_view_comment.getText().toString());
+                            //adapter_comment.notifyDataSetChanged();
                             edit_board_view_comment.setTag(null);
+                            adapter_comment.board_comment_list_data.clear();
+                            jsonParser();
+
                         }else{
                             //HashMap hash = new HashMap();
                             //adapter_comment.addItem("김은지", strNow, edit_board_view_comment.getText().toString(), hash);
@@ -189,7 +207,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                                     + "&boardarticle_no=" + boardarticle_no
                                     +"&content=" + edit_board_view_comment.getText().toString();
                             try{
-                                new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                                new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
                                         +board_no+"/articles/" + boardarticle_no + "/comments", "POST", requestBody).execute().get();
                             }catch(Exception e){
 
@@ -252,6 +270,16 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                             startActivity(intent);
                         } else if(index == 1){
                             //게시글 삭제하는 코드.
+
+                            try{
+                                new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
+                                        +board_no+"/articles/" + boardarticle_no, "DELETE", "").execute().get();
+                            }catch(Exception e){
+
+                            }
+
+                            //뒤로 돌아갔을때 변한 사항이 바로바로 반영되도록 해야한다.
+
                         } else{
                             adapter_comment.dialog(1, position - 1);
                         }
@@ -471,19 +499,16 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             return convertView;
         }
 
-        public void addItem(String comment_writer, String comment_date, String comment, HashMap commentHashMap){
+        public void addItem(String boardcomment_no, String comment_writer, String comment_date, String comment, HashMap commentHashMap){
             BoardCommentData addData = new BoardCommentData();
 
+            addData.boardcomment_no = boardcomment_no;
             addData.comment = comment;
             addData.comment_date = comment_date;
             addData.commnet_writer = comment_writer;
             addData.comment_hashMap = commentHashMap;
 
             board_comment_list_data.add(addData);
-        }
-
-        public void updateComment(int position, String content){
-            board_comment_list_data.get(position).setComment(content);
         }
 
         public class ViewHolder{
@@ -517,7 +542,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                                     tag = tag + "@" + board_comment_list_data.get(position).comment_hashMap.get("hash_tag"+i) + " ";
                                 }
                                 edit_board_view_comment.setText(tag + (board_comment_list_data.get(position).comment).toString());
-                                edit_board_view_comment.setTag(position);
+                                edit_board_view_comment.setTag(board_comment_list_data.get(position).boardcomment_no);
                                 //커서 위치 문자열 뒤쪽에 위치하도록.
                                 Editable edt = edit_board_view_comment.getText();
                                 Selection.setSelection(edt, edt.length());
@@ -525,6 +550,15 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                                 list_board_view_comment.setSelectionFromTop(position, 0);
                             }
                             else {
+
+                                try{
+                                    new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
+                                            +board_no+"/articles/" + boardarticle_no + "/comments/"
+                                            + board_comment_list_data.get(position).boardcomment_no, "DELETE", "").execute().get();
+                                }catch(Exception e){
+
+                                }
+
                                 board_comment_list_data.remove(position);
                                 adapter_comment.notifyDataSetChanged();
                             }
@@ -546,7 +580,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     public void jsonParser(){
         try{
 
-            JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+            JSONObject json = new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/boards/"
                     +Integer.parseInt(board_no)+"/articles/"
                     +Integer.parseInt(boardarticle_no), "GET", "").execute().get();
 
@@ -642,7 +676,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 comment_reg_date = date;
 
                 String comment_content = Html.fromHtml(commentObj.getString("content")).toString();
-
+                String boardcomment_no = commentObj.getString("boardcomment_no");
                 JSONArray hashArr = commentObj.getJSONArray("comment_hash_tags");
                 HashMap commentHashMap = new HashMap();
                 if(hashArr.length()!=0) {
@@ -652,7 +686,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                         commentHashMap.put("hash_tag_type"+j, hashObj.getString("hash_tag_type"));
                     }
                 }
-                adapter_comment.addItem(comment_name, comment_reg_date, comment_content, commentHashMap);
+                adapter_comment.addItem(boardcomment_no, comment_name, comment_reg_date, comment_content, commentHashMap);
             }
             adapter_comment.notifyDataSetChanged();
 
