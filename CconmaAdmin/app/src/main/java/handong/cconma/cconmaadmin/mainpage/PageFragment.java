@@ -71,7 +71,7 @@ public class PageFragment extends Fragment {
     ListView list_board;
     BoardAdapter adapter_board;
 
-    ToggleButton btn_board_search_view;
+    //ToggleButton btn_board_search_view;
     FrameLayout layout_board_search;
     Spinner spinner_board_condition;
     EditText edit_board_search;
@@ -79,6 +79,8 @@ public class PageFragment extends Fragment {
 
     InputMethodManager input_manager;
     View view;
+
+
     public static PageFragment newInstance(int page, int page_no) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -100,8 +102,8 @@ public class PageFragment extends Fragment {
     public void onResume(){
         super.onResume();
 
-        btn_board_search_view.setChecked(false);
-        layout_board_search.setVisibility(View.GONE);
+        //btn_board_search_view.setChecked(false);
+        //layout_board_search.setVisibility(View.GONE);
         searchON = false;
     }
 
@@ -114,7 +116,7 @@ public class PageFragment extends Fragment {
         progress = (ProgressBar)view.findViewById(R.id.progress_list_update);
 
         //검색창 열기/닫기 버튼
-        btn_board_search_view = (ToggleButton)view.findViewById(R.id.btn_board_search_view);
+        /*btn_board_search_view = (ToggleButton)view.findViewById(R.id.btn_board_search_view);
         btn_board_search_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,7 +126,7 @@ public class PageFragment extends Fragment {
                     layout_board_search.setVisibility(View.GONE);
                 }
             }
-        });
+        });*/
         //검색창 Frame Layout
         layout_board_search = (FrameLayout)view.findViewById(R.id.layout_board_search);
         //검색 조건 spinner
@@ -167,8 +169,8 @@ public class PageFragment extends Fragment {
                 edit_board_search.setText("");
                 input_manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
-                layout_board_search.setVisibility(View.GONE);
-                btn_board_search_view.setChecked(false);
+                //layout_board_search.setVisibility(View.GONE);
+                //btn_board_search_view.setChecked(false);
 
             }
         });
@@ -201,8 +203,6 @@ public class PageFragment extends Fragment {
                 });
                 }
             });*/
-
-
 
 
         list_board.setFocusable(false);
