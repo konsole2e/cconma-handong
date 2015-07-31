@@ -26,6 +26,7 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,8 +80,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     CheckBox check_board_view_complete;
 
     TextView text_board_view_content;
-    Button btn_board_view_modify;
-    Button btn_board_view_delete;
 
     ListView list_board_view_comment;
     BoardCommentAdapter adapter_comment;
@@ -138,10 +137,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         check_board_view_complete.setOnClickListener(clickListener);
 
         text_board_view_content = (TextView)header.findViewById(R.id.text_board_view_content);
-        btn_board_view_modify = (Button)header.findViewById(R.id.btn_board_view_modify);
-        btn_board_view_modify.setOnClickListener(clickListener);
-        btn_board_view_delete = (Button)header.findViewById(R.id.btn_board_view_delete);
-        btn_board_view_delete.setOnClickListener(clickListener);
 
         jsonParser();
 
@@ -224,12 +219,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                         input_manager.hideSoftInputFromWindow(edit_board_view_comment.getWindowToken(), 0);
 
                     }
-                    break;
-                case R.id.btn_board_view_modify:
-                    dialog(0, 0);
-                    break;
-                case R.id.btn_board_view_delete:
-                    dialog(1, 0);
                     break;
                 case R.id.edit_board_view_comment:
                     list_board_view_comment.setSelectionFromTop(adapter_comment.getCount() - 1, 0);
@@ -751,10 +740,26 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
+            case R.id.favorite:
+                break;
+            case R.id.modify:
+                dialog(0, 0);
+                break;
+            case R.id.delete:
+                dialog(1, 0);
+                break;
+            case R.id.complete:
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_view, menu);
+
+        return true;
     }
 }
