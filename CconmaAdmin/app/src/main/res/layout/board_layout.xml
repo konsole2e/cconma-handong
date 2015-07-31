@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/snackbarPosition"
-    android:background="@color/ColorPanel"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <WebView
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/ColorPanel"
-        android:id="@+id/webView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
-    </WebView>
+        android:background="#EEEEEE"/>
 
     <fr.castorflex.android.circularprogressbar.CircularProgressBar
         android:id="@+id/progressbar_circular"
@@ -24,6 +20,7 @@
         android:indeterminateOnly="false"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:visibility="gone"
         app:cpb_colors="@array/colors"/>
 
 </RelativeLayout>

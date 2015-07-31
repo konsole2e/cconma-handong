@@ -72,7 +72,7 @@ public class MyWebView extends BaseActivity {
             return true;
         }
         public void onPageFinished(WebView view, String url){
-            Cookies.getInstance().updateCookies(url);
+            Cookies.getInstance(MyWebView.this).updateCookies(url);
         }
     }
 }

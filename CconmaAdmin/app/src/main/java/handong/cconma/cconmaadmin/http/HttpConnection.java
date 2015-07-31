@@ -50,7 +50,7 @@ public class HttpConnection  {
             Log.d(TAG, "Connection start");
             conn.setConnectTimeout(2000);
             conn.setRequestProperty("Content-Language", "en-US");
-            conn.setRequestProperty("Cookie", Cookies.getInstance().getCurrentCookies());
+            conn.setRequestProperty("Cookie", Cookies.getInstance(null).getCurrentCookies());
             conn.setRequestMethod(method);
             conn.setRequestProperty("Accept-Charset", "UTF-8");
             if(method.equals("POST")){

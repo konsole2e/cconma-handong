@@ -33,7 +33,6 @@ public class MainAsyncTask extends AsyncTask<JSONObject, Void, JSONObject> {
 
         HttpConnection connection = new HttpConnection(url, method, requestBody);
         sResult = connection.init();
-        Log.d(TAG, sResult);
 
         JSONObject jsonObject = null;
         try {

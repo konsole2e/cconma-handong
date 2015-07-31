@@ -27,9 +27,10 @@
                 android:scrollbars="horizontal"
                 android:layout_below="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="40dp"
                 android:fillViewport="true"
                 app:tabIndicatorColor="#FFFFFF"
+                app:tabIndicatorHeight="4dp"
                 app:tabTextAppearance="?android:attr/textAppearanceSmall"/>
         </android.support.design.widget.AppBarLayout>
 
@@ -49,9 +50,8 @@
             android:src="@drawable/ic_add_white_24dp"
             android:layout_gravity="bottom|end"
             app:fabSize="normal"
-            app:backgroundTint="#FDD835"
+            app:backgroundTint="#dd2c00"
             />
-
     </android.support.design.widget.CoordinatorLayout>
     <!--
         <android.support.v7.widget.RecyclerView

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
@@ -19,7 +20,6 @@ import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.statics.StaticsLike;
-import handong.cconma.cconmaadmin.statics.StaticsMain_B;
 import handong.cconma.cconmaadmin.statics.StaticsMember;
 import handong.cconma.cconmaadmin.statics.StaticsMemberRecent;
 import handong.cconma.cconmaadmin.statics.StaticsOrderH;
@@ -32,7 +32,6 @@ import handong.cconma.cconmaadmin.statics.StaticsTrade;
  */
 public class MainFragment extends Fragment implements View.OnClickListener{
     public static final String POSITION = "0";
-    public static final String URL = "http://www.google.com";
     private CharSequence TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
 
     private WebView webview;
@@ -42,27 +41,51 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        Log.d("fragment", "RESUME");
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.d("fragment", "onStart");
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.d("fragment", "onStop");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = null;
+        Log.d("fragment", "onCreateView");
+        View rootView;
 
+        Log.d("fragment", "savedInstanceState: " + String.valueOf(savedInstanceState));
         int position = getArguments().getInt(POSITION);
 
         if(position == 1){
             rootView = inflater.inflate(R.layout.board_viewpager, container, false);
 
             ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
-            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(),
-                    getActivity().getApplicationContext());
+            viewPager.setOffscreenPageLimit(2);
+            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
             viewPager.setAdapter(viewPagerAdapter);
 
             TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
+            tabLayout.setVisibility(View.VISIBLE);
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
             tabLayout.setupWithViewPager(viewPager);
         }
         else if(position == 2){
             rootView = inflater.inflate(R.layout.statics_main, container, false);
+
+            TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
+            tabLayout.setVisibility(View.GONE);
 
             Button orderH = (Button)rootView.findViewById(R.id.order_hourly_btn);
             orderH.setOnClickListener(this);
@@ -153,7 +176,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         }
         public void onPageFinished(WebView view, String url){
             ((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).progressiveStop();
-            Cookies.getInstance().updateCookies(url);
+            Cookies.getInstance(getActivity().getApplicationContext()).updateCookies(url);
         }
     }
 }
