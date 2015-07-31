@@ -77,7 +77,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     LinearLayout layout_view_notice;
     TextView text_board_view_writer;
     TextView text_board_view_date;
-    CheckBox check_board_view_complete;
 
     TextView text_board_view_content;
 
@@ -114,6 +113,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         list_board_view_comment = (ListView)findViewById(R.id.list_board_view_comment);
         list_board_view_comment.addHeaderView(header);
@@ -133,8 +133,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         text_board_view_title = (TextView)header.findViewById(R.id.text_board_view_title);
         text_board_view_writer = (TextView)header.findViewById(R.id.text_board_view_writer);
         text_board_view_date = (TextView)header.findViewById(R.id.text_board_view_date);
-        check_board_view_complete = (CheckBox)header.findViewById(R.id.check_board_view_complete);
-        check_board_view_complete.setOnClickListener(clickListener);
 
         text_board_view_content = (TextView)header.findViewById(R.id.text_board_view_content);
 
@@ -158,12 +156,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         @Override
         public void onClick(View v) {
             switch(v.getId()){
-                case R.id.check_board_view_complete:
-                    if(check_board_view_complete.isChecked())
-                        Toast.makeText(getApplicationContext(), "해당 게시글이 완료 되었습니다.", Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(getApplicationContext(), "해당 게시글이 완료해제 되었습니다.", Toast.LENGTH_SHORT).show();
-                    break;
                 case R.id.btn_board_view_comment:
                     if(!(edit_board_view_comment.getText().toString()).equals("")) {
                         long now = System.currentTimeMillis();
@@ -581,6 +573,9 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 String reg_date = json.getString("reg_date");
                 String content = json.getString("content");
 
+                JSONArray scrapArr = json.getJSONArray("scrap_info");
+                
+
                 JSONArray noticeArr = json.getJSONArray("article_hash_tags");
                 if (noticeArr.length() != 0) {
                     int sum_of_width_notice = 0;
@@ -740,15 +735,20 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
             case R.id.favorite:
+                item.setIcon(getResources().getDrawable(R.drawable.ic_star_white_24dp));
+                break;
+            case R.id.complete:
+                item.setIcon(getResources().getDrawable(R.drawable.ic_check_box_white_24dp));
                 break;
             case R.id.modify:
                 dialog(0, 0);
                 break;
             case R.id.delete:
                 dialog(1, 0);
-                break;
-            case R.id.complete:
                 break;
         }
         return super.onOptionsItemSelected(item);

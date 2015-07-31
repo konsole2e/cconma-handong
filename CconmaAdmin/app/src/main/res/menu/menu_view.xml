@@ -1,32 +1,32 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".BoardViewActivity">
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
     <item
         android:id="@+id/favorite"
         android:title="Favorite"
-        android:icon="@drawable/ic_action_important"
-        app:showAsAction="always">
-    </item>
-
-    <item
-        android:id="@+id/modify"
-        android:title="Modify"
-        android:icon="@drawable/ic_add_white_24dp"
-        app:showAsAction="always">
-    </item>
-
-    <item
-        android:id="@+id/delete"
-        android:title="Delete"
-        android:icon="@drawable/ic_content_cut_white_24dp"
+        android:icon="@drawable/ic_star_border_white_24dp"
         app:showAsAction="always">
     </item>
 
     <item
         android:id="@+id/complete"
         android:title="Complete"
-        android:icon="@drawable/ic_done_white_24dp"
+        android:icon="@drawable/ic_check_selector"
+        app:showAsAction="always">
+    </item>
+
+    <item
+        android:id="@+id/modify"
+        android:title="Modify"
+        android:icon="@drawable/ic_edit_white_24dp"
+        app:showAsAction="always">
+    </item>
+
+    <item
+        android:id="@+id/delete"
+        android:title="Delete"
+        android:icon="@drawable/ic_delete_white_24dp"
         app:showAsAction="always">
     </item>
 
