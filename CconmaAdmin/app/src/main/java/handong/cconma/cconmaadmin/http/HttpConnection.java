@@ -35,7 +35,7 @@ public class HttpConnection  {
     public HttpConnection(String url, String method, String requestBody){
         try {
             this.url = new URL(url);
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Log.d(TAG, "URL exception!!! " + e.getMessage());
         }
@@ -63,6 +63,7 @@ public class HttpConnection  {
             if(!requestBody.equals("")) {
                 OutputStream os = conn.getOutputStream();
                 os.write(requestBody.getBytes());
+                Log.d("TAG", String.valueOf(requestBody.getBytes()));
                 os.close();
             }
 
