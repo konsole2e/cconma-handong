@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/ColorPanel">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar">
+    </include>
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+        <Spinner
+            android:id="@+id/spinner_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            style="@android:style/Theme.DeviceDefault"/>
+        <CheckBox
+            android:id="@+id/checkbox_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:text="공지사항"
+            android:buttonTint="#000000"
+            style="@style/SmallBlack"/>
+    </FrameLayout>
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/layout_write_notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:orientation="horizontal"/>
+    </HorizontalScrollView>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/edit_board_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:textStyle="bold"
+            android:background="@drawable/edit_write"
+            android:textColorHint="#88444444"
+            android:hint="제목을 입력하세요."/>
+        <EditText
+            android:id="@+id/edit_board_content"
+            android:layout_below="@id/edit_board_title"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/edit_write"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:textColorHint="#88444444"
+            android:hint="내용을 입력하세요."/>
+    </RelativeLayout>
+</LinearLayout>
