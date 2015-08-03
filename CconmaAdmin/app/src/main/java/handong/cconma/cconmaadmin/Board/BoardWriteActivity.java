@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -42,6 +44,9 @@ import handong.cconma.cconmaadmin.R;
  * Created by on 2015-07-06.
  */
 public class BoardWriteActivity extends AppCompatActivity {
+
+    EditText mContent;
+    EditText mTitle;
     String fileName;
     String filePath = "";
     FrameLayout layout_board_write_file;
@@ -72,6 +77,7 @@ public class BoardWriteActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar haha = getSupportActionBar();
         haha.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         edit_title = (EditText)findViewById(R.id.title);
@@ -184,7 +190,7 @@ public class BoardWriteActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 TextView selectedItem = (TextView) view;
-                if(!selectedItem.getText().equals("알림 조건")) {
+                if (!selectedItem.getText().equals("알림 조건")) {
                     Button testButton = new Button(getApplicationContext());
                     testButton.setText(selectedItem.getText());
                     ((LinearLayout) findViewById(R.id.selectedList)).addView(testButton);
@@ -196,47 +202,14 @@ public class BoardWriteActivity extends AppCompatActivity {
                     });
                 }
             }
+
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
-        final EditText mTitle = (EditText)findViewById(R.id.title);
-        final EditText mContent = (EditText)findViewById(R.id.content);
-        // confirm button
-        Button confirm = (Button)findViewById(R.id.confirm);
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    String content = mContent.getText().toString().replace("\n", "<br>");
-
-                    String requestBody ="subject=" + String.valueOf(mTitle.getText())
-                    + "&content=" + content + "<br> - From App" + "&filename=" +
-                    "" + "&filename2=" + "";
-
-                    Log.d("debugging", requestBody);
-                    new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/board_no/12", "POST", requestBody).execute().get();
-                } catch (Exception e) {
-                    Log.d("debugging", "Exception in BoardWriteActivity line 212 " + e.getMessage());
-                    e.printStackTrace();
-                }
-
-                Toast.makeText(context, "글이 등록되었습니다", Toast.LENGTH_SHORT).show();
-               // Intent intent = new Intent(BoardWriteActivity.this, MainActivity.class);
-                //startActivity(intent);
-               // finish();
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
-        // cancel button
-        Button cancel = (Button)findViewById(R.id.cancel);
-        cancel.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "canceled", Toast.LENGTH_SHORT).show();
-                onBackPressed();
-            }
-        });
+        mTitle = (EditText)findViewById(R.id.title);
+        mContent = (EditText)findViewById(R.id.content);
     }
 
     public void getDirectory(String dirPath){
@@ -266,5 +239,39 @@ public class BoardWriteActivity extends AppCompatActivity {
         list_board_write_file.setAdapter(fileList);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.write:
+                try {
+                    String content = mContent.getText().toString().replace("\n", "<br>");
 
+                    String requestBody ="subject=" + String.valueOf(mTitle.getText())
+                            + "&content=" + content + "<br> - From App" + "&filename=" +
+                            "" + "&filename2=" + "";
+
+                    Log.d("debugging", requestBody);
+                    new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/board_no/12", "POST", requestBody).execute().get();
+                } catch (Exception e) {
+                    Log.d("debugging", "Exception in BoardWriteActivity line 212 " + e.getMessage());
+                    e.printStackTrace();
+                }
+
+                Toast.makeText(context, "글이 등록되었습니다", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_write, menu);
+
+        return true;
+    }
 }

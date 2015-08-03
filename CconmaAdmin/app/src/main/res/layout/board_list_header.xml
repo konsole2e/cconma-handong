@@ -14,6 +14,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/layout_view_notice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="4dp"/>
             <TextView
                 android:id="@+id/text_board_view_title"
                 android:layout_width="wrap_content"
@@ -21,53 +27,6 @@
                 android:layout_weight="2"
                 android:textColor="#000000"
                 android:hint="제목"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="4dp">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/text_board_view_notice1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"/>
-                    <TextView
-                        android:id="@+id/text_board_view_notice2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:visibility="gone" />
-                    <TextView
-                        android:id="@+id/text_board_view_notice3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
-                    <TextView
-                        android:id="@+id/text_board_view_notice4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/text_board_view_notice5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
-                    <TextView
-                        android:id="@+id/text_board_view_notice6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
@@ -75,12 +34,6 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="right">
-            <CheckBox
-                android:id="@+id/check_board_view_complete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:text="완료하기"/>
             <TextView
                 android:id="@+id/text_board_view_writer"
                 android:layout_width="wrap_content"
@@ -110,23 +63,6 @@
         android:textColorHint="#000000"
         android:textColor="#000000"
         android:hint=" 글이다"/>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="right"
-        android:paddingRight="8dp">
-        <Button
-            android:id="@+id/btn_board_view_modify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="수정"/>
-        <Button
-            android:id="@+id/btn_board_view_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="삭제"/>
-    </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="1dp"

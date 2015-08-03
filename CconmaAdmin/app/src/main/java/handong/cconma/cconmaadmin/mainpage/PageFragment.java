@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
+import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.LogRecord;
@@ -47,11 +50,16 @@ import handong.cconma.cconmaadmin.etc.MainAsyncTask;
  * Created by Young Bin Kim on 2015-07-08.
  */
 public class PageFragment extends Fragment {
+
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String ARG_PAGE_NO = "ARG_PAGE_NO";
     private int mPage;
     private int mPage_no;
     private int jsonPage = 0;
+
+    boolean searchON = false;
+    String search_keyword="";
+    String search_cond = "";
 
 
     JSONObject result;
@@ -63,7 +71,7 @@ public class PageFragment extends Fragment {
     ListView list_board;
     BoardAdapter adapter_board;
 
-    ToggleButton btn_board_search_view;
+    //ToggleButton btn_board_search_view;
     FrameLayout layout_board_search;
     Spinner spinner_board_condition;
     EditText edit_board_search;
@@ -71,6 +79,8 @@ public class PageFragment extends Fragment {
 
     InputMethodManager input_manager;
     View view;
+
+
     public static PageFragment newInstance(int page, int page_no) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -92,8 +102,9 @@ public class PageFragment extends Fragment {
     public void onResume(){
         super.onResume();
 
-        btn_board_search_view.setChecked(false);
-        layout_board_search.setVisibility(View.GONE);
+        //btn_board_search_view.setChecked(false);
+        //layout_board_search.setVisibility(View.GONE);
+        searchON = false;
     }
 
     @Override
@@ -105,7 +116,7 @@ public class PageFragment extends Fragment {
         progress = (ProgressBar)view.findViewById(R.id.progress_list_update);
 
         //검색창 열기/닫기 버튼
-        btn_board_search_view = (ToggleButton)view.findViewById(R.id.btn_board_search_view);
+        /*btn_board_search_view = (ToggleButton)view.findViewById(R.id.btn_board_search_view);
         btn_board_search_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +126,7 @@ public class PageFragment extends Fragment {
                     layout_board_search.setVisibility(View.GONE);
                 }
             }
-        });
+        });*/
         //검색창 Frame Layout
         layout_board_search = (FrameLayout)view.findViewById(R.id.layout_board_search);
         //검색 조건 spinner
@@ -132,13 +143,35 @@ public class PageFragment extends Fragment {
         btn_board_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity().getApplicationContext(), spinner_board_condition.getSelectedItem().toString()
-                        + " " + edit_board_search.getText(), Toast.LENGTH_SHORT).show();
+
+                searchON = true;
+                adapter_board.board_list_data.clear();
+                if(spinner_board_condition.getSelectedItem().equals("작성자"))
+                    search_cond = "/writers/all?search_field=name&keyword=";
+                else if(spinner_board_condition.getSelectedItem().equals("내용"))
+                    search_cond = "/writers/all?search_field=content&keyword=";
+                else if(spinner_board_condition.getSelectedItem().equals("제목"))
+                    search_cond = "/writers/all?search_field=subject&keyword=";
+
+                search_keyword = String.valueOf(edit_board_search.getText());
+                try {
+                    search_keyword = URLEncoder.encode(search_keyword, "UTF-8");
+                }catch(Exception e){
+
+                }
+                Log.d("test", search_cond);
+                jsonParser();
+
+                adapter_board.notifyDataSetChanged();
+
+                /*Toast.makeText(getActivity().getApplicationContext(), spinner_board_condition.getSelectedItem().toString()
+                        + " " + edit_board_search.getText(), Toast.LENGTH_SHORT).show();*/
                 edit_board_search.setText("");
                 input_manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
-                layout_board_search.setVisibility(View.GONE);
-                btn_board_search_view.setChecked(false);
+                //layout_board_search.setVisibility(View.GONE);
+                //btn_board_search_view.setChecked(false);
+
             }
         });
 
@@ -170,8 +203,6 @@ public class PageFragment extends Fragment {
                 });
                 }
             });*/
-
-
 
 
         list_board.setFocusable(false);
@@ -263,46 +294,92 @@ public class PageFragment extends Fragment {
 
 
     public void jsonParser(){
-        jsonPage = jsonPage + 1;
-        try{
+        if(searchON == false) {
+            try {
 
-            JSONObject jason = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"+mPage_no+"/writers/all"
-                    +"?page="+jsonPage+"&n=20", "GET", "").execute().get();
+                jsonPage = jsonPage + 1;
+                JSONObject jason = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/" + mPage_no + "/writers/all"
+                        + "?page=" + jsonPage + "&n=20", "GET", "").execute().get();
 
-            JSONArray jsonArray = jason.getJSONArray("articles");
+                JSONArray jsonArray = jason.getJSONArray("articles");
 
-            for(int i=0; i<jsonArray.length(); i++){
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                String notice_type = jsonObject.getString("notice_type");
-                String board_no = jsonObject.getString("board_no");
-                String boardarticle_no = jsonObject.getString("boardarticle_no");
-                String name = jsonObject.getString("name");
-                String subject = jsonObject.getString("subject");
-                String mem_no = jsonObject.getString("mem_no");
-                String reg_date = jsonObject.getString("reg_date");
-                String ip = jsonObject.getString("ip");
-                String hit = jsonObject.getString("hit");
-                String board_short_name = jsonObject.getString("board_short_name");
-                String hash_tag="";
-                JSONArray hashArr = jsonObject.getJSONArray("article_hash_tags");
-                HashMap hashMap = new HashMap();
-                if(hashArr.length()!=0) {
-                    for (int j = 0; j < hashArr.length(); j++) {
-                        JSONObject hashObj = hashArr.getJSONObject(j);
-                        hashMap.put("hash_tag"+j, hashObj.getString("hash_tag"));
-                        hashMap.put("hash_tag_type"+j, hashObj.getString("hash_tag_type"));
+                    String notice_type = jsonObject.getString("notice_type");
+                    String board_no = jsonObject.getString("board_no");
+                    String boardarticle_no = jsonObject.getString("boardarticle_no");
+                    String name = jsonObject.getString("name");
+                    String subject = jsonObject.getString("subject");
+                    String mem_no = jsonObject.getString("mem_no");
+                    String reg_date = jsonObject.getString("reg_date");
+                    String ip = jsonObject.getString("ip");
+                    String hit = jsonObject.getString("hit");
+                    String board_short_name = jsonObject.getString("board_short_name");
+                    String hash_tag = "";
+                    JSONArray hashArr = jsonObject.getJSONArray("article_hash_tags");
+                    HashMap hashMap = new HashMap();
+                    if (hashArr.length() != 0) {
+                        for (int j = 0; j < hashArr.length(); j++) {
+                            JSONObject hashObj = hashArr.getJSONObject(j);
+                            hashMap.put("hash_tag" + j, hashObj.getString("hash_tag"));
+                            hashMap.put("hash_tag_type" + j, hashObj.getString("hash_tag_type"));
+                        }
                     }
+                    String comment_nicknames = jsonObject.getString("comment_nicknames");
+
+                    adapter_board.addItem(notice_type, board_no, boardarticle_no, name,
+                            subject, mem_no, reg_date, ip, hit,
+                            board_short_name, hashMap, comment_nicknames);
                 }
-                String comment_nicknames = jsonObject.getString("comment_nicknames");
 
-                adapter_board.addItem(notice_type, board_no, boardarticle_no, name,
-                        subject, mem_no, reg_date, ip, hit,
-                        board_short_name, hashMap, comment_nicknames);
+            } catch (Exception e) {
+                Log.e("JSON", Log.getStackTraceString(e));
             }
+        }else{
+            jsonPage = jsonPage + 1;
+            try{
+                //String url = URLDecoder.decode("http://www.cconma.com/admin/api/board/v1/boards/" + mPage_no + search_cond, "EUC-KR");
+                //JSONObject jason = new MainAsyncTask(url, "GET", "").execute().get();
+                JSONObject jason = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                        + mPage_no + search_cond + search_keyword, "GET", "").execute().get();
+                JSONArray jsonArray = jason.getJSONArray("articles");
 
-        }catch(Exception e){
-            Log.e("JSON", Log.getStackTraceString(e));
+                for(int i=0; i<jsonArray.length(); i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    String notice_type = jsonObject.getString("notice_type");
+                    String board_no = jsonObject.getString("board_no");
+                    String boardarticle_no = jsonObject.getString("boardarticle_no");
+                    String name = jsonObject.getString("name");
+                    String subject = jsonObject.getString("subject");
+                    String mem_no = jsonObject.getString("mem_no");
+                    String reg_date = jsonObject.getString("reg_date");
+                    String ip = jsonObject.getString("ip");
+                    String hit = jsonObject.getString("hit");
+                    String board_short_name = jsonObject.getString("board_short_name");
+                    String hash_tag="";
+                    JSONArray hashArr = jsonObject.getJSONArray("article_hash_tags");
+                    HashMap hashMap = new HashMap();
+                    if(hashArr.length()!=0) {
+                        for (int j = 0; j < hashArr.length(); j++) {
+                            JSONObject hashObj = hashArr.getJSONObject(j);
+                            hashMap.put("hash_tag"+j, hashObj.getString("hash_tag"));
+                            hashMap.put("hash_tag_type"+j, hashObj.getString("hash_tag_type"));
+                        }
+                    }
+                    String comment_nicknames = jsonObject.getString("comment_nicknames");
+
+                    adapter_board.addItem(notice_type, board_no, boardarticle_no, name,
+                            subject, mem_no, reg_date, ip, hit,
+                            board_short_name, hashMap, comment_nicknames);
+                }
+
+
+
+            }catch(Exception e){
+
+            }
         }
 
         adapter_board.notifyDataSetChanged();

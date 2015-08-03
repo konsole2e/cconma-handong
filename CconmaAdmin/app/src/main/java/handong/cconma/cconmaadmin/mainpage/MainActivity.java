@@ -1,5 +1,6 @@
 package handong.cconma.cconmaadmin.mainpage;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -90,10 +91,18 @@ public class MainActivity extends AppCompatActivity {
      */
     private CharSequence mTitle;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //checkPlayServices();
+    class loadingData extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+        }
     }
 
     @Override
@@ -104,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setBackgroundDrawable(null);
 
         mTitle = getTitle();
-        context = getApplicationContext();
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -113,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
-
+        
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override
@@ -124,8 +132,10 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     menuItem.setChecked(true);
                     mDrawerLayout.closeDrawers();
-                    Log.d(TAG, String.valueOf(menuItem.getGroupId()));
-                    switch (menuItem.getItemId()) {
+
+                    position = menuItem.getItemId();
+                    Log.d(TAG, String.valueOf(position));
+                    switch (position) {
                         case R.id.board:
                             selectItem(1);
                             break;
@@ -200,11 +210,23 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, BoardMarkedActivity.class);
             startActivity(intent);
         } else if (id == R.id.notification) {
-            Intent intent = new Intent(this, PushView.class);
+            Intent intent = new Intent(this, StartPage.class);
             startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if(count == 0){
+            finish();
+        }
+        else{
+            getFragmentManager().popBackStack();
+        }
     }
 
     /*@Override
@@ -298,66 +320,12 @@ public class MainActivity extends AppCompatActivity {
 
                 fragmentManager = getSupportFragmentManager();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.replace(R.id.main_content_frame, fragment, "fragment");
+                ft.replace(R.id.main_content_frame, fragment, "fragment" + String.valueOf(position));
+                ft.addToBackStack(null);
+                Log.d(TAG, "fragment stack: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
                 ft.commit();
             //}
     }
-
-   /* class init extends AsyncTask<Void, Void, Void>{
-        int position;
-        public init(int position){
-            this.position = position;
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            if (position == 1) {
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
-                if (fragment != null) {
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.remove(fragment).commit();
-                }
-
-                // View Page Adapter
-
-                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
-                        MainActivity.this);
-                viewPager.setAdapter(viewPagerAdapter);
-
-                // ViewPager setting
-                tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-                tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-                tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
-                tabLayout.setupWithViewPager(viewPager);
-
-                tabLayout.setVisibility(tabLayout.VISIBLE);
-
-
-                floatingActionButton.setVisibility(floatingActionButton.VISIBLE);
-                floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, BoardWriteActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                getSupportActionBar().setTitle(TITLES[position - 1]);
-            } else {
-                tabLayout.setVisibility(findViewById(R.id.tabLayout).GONE);
-                floatingActionButton.setVisibility(findViewById(R.id.fab).GONE);
-                Fragment fragment = new MainFragment();
-                Bundle args = new Bundle();
-                args.putInt(MainFragment.POSITION, position);
-                fragment.setArguments(args);
-
-                fragmentManager = getSupportFragmentManager();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.replace(R.id.main_content_frame, fragment, "fragment");
-                ft.commit();
-            }
-            return null;
-        }
-    }*/
-
     private void setSwipeToRefresh() {
         //set SwipeToRefresh on the activity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

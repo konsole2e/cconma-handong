@@ -83,36 +83,5 @@ public class BoardModifyActivity extends AppCompatActivity {
 
         });
 
-        // confirm button
-        Button confirm = (Button)findViewById(R.id.confirm);
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // ArrayList<String> noticeList = new ArrayList<String>();
-                // for noticeList.size -> noticeList.add(i);
-                boolean notice = ((CheckBox) findViewById(R.id.checkNotice)).isChecked();
-                String title = ((EditText) findViewById(R.id.title)).getText() + "";
-                String content = ((EditText) findViewById(R.id.content)).getText() + "";
-                // String fild = ((Button)findViewById(R.id.file)).getText()+""; // need to fix it...
-
-                /*
-                * INSERT notice, title, content, file INTO board_database
-                * */
-                Toast.makeText(getApplicationContext(), "modified", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(BoardModifyActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        // cancel button
-        Button cancel = (Button)findViewById(R.id.cancel);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
     }
 }

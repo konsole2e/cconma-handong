@@ -21,10 +21,6 @@
             android:dividerHeight="1dp"/>
     </LinearLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#f44336"/>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="50dp"
@@ -40,19 +36,22 @@
             android:focusableInTouchMode="true"
             android:layout_marginTop="1dp"
             android:background="#ffffff">
+
+            <!--
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.7"
                 android:paddingLeft="16dp"
                 style="@style/SmallBlack"
-                android:text="댓글"/>
+                android:text="댓글"/>-->
             <EditText
                 android:id="@+id/edit_board_view_comment"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
+                android:layout_marginLeft="5dp"
                 android:paddingLeft="7dp"
                 android:layout_weight="3"
                 style="@style/SmallBlack"
@@ -64,7 +63,7 @@
                 android:id="@+id/btn_board_view_comment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.7"
+                android:layout_weight="0.6"
                 android:text="입력"/>
         </LinearLayout>
     </LinearLayout>

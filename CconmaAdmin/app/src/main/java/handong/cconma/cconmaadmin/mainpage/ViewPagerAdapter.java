@@ -4,6 +4,13 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import handong.cconma.cconmaadmin.data.BasicData;
 
 /**
  * Created by Young Bin Kim on 2015-07-08.
@@ -11,17 +18,32 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private Context mContext;
     final int pageCount = 13;
-    private String tabTitles[] = new String[] { "꽃마보드", "개발", "CM", "CS", "마케팅", "행밥", "디자인", "물류", "스크랩", "초안", "별도메일", "해외장터", "IT자산/차량" };
-    private int tablTitles_no[] = new int[] {12, 17, 39, 46, 30, 45, 37, 18, 32, 33, 26, 48, 27 };
+    private HashMap board_list;
+    private ArrayList<String> tabBoardNo;
+    private HashMap titles;
+    private ArrayList<String> tabTitles;
 
     public ViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         mContext = context;
+        BasicData boardData = BasicData.getInstance();
+        board_list = BasicData.getInstance().getBoardList();
+
+        tabBoardNo = new ArrayList<>();
+        tabTitles = new ArrayList<>();
+
+        for( int i = 0; i < board_list.size() / 2; i++ ){
+            tabBoardNo.add(board_list.get("board_no" + i).toString());
+            Log.d("Data", "data" + i + ": " + tabBoardNo.get(i));
+            tabTitles.add(board_list.get("board_title" + i).toString());
+            Log.d("Data", "data" + i + ": " + tabTitles.get(i));
+        }
     }
 
     @Override
     public Fragment getItem(int position) {
-        return PageFragment.newInstance(position + 1, tablTitles_no[position]);
+        return BoardFragment.newInstance(tabBoardNo.get(position + 1));
+        //return BoardFragment.newInstance(position + 1, tablTitles_no[position]);
     }
 
     @Override
@@ -31,6 +53,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return tabTitles[position];
+        return tabTitles.get(position);
+        //return tabTitles[position];
     }
 }

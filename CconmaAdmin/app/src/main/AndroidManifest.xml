@@ -21,65 +21,41 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".etc.LoginWebView"
+            android:name=".mainpage.StartPage"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity android:name=".mainpage.MainActivity" android:screenOrientation="portrait"/>
 
-        <!--<activity android:name=".etc.LoginWebView"/>-->
-
+        <activity android:name=".etc.LoginWebView"/>
+        <activity android:name=".etc.StartupWebView"/>
         <activity android:name=".etc.MyWebView"/>
 
         <activity
-            android:name=".etc.SettingActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".mainpage.MainActivity" />
-        </activity>
+            android:name=".etc.SettingActivity"/>
+
         <activity
-            android:name=".board.BoardWriteActivity"
-            android:parentActivityName=".mainpage.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".mainpage.MainActivity" />
-        </activity>
+            android:name=".board.BoardWriteActivity"/>
+
         <activity
-            android:name=".board.BoardModifyActivity"
-            android:parentActivityName=".board.BoardViewActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".board.BoardViewActivity" />
-        </activity>
+            android:name=".board.BoardModifyActivity"/>
+
         <activity
             android:name=".board.BoardViewActivity"
-            android:parentActivityName=".mainpage.MainActivity"
-            android:windowSoftInputMode="adjustResize" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".mainpage.MainActivity" />
-        </activity>
-        <activity
-            android:name=".board.BoardMarkedActivity"
-            android:parentActivityName=".mainpage.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".mainpage.MainActivity" />
-        </activity>
+            android:windowSoftInputMode="adjustResize"/>
 
-        <activity android:name=".push.PushView">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".mainpage.MainActivity" />
-        </activity>
+        <activity
+            android:name=".board.BoardMarkedActivity"/>
+
+        <activity android:name=".push.PushView"/>
+
         <activity android:name=".statics.StaticsMain_B" />
         <activity
             android:name=".statics.StaticsOrderH"
