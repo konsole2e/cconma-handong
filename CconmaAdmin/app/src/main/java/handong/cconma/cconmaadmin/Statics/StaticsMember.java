@@ -19,7 +19,7 @@ import java.util.Map;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.etc.HTTPConnector;
-import handong.cconma.cconmaadmin.etc.JSONResponse;
+import handong.cconma.cconmaadmin.http.JSONResponse;
 
 public class StaticsMember extends Activity implements JSONResponse {
     //Combine Chart private CombinedChart dailyChart;
@@ -59,9 +59,9 @@ public class StaticsMember extends Activity implements JSONResponse {
         setting.commonSetting(weeklyChart);
         setting.commonSetting(monthlyChart);
 
-        mvD.attachChart(dailyChart, "", "명", "", 9);
-        mvW.attachChart(weeklyChart, "", "명", "", 9);
-        mvM.attachChart(monthlyChart, "", "명", "", 9);
+        mvD.attachChart(dailyChart, "", "", 9);
+        mvW.attachChart(weeklyChart, "", "", 9);
+        mvM.attachChart(monthlyChart, "", "", 9);
 
         dailyChart.setMarkerView(mvD);
         weeklyChart.setMarkerView(mvW);
@@ -129,7 +129,7 @@ public class StaticsMember extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     // dailyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting(dailyChart);
+//                    setting.zoomSetting(dailyChart);
                 }
             }
         });
@@ -142,7 +142,7 @@ public class StaticsMember extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //weeklyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting(weeklyChart);
+//                    setting.zoomSetting(weeklyChart);
                 }
             }
         });
@@ -155,7 +155,7 @@ public class StaticsMember extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting(monthlyChart);
+ //                   setting.zoomSetting(monthlyChart);
                 }
             }
         });
@@ -185,13 +185,13 @@ public class StaticsMember extends Activity implements JSONResponse {
     }
 
     @Override
-    public void processFinish(ArrayList<JSONObject> output) {
+    public void processFinish(JSONObject output) {
         int i = 0;
-        dailyChart.setData(manager.dailyChartSetting(output.get(i++)));
-        weeklyChart.setData(manager.weeklyChartSetting(output.get(i)));
-        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG(output.get(i++)));
-        monthlyChart.setData(manager.monthlyChartSetting(output.get(i)));
-        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG(output.get(i++)));
+        dailyChart.setData(manager.dailyChartSetting(output));
+        weeklyChart.setData(manager.weeklyChartSetting(output));
+        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG(output));
+        monthlyChart.setData(manager.monthlyChartSetting(output));
+        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG(output));
 
         refresh();
         return;

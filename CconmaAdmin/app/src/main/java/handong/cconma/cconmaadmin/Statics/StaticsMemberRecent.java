@@ -1,12 +1,8 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +18,7 @@ import java.util.Map;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.etc.HTTPConnector;
-import handong.cconma.cconmaadmin.etc.JSONResponse;
+import handong.cconma.cconmaadmin.http.JSONResponse;
 
 public class StaticsMemberRecent extends Activity implements JSONResponse {
     private BackPressCloseHandler backPressCloseHandler;
@@ -110,7 +106,7 @@ public class StaticsMemberRecent extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     // pcChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting(pcChart);
+//                    setting.zoomSetting(pcChart);
                 }
             }
         });
@@ -123,7 +119,7 @@ public class StaticsMemberRecent extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting(mobChart);
+//                    setting.zoomSetting(mobChart);
                 }
             }
         });
@@ -151,10 +147,10 @@ public class StaticsMemberRecent extends Activity implements JSONResponse {
     }
 
     @Override
-    public void processFinish(ArrayList<JSONObject> output) {
+    public void processFinish(JSONObject output) {
         int i = 0;
-        pcChart.setData(manager.setting("PC", output.get(i++)));
-        mobChart.setData(manager.setting("모바일", output.get(i++)));
+        pcChart.setData(manager.setting("PC", output));
+        mobChart.setData(manager.setting("모바일", output));
         refresh();
         return;
     }

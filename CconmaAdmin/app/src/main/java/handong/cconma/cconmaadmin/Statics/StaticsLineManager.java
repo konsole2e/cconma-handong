@@ -70,8 +70,14 @@ public class StaticsLineManager {
 
     public void xAxisSetting(JSONObject xAxis) {
         try {
-            if(xAxis.optString(StaticsVariables.enabled).toLowerCase().equals("false")){
+            if (xAxis.optString(StaticsVariables.enabled).toLowerCase().equals("false")) {
                 chart.getXAxis().setEnabled(false);
+            }
+            if (!xAxis.optString(StaticsVariables.axisWidth).equals("")) {
+                chart.getXAxis().setAxisLineWidth(Float.valueOf(xAxis.getString(StaticsVariables.axisWidth)));
+            }
+            if (!xAxis.optString(StaticsVariables.axisColor).equals("")) {
+                chart.getXAxis().setAxisLineColor(Color.parseColor(xAxis.getString(StaticsVariables.axisColor)));
             }
             if (!xAxis.optString(StaticsVariables.textColor).equals("")) {
                 chart.getXAxis().setTextColor(Color.parseColor(xAxis.getString(StaticsVariables.textColor)));
@@ -106,9 +112,17 @@ public class StaticsLineManager {
     }
 
     public void leftYAxisSetting(JSONObject yAxis) {
+        String unit = "";
+        String format = "";
         try {
-            if(yAxis.optString(StaticsVariables.enabled).toLowerCase().equals("false")){
+            if (yAxis.optString(StaticsVariables.enabled).toLowerCase().equals("false")) {
                 chart.getAxisLeft().setEnabled(false);
+            }
+            if (!yAxis.optString(StaticsVariables.axisWidth).equals("")) {
+                chart.getAxisLeft().setAxisLineWidth(Float.valueOf(yAxis.getString(StaticsVariables.axisWidth)));
+            }
+            if (!yAxis.optString(StaticsVariables.axisColor).equals("")) {
+                chart.getAxisLeft().setAxisLineColor(Color.parseColor(yAxis.getString(StaticsVariables.axisColor)));
             }
             if (!yAxis.optString(StaticsVariables.textColor).equals("")) {
                 chart.getAxisLeft().setTextColor(Color.parseColor(yAxis.getString(StaticsVariables.textColor)));
@@ -123,6 +137,7 @@ public class StaticsLineManager {
                 chart.getAxisLeft().setGridLineWidth(Float.valueOf(yAxis.getString(StaticsVariables.gridWidth)));
             }
             if (!yAxis.optString(StaticsVariables.min).equals("")) {
+                chart.getAxisLeft().setStartAtZero(false);
                 chart.getAxisLeft().setAxisMinValue(Float.valueOf(yAxis.getString(StaticsVariables.min)));
             }
             if (!yAxis.optString(StaticsVariables.max).equals("")) {
@@ -138,8 +153,12 @@ public class StaticsLineManager {
                 chart.getAxisLeft().setSpaceBottom(Float.valueOf(yAxis.getString(StaticsVariables.spaceBottom)));
             }
             if (!yAxis.optString(StaticsVariables.unit).equals("")) {
-                chart.getAxisLeft().setValueFormatter(new StaticsValueFormatter(yAxis.getString(StaticsVariables.unit)));
+                unit = yAxis.getString(StaticsVariables.unit);
             }
+            if (!yAxis.optString(StaticsVariables.valueFormat).equals("")) {
+                format = yAxis.getString(StaticsVariables.valueFormat);
+            }
+            chart.getAxisLeft().setValueFormatter(new StaticsValueFormatter(format, unit));
         } catch (JSONException e) {
             e.printStackTrace();
             Log.d("Parsing", "leftYAxisSetting");
@@ -147,9 +166,17 @@ public class StaticsLineManager {
     }
 
     public void rightYAxisSetting(JSONObject yAxis) {
+        String unit = "";
+        String format = "";
         try {
-            if(yAxis.optString(StaticsVariables.enabled).toLowerCase().equals("false")){
+            if (yAxis.optString(StaticsVariables.enabled).toLowerCase().equals("false")) {
                 chart.getAxisRight().setEnabled(false);
+            }
+            if (!yAxis.optString(StaticsVariables.axisWidth).equals("")) {
+                chart.getAxisRight().setAxisLineWidth(Float.valueOf(yAxis.getString(StaticsVariables.axisWidth)));
+            }
+            if (!yAxis.optString(StaticsVariables.axisColor).equals("")) {
+                chart.getAxisRight().setAxisLineColor(Color.parseColor(yAxis.getString(StaticsVariables.axisColor)));
             }
             if (!yAxis.optString(StaticsVariables.textColor).equals("")) {
                 chart.getAxisRight().setTextColor(Color.parseColor(yAxis.getString(StaticsVariables.textColor)));
@@ -164,6 +191,7 @@ public class StaticsLineManager {
                 chart.getAxisRight().setGridLineWidth(Float.valueOf(yAxis.getString(StaticsVariables.gridWidth)));
             }
             if (!yAxis.optString(StaticsVariables.min).equals("")) {
+                chart.getAxisRight().setStartAtZero(false);
                 chart.getAxisRight().setAxisMinValue(Float.valueOf(yAxis.getString(StaticsVariables.min)));
             }
             if (!yAxis.optString(StaticsVariables.max).equals("")) {
@@ -179,8 +207,12 @@ public class StaticsLineManager {
                 chart.getAxisRight().setSpaceBottom(Float.valueOf(yAxis.getString(StaticsVariables.spaceBottom)));
             }
             if (!yAxis.optString(StaticsVariables.unit).equals("")) {
-                chart.getAxisRight().setValueFormatter(new StaticsValueFormatter(yAxis.getString(StaticsVariables.unit)));
+                unit = yAxis.getString(StaticsVariables.unit);
             }
+            if (!yAxis.optString(StaticsVariables.valueFormat).equals("")) {
+                format = yAxis.getString(StaticsVariables.valueFormat);
+            }
+            chart.getAxisRight().setValueFormatter(new StaticsValueFormatter(format, unit));
         } catch (JSONException e) {
             e.printStackTrace();
             Log.d("Parsing", "rightYAxisSetting");
@@ -215,7 +247,6 @@ public class StaticsLineManager {
 
     public void toolTipSetting(JSONObject tt) {
         String mLeft = "LABEL";
-        String mUnit = "";
         String mSkipZero = "";
         int mTextSize = 9;
         try {
@@ -224,17 +255,14 @@ public class StaticsLineManager {
                     mLeft = tt.getString(StaticsVariables.leftSide);
                 }
             }
-            if (!tt.optString(StaticsVariables.unit).equals("")) {
-                mUnit = tt.getString(StaticsVariables.unit);
-            }
-            if(!tt.optString(StaticsVariables.skipZero).equals("")){
+            if (!tt.optString(StaticsVariables.skipZero).equals("")) {
                 mSkipZero = tt.getString(StaticsVariables.skipZero).toLowerCase();
             }
-            if(!tt.optString(StaticsVariables.textSize).equals("")){
+            if (!tt.optString(StaticsVariables.textSize).equals("")) {
                 mTextSize = Integer.valueOf(tt.getString(StaticsVariables.textSize));
             }
             StaticsMarkerView mv = new StaticsMarkerView(con, R.layout.statics_marker_view_layout);
-            mv.attachChart(chart, mLeft, mUnit, mSkipZero, mTextSize);
+            mv.attachChart(chart, mLeft, mSkipZero, mTextSize);
             chart.setMarkerView(mv);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -247,6 +275,8 @@ public class StaticsLineManager {
         try {
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject data = arr.getJSONObject(i);
+                String unit = "";
+                String format = "";
                 if (lineData == null) {
                     lineData = new LineData(parsingXValues(data.getJSONArray(StaticsVariables.xValues)));
                 }
@@ -267,8 +297,12 @@ public class StaticsLineManager {
                     dataSet.setValueTextSize(Float.valueOf(data.getString(StaticsVariables.textSize)));
                 }
                 if (!data.optString(StaticsVariables.unit).equals("")) {
-                    dataSet.setValueFormatter(new StaticsValueFormatter(data.getString(StaticsVariables.unit)));
+                    unit = data.getString(StaticsVariables.unit);
                 }
+                if (!data.optString(StaticsVariables.valueFormat).equals("")) {
+                    format = data.getString(StaticsVariables.valueFormat);
+                }
+                dataSet.setValueFormatter(new StaticsValueFormatter(format, unit));
                 if (!data.optString(StaticsVariables.line_width).equals("")) {
                     dataSet.setLineWidth(Float.valueOf(data.getString(StaticsVariables.line_width)));
                 }
@@ -277,7 +311,7 @@ public class StaticsLineManager {
                 }
                 if (!data.optString(StaticsVariables.line_circleColor).equals("")) {
                     dataSet.setCircleColor(Color.parseColor(data.getString(StaticsVariables.line_circleColor)));
-                }else{
+                } else {
                     dataSet.setCircleColor(Color.parseColor(data.getString(StaticsVariables.color)));
                 }
                 if (!data.optString(StaticsVariables.line_innerCircleColor).equals("")) {

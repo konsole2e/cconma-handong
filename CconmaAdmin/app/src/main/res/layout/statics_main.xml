@@ -73,7 +73,7 @@
                 <Button
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="New Button"
+                    android:text="JSON TEST"
                     android:id="@+id/test_btn"
                     android:layout_weight="1" />
 

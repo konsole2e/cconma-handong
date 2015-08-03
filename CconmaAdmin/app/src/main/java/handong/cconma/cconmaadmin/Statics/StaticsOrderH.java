@@ -19,7 +19,7 @@ import java.util.Map;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.etc.HTTPConnector;
-import handong.cconma.cconmaadmin.etc.JSONResponse;
+import handong.cconma.cconmaadmin.http.JSONResponse;
 
 public class StaticsOrderH extends Activity implements JSONResponse {
     private LineChart pcChart;
@@ -48,8 +48,8 @@ public class StaticsOrderH extends Activity implements JSONResponse {
         pcChart = (LineChart) findViewById(R.id.order_hourly_pc_chart);
         mobChart = (LineChart) findViewById(R.id.order_hourly_mobile_chart);
 
-        mvPc.attachChart(pcChart, "", "건", "", 9);
-        mvMob.attachChart(mobChart, "", "건", "", 9);
+        mvPc.attachChart(pcChart, "", "", 9);
+        mvMob.attachChart(mobChart, "", "", 9);
 
         setting.commonSetting(pcChart);
         setting.commonSetting(mobChart);
@@ -72,7 +72,6 @@ public class StaticsOrderH extends Activity implements JSONResponse {
         HTTPConnector hc = new HTTPConnector(this);
         hc.setProgressMessage("차트를 그리고 있습니다.");
         hc.execute(
-                "http://api.androidhive.info/contacts",
                 "http://api.androidhive.info/contacts"
         );
 
@@ -112,7 +111,7 @@ public class StaticsOrderH extends Activity implements JSONResponse {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     gone();
-                    setting.zoomSetting(pcChart);
+//                    setting.zoomSetting(pcChart);
                   /*  pcChart.setScaleEnabled(true);
                     pcChart.setPinchZoom(true);*/
                 }
@@ -126,7 +125,7 @@ public class StaticsOrderH extends Activity implements JSONResponse {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     gone();
-                    setting.zoomSetting(mobChart);
+//                    setting.zoomSetting(mobChart);
                     //mobChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                 }
             }
@@ -155,10 +154,10 @@ public class StaticsOrderH extends Activity implements JSONResponse {
     }
 
     @Override
-    public void processFinish(ArrayList<JSONObject> output) {
+    public void processFinish(JSONObject output) {
         int i = 0;
-        pcChart.setData(manager.setting(output.get(i++)));
-        mobChart.setData(manager.setting(output.get(i++)));
+        pcChart.setData(manager.setting(output));
+        mobChart.setData(manager.setting(output));
         refresh();
         return;
     }

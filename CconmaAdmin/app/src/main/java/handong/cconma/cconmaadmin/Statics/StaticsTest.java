@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -23,21 +25,23 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import handong.cconma.cconmaadmin.R;
-import handong.cconma.cconmaadmin.etc.JSONResponse;
+import handong.cconma.cconmaadmin.http.JSONResponse;
+import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 
 import static android.widget.RelativeLayout.*;
 
 public class StaticsTest extends Activity implements JSONResponse {
     private BackPressCloseHandler backPressCloseHandler;
-    private JSONObject result;
+    private JSONObject result = null;
     private LinkedHashMap<View, ViewGroup.LayoutParams> charts;
     private ArrayList<RelativeLayout> btns;
     private LinearLayout ll;
     private boolean mode = false;
     private StaticsCommonSetting setting;
-
+    private TextView zoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,22 +53,89 @@ public class StaticsTest extends Activity implements JSONResponse {
         charts = new LinkedHashMap<>();
         btns = new ArrayList<>();
         setting = new StaticsCommonSetting();
-
-        //  HTTPConnector hc = new HTTPConnector(this, "GET");
-        // hc.execute("");
-
         ll = (LinearLayout) findViewById(R.id.statics_test_ll);
-        processFinish(new ArrayList<JSONObject>());
+        zoom = (TextView) findViewById(R.id.zoom_tv);
 
+        TextView reload = (TextView) findViewById(R.id.reload_tv);
+        reload.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Configuration config = getResources().getConfiguration();
+                if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {// 세로
+                    recreate();
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 가로전환
+
+                } else {
+                    recreate();
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // 가로전환
+                }
+            }
+        });
+
+        zoom.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Configuration config = getResources().getConfiguration();
+                if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {// 세로
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // 가로전환
+                    zoom.setText("돌아가기");
+      /*              gone();
+                    if (chart instanceof PieChart) {
+                        setting.zoomSetting((PieChart) chart);
+                    } else if (chart instanceof BarChart) {
+                        setting.zoomSetting((BarChart) chart);
+                    } else if (chart instanceof CombinedChart) {
+                        setting.zoomSetting((CombinedChart) chart);
+                    } else if (chart instanceof LineChart) {
+                        setting.zoomSetting((LineChart) chart);
+                    }*/
+                } else {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 가로전환
+                    zoom.setText("크게보기");
+                }
+            }
+        });
+
+        MainAsyncTask mat = new MainAsyncTask("http://local.cconma.com/admin/api/stat/v1/sample_chart", "GET", "", this);
+        mat.setMessage("차트를 그리고 있습니다.");
+        mat.execute();
+ //       Log.d("통계", result.toString());
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { // 세로 전환시 발생
+        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { // 가로 전환시 발생
+        }
+    }
+
+    public void downloadChart() {
+        try {
+            MainAsyncTask mat = new MainAsyncTask("http://local.cconma.com/admin/api/stat/v1/sample_chart", "GET", "", this);
+            mat.setMessage("차트를 그리고 있습니다.");
+            result = mat.execute().get();
+            Log.d("통계", result.toString());
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //processFinish(new ArrayList<JSONObject>());
+        parsingcCharts();
     }
 
     public void parsingcCharts() {
+
         try {
-            JSONArray jArray = result.getJSONArray(StaticsVariables.chart);
-            for (int i = 0; i < jArray.length(); i++) {
-                JSONObject obj = jArray.getJSONObject(i);
-                String category = obj.getString(StaticsVariables.category).toLowerCase();
-                generateChart(obj, category);
+            if (result == null) {
+                Toast.makeText(getApplicationContext(), "받아온 데이터가 없습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                JSONArray jArray = result.getJSONArray(StaticsVariables.chart);
+                for (int i = 0; i < jArray.length(); i++) {
+                    JSONObject obj = jArray.getJSONObject(i);
+                    String category = obj.getString(StaticsVariables.category).toLowerCase();
+                    generateChart(obj, category);
 
                /* if (category.equals("line")) {
                     generateLineChart(obj);
@@ -77,49 +148,11 @@ public class StaticsTest extends Activity implements JSONResponse {
                 } else {
                     return;
                 }*/
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public void generateZoomBtn(final View chart) {
-        RelativeLayout rl = new RelativeLayout(this);
-        rl.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        TextView tv = new TextView(this);
-        tv.setText("크게보기 >");
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
-        int dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()); // 10dp
-        tv.setPadding(dpInPx, dpInPx, dpInPx, dpInPx);
-        tv.setBackgroundColor(getResources().getColor(R.color.transparent));
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params.addRule(CENTER_VERTICAL);
-        tv.setLayoutParams(params);
-        rl.addView(tv);
-
-        ll.addView(rl);
-        btns.add(rl);
-        tv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mode == false) {
-                    mode = true;
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // 가로전환
-                    gone();
-                    if (chart instanceof PieChart) {
-                        setting.zoomSetting((PieChart) chart);
-                    } else if (chart instanceof BarChart) {
-                        setting.zoomSetting((BarChart) chart);
-                    } else if (chart instanceof CombinedChart) {
-                        setting.zoomSetting((CombinedChart) chart);
-                    } else if (chart instanceof LineChart) {
-                        setting.zoomSetting((LineChart) chart);
-                    }
-                }
-            }
-        });
     }
 
     public void refresh() {
@@ -185,12 +218,63 @@ public class StaticsTest extends Activity implements JSONResponse {
             return;
         }
 
-        chart.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics())));
-        generateZoomBtn(chart);
+        chart.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Integer.valueOf(json.optString(StaticsVariables.height, "200")), getResources().getDisplayMetrics())));
+        generateZoomBtn(json.optString(StaticsVariables.description, "차트"));
         chart.invalidate();
 
         ll.addView(chart);
         charts.put(chart, chart.getLayoutParams());
+    }
+
+    public void generateZoomBtn(String desc) {
+        int dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()); // 10dp
+        RelativeLayout rl = new RelativeLayout(this);
+        rl.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        ((RelativeLayout.LayoutParams) rl.getLayoutParams()).setMargins(0, dpInPx, 0, 0);
+
+        TextView title = new TextView(this);
+        title.setText(desc);
+        title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+        title.setPadding(dpInPx, dpInPx, dpInPx, dpInPx);
+        title.setBackgroundColor(getResources().getColor(R.color.transparent));
+        RelativeLayout.LayoutParams titleParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        titleParam.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        titleParam.addRule(CENTER_VERTICAL);
+        title.setLayoutParams(titleParam);
+        rl.addView(title);
+
+     /*   TextView zoom = new TextView(this);
+        zoom.setText("크게보기 >");
+        zoom.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+        zoom.setPadding(dpInPx, dpInPx, dpInPx, dpInPx);
+        zoom.setBackgroundColor(getResources().getColor(R.color.transparent));
+        RelativeLayout.LayoutParams zoomParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        zoomParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        zoomParams.addRule(CENTER_VERTICAL);
+        zoom.setLayoutParams(zoomParams);
+        rl.addView(zoom);*/
+
+        ll.addView(rl);
+        btns.add(rl);
+    /*    zoom.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mode == false) {
+                    mode = true;
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // 가로전환
+                    gone();
+                    if (chart instanceof PieChart) {
+                        setting.zoomSetting((PieChart) chart);
+                    } else if (chart instanceof BarChart) {
+                        setting.zoomSetting((BarChart) chart);
+                    } else if (chart instanceof CombinedChart) {
+                        setting.zoomSetting((CombinedChart) chart);
+                    } else if (chart instanceof LineChart) {
+                        setting.zoomSetting((LineChart) chart);
+                    }
+                }
+            }
+        });*/
     }
 
 /*   public void generateLineChart(JSONObject json) {
@@ -233,643 +317,701 @@ public class StaticsTest extends Activity implements JSONResponse {
     }*/
 
     @Override
-    public void processFinish(ArrayList<JSONObject> output) {
-        //result = output.get(0);
-
+    public void processFinish(JSONObject output) {
+        result = output;
+        Log.d("통계 fin", result.toString());
+/*
         try {
-            result = new JSONObject("{" +
-                    "  \"chart\": [" +
-                    "    {" +
-                    "      \"category\": \"line\"," +
-                    "      \"chartBGColor\": \"#00ffffff\"," +
-                    "      \"graphBGColor\": \"#ffffff\"," +
-                    "      \"xAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"gap\": \"0\"," +
-                    "        \"position\": \"BOTTOM\"" +
-                    "      }," +
-                    "      \"leftYAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"min\": \"-10\"," +
-                    "        \"max\": \"100\"," +
-                    "        \"invert\": \"true\"," +
-                    "        \"spaceTop\": \"20\"," +
-                    "        \"spaceBottom\": \"20\"," +
-                    "        \"unit\": \"명\"" +
-                    "      }," +
-                    "      \"rightYAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"min\": \"0\"," +
-                    "        \"max\": \"110\"," +
-                    "        \"invert\": \"false\"," +
-                    "        \"spaceTop\": \"30\"," +
-                    "        \"spaceBottom\": \"30\"," +
-                    "        \"unit\": \"마리\"" +
-                    "      }," +
-                    "      \"tooltip\": {" +
-                    "        \"leftSide\": \"index\"," +
-                    "        \"unit\": \"대\"," +
-                    "        \"skipZero\": \"bar\"" +
-                    "      }," +
-                    "      \"legend\": {" +
-                    "        \"position\": \"BELOW_CHART_CENTER\"," +
-                    "        \"form\": \"CIRCLE\"," +
-                    "        \"formSize\": \"2\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"7\"," +
-                    "        \"legendSpace\": \"1\"" +
-                    "      }," +
-                    "      \"data\": [" +
-                    "        {" +
-                    "          \"xValues\": [" +
-                    "            \"일\"," +
-                    "            \"월\"," +
-                    "            \"화\"," +
-                    "            \"수\"," +
-                    "            \"목\"," +
-                    "            \"금\"," +
-                    "            \"토\"" +
-                    "          ]," +
-                    "          \"yValues\": [" +
-                    "            \"0\"," +
-                    "            \"10\"," +
-                    "            \"20\"," +
-                    "            \"25\"," +
-                    "            \"30\"," +
-                    "            \"40\"," +
-                    "            \"50\"" +
-                    "          ]," +
-                    "          \"label\": \"테스트1\"," +
-                    "          \"axisDepend\": \"LEFT\"," +
-                    "          \"textEnable\": \"true\"," +
-                    "          \"textColor\": \"#ff0000\"," +
-                    "          \"textSize\": \"5\"," +
-                    "          \"unit\": \"비\"," +
-                    "          \"color\": \"#ff0000\"," +
-                    "          \"line_width\": \"2\"," +
-                    "          \"line_circleSize\": \"4\"," +
-                    "          \"line_circleColor\": \"#00b2ff\"," +
-                    "          \"line_innerCircleColor\": \"#ffffff\"," +
-                    "          \"line_dash\": {" +
-                    "            \"line_length\": \"4\"," +
-                    "            \"line_spaceLength\": \"6\"" +
-                    "          }" +
-                    "        }," +
-                    "        {" +
-                    "          \"xValues\": [" +
-                    "            \"일\"," +
-                    "            \"월\"," +
-                    "            \"화\"," +
-                    "            \"수\"," +
-                    "            \"목\"," +
-                    "            \"금\"," +
-                    "            \"토\"" +
-                    "          ]," +
-                    "          \"yValues\": [" +
-                    "            \"13\"," +
-                    "            \"34\"," +
-                    "            \"44\"," +
-                    "            \"45\"," +
-                    "            \"66\"," +
-                    "            \"69\"," +
-                    "            \"71\"" +
-                    "          ]," +
-                    "          \"label\": \"테스트2\"," +
-                    "          \"axisDepend\": \"RIGHT\"," +
-                    "          \"textEnable\": \"true\"," +
-                    "          \"textColor\": \"#ffd200\"," +
-                    "          \"textSize\": \"5\"," +
-                    "          \"unit\": \"눈\"," +
-                    "          \"color\": \"#ffd200\"," +
-                    "          \"line_width\": \"1\"," +
-                    "          \"line_circleSize\": \"2\"," +
-                    "          \"line_circleColor\": \"#ffffff\"," +
-                    "          \"line_innerCircleColor\": \"#99d9ea\"" +
-                    "        }" +
-                    "      ]" +
+            result = new JSONObject("{\n" +
+                    "  \"chart\": [\n" +
+                    "    {\n" +
+                    "      \"category\": \"line\",\n" +
+                    "      \"chartBGColor\": \"#00ffffff\",\n" +
+                    "      \"graphBGColor\": \"#ffffff\",\n" +
+                    "      \"xAxis\": {\n" +
+                    "        \"enabled\": \"true\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"gap\": \"0\",\n" +
+                    "        \"position\": \"BOTTOM\"\n" +
+                    "      },\n" +
+                    "      \"leftYAxis\": {\n" +
+                    "        \"enabled\": \"true\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"min\": \"-10\",\n" +
+                    "        \"max\": \"100\",\n" +
+                    "        \"invert\": \"false\",\n" +
+                    "        \"spaceTop\": \"20\",\n" +
+                    "        \"spaceBottom\": \"20\",\n" +
+                    "        \"unit\": \"명\",\n" +
+                    "        \"valueFormat\" : \"%,d\"\n" +
+                    "      },\n" +
+                    "      \"rightYAxis\": {\n" +
+                    "        \"enabled\": \"false\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"min\": \"0\",\n" +
+                    "        \"max\": \"110\",\n" +
+                    "        \"invert\": \"false\",\n" +
+                    "        \"spaceTop\": \"30\",\n" +
+                    "        \"spaceBottom\": \"30\",\n" +
+                    "        \"unit\": \"마리\",\n" +
+                    "        \"valueFormat\" : \"%,d\"\n" +
+                    "      },\n" +
+                    "      \"tooltip\": {\n" +
+                    "        \"leftSide\": \"index\",\n" +
+                    "        \"skipZero\": \"bar\"\n" +
+                    "      },\n" +
+                    "      \"legend\": {\n" +
+                    "        \"position\": \"BELOW_CHART_CENTER\",\n" +
+                    "        \"form\": \"CIRCLE\",\n" +
+                    "        \"formSize\": \"2\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"7\",\n" +
+                    "        \"legendSpace\": \"1\"\n" +
+                    "      },\n" +
+                    "      \"data\": [\n" +
+                    "        {\n" +
+                    "          \"xValues\": [\n" +
+                    "            \"일\",\n" +
+                    "            \"월\",\n" +
+                    "            \"화\",\n" +
+                    "            \"수\",\n" +
+                    "            \"목\",\n" +
+                    "            \"금\",\n" +
+                    "            \"토\",\n" +
+                    "            \"일\",\n" +
+                    "            \"월\",\n" +
+                    "            \"화\",\n" +
+                    "            \"수\",\n" +
+                    "            \"목\",\n" +
+                    "            \"금\",\n" +
+                    "            \"토\",\n" +
+                    "            \"일\",\n" +
+                    "            \"월\",\n" +
+                    "            \"화\",\n" +
+                    "            \"수\",\n" +
+                    "            \"목\",\n" +
+                    "            \"금\",\n" +
+                    "            \"토\",\n" +
+                    "            \"일\",\n" +
+                    "            \"월\",\n" +
+                    "            \"화\",\n" +
+                    "            \"수\",\n" +
+                    "            \"목\",\n" +
+                    "            \"금\",\n" +
+                    "            \"토\"\n" +
+                    "          ],\n" +
+                    "          \"yValues\": [\n" +
+                    "            \"80\",\n" +
+                    "            \"0\",\n" +
+                    "            \"92\",\n" +
+                    "            \"2\",\n" +
+                    "            \"0\",\n" +
+                    "            \"99\",\n" +
+                    "            \"95\",\n" +
+                    "            \"80\",\n" +
+                    "            \"0\",\n" +
+                    "            \"92\",\n" +
+                    "            \"2\",\n" +
+                    "            \"0\",\n" +
+                    "            \"99\",\n" +
+                    "            \"95\",\n" +
+                    "            \"80\",\n" +
+                    "            \"0\",\n" +
+                    "            \"92\",\n" +
+                    "            \"2\",\n" +
+                    "            \"0\",\n" +
+                    "            \"99\",\n" +
+                    "            \"95\",\n" +
+                    "            \"80\",\n" +
+                    "            \"0\",\n" +
+                    "            \"92\",\n" +
+                    "            \"2\",\n" +
+                    "            \"0\",\n" +
+                    "            \"99\",\n" +
+                    "            \"95\"\n" +
+                    "          ],\n" +
+                    "          \"label\": \"테스트1\",\n" +
+                    "          \"axisDepend\": \"LEFT\",\n" +
+                    "          \"textEnable\": \"true\",\n" +
+                    "          \"textColor\": \"#ff0000\",\n" +
+                    "          \"textSize\": \"5\",\n" +
+                    "          \"unit\": \"비\",\n" +
+                    "          \"valueFormat\" : \"%,d\",\n" +
+                    "          \"color\": \"#ff0000\",\n" +
+                    "          \"line_width\": \"2\",\n" +
+                    "          \"line_circleSize\": \"4\",\n" +
+                    "          \"line_circleColor\": \"#00b2ff\",\n" +
+                    "          \"line_innerCircleColor\": \"#ffffff\",\n" +
+                    "          \"line_dash\": {\n" +
+                    "            \"line_length\": \"4\",\n" +
+                    "            \"line_spaceLength\": \"6\"\n" +
+                    "          }\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "          \"xValues\": [\n" +
+                    "            \"일\",\n" +
+                    "            \"월\",\n" +
+                    "            \"화\",\n" +
+                    "            \"수\",\n" +
+                    "            \"목\",\n" +
+                    "            \"금\",\n" +
+                    "            \"토\"\n" +
+                    "          ],\n" +
+                    "          \"yValues\": [\n" +
+                    "            \"83\",\n" +
+                    "            \"84\",\n" +
+                    "            \"94\",\n" +
+                    "            \"0\",\n" +
+                    "            \"6\",\n" +
+                    "            \"0\",\n" +
+                    "            \"97\"\n" +
+                    "          ],\n" +
+                    "          \"label\": \"테스트2\",\n" +
+                    "          \"axisDepend\": \"RIGHT\",\n" +
+                    "          \"textEnable\": \"true\",\n" +
+                    "          \"textColor\": \"#ffd200\",\n" +
+                    "          \"textSize\": \"5\",\n" +
+                    "          \"unit\": \"눈\",\n" +
+                    "          \"valueFormat\" : \"%,d\",\n" +
+                    "          \"color\": \"#ffd200\",\n" +
+                    "          \"line_width\": \"1\",\n" +
+                    "          \"line_circleSize\": \"2\",\n" +
+                    "          \"line_circleColor\": \"#ffffff\",\n" +
+                    "          \"line_innerCircleColor\": \"#99d9ea\"\n" +
+                    "        }\n" +
+                    "      ]\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"category\": \"line\",\n" +
+                    "      \"chartBGColor\": \"#00ffffff\",\n" +
+                    "      \"graphBGColor\": \"#ffffff\",\n" +
+                    "      \"xAxis\": {\n" +
+                    "        \"enabled\": \"true\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"gap\": \"0\",\n" +
+                    "        \"position\": \"BOTTOM\"\n" +
+                    "      },\n" +
+                    "      \"leftYAxis\": {\n" +
+                    "        \"enabled\": \"true\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"min\": \"-10\",\n" +
+                    "        \"max\": \"100\",\n" +
+                    "        \"invert\": \"false\",\n" +
+                    "        \"spaceTop\": \"20\",\n" +
+                    "        \"spaceBottom\": \"20\",\n" +
+                    "        \"unit\": \"명\",\n" +
+                    "        \"valueFormat\" : \"%,.1f\"\n" +
+                    "      },\n" +
+                    "      \"rightYAxis\": {\n" +
+                    "        \"enabled\": \"true\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"min\": \"0\",\n" +
+                    "        \"max\": \"110\",\n" +
+                    "        \"invert\": \"false\",\n" +
+                    "        \"spaceTop\": \"30\",\n" +
+                    "        \"spaceBottom\": \"30\",\n" +
+                    "        \"unit\": \"마리\",\n" +
+                    "        \"valueFormat\" : \"%,.1f\"\n" +
+                    "      },\n" +
+                    "      \"tooltip\": {\n" +
+                    "        \"leftSide\": \"index\",\n" +
+                    "        \"skipZero\": \"bar\"\n" +
+                    "      },\n" +
+                    "      \"legend\": {\n" +
+                    "        \"position\": \"BELOW_CHART_CENTER\",\n" +
+                    "        \"form\": \"CIRCLE\",\n" +
+                    "        \"formSize\": \"2\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"7\",\n" +
+                    "        \"legendSpace\": \"1\"\n" +
+                    "      },\n" +
+                    "      \"data\": [\n" +
+                    "        {\n" +
+                    "          \"xValues\": [\n" +
+                    "            \"일1\",\n" +
+                    "            \"월2\",\n" +
+                    "            \"화3\",\n" +
+                    "            \"수4\",\n" +
+                    "            \"목5\",\n" +
+                    "            \"금6\",\n" +
+                    "            \"토7\"\n" +
+                    "          ],\n" +
+                    "          \"yValues\": [\n" +
+                    "            \"100\",\n" +
+                    "            \"0\",\n" +
+                    "            \"0\",\n" +
+                    "            \"5\",\n" +
+                    "            \"80\",\n" +
+                    "            \"84\",\n" +
+                    "            \"5\"\n" +
+                    "          ],\n" +
+                    "          \"label\": \"테스트3\",\n" +
+                    "          \"axisDepend\": \"LEFT\",\n" +
+                    "          \"textEnable\": \"true\",\n" +
+                    "          \"textColor\": \"#ff0000\",\n" +
+                    "          \"textSize\": \"5\",\n" +
+                    "          \"unit\": \"비\",\n" +
+                    "          \"valueFormat\" : \"%,.2f\",\n" +
+                    "          \"color\": \"#ff00ff\",\n" +
+                    "          \"line_width\": \"2\",\n" +
+                    "          \"line_circleSize\": \"4\",\n" +
+                    "          \"line_circleColor\": \"#00b2ff\",\n" +
+                    "          \"line_innerCircleColor\": \"#ffffff\",\n" +
+                    "          \"line_dash\": {\n" +
+                    "            \"line_length\": \"4\",\n" +
+                    "            \"line_spaceLength\": \"6\"\n" +
+                    "          }\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "          \"xValues\": [\n" +
+                    "            \"일2\",\n" +
+                    "            \"월3\",\n" +
+                    "            \"화3\",\n" +
+                    "            \"수3\",\n" +
+                    "            \"목2\",\n" +
+                    "            \"금2\",\n" +
+                    "            \"토2\"\n" +
+                    "          ],\n" +
+                    "          \"yValues\": [\n" +
+                    "            \"3\",\n" +
+                    "            \"4\",\n" +
+                    "            \"4\",\n" +
+                    "            \"95\",\n" +
+                    "            \"96\",\n" +
+                    "            \"99\",\n" +
+                    "            \"1\"\n" +
+                    "          ],\n" +
+                    "          \"label\": \"테스트4\",\n" +
+                    "          \"axisDepend\": \"RIGHT\",\n" +
+                    "          \"textEnable\": \"true\",\n" +
+                    "          \"textColor\": \"#ffd200\",\n" +
+                    "          \"textSize\": \"5\",\n" +
+                    "          \"unit\": \"눈\",\n" +
+                    "          \"valueFormat\" : \"%,.3f\",\n" +
+                    "          \"color\": \"#ffd210\",\n" +
+                    "          \"line_width\": \"1\",\n" +
+                    "          \"line_circleSize\": \"2\",\n" +
+                    "          \"line_circleColor\": \"#ffffff\",\n" +
+                    "          \"line_innerCircleColor\": \"#99d9ea\"\n" +
+                    "        }\n" +
+                    "      ]\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"category\": \"bar\",\n" +
+                    "      \"chartBGColor\": \"#00ffffff\",\n" +
+                    "      \"graphBGColor\": \"#ffffff\",\n" +
+                    "      \"xAxis\": {\n" +
+                    "        \"enabled\": \"true\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"gap\": \"-1\",\n" +
+                    "        \"position\": \"BOTTOM\"\n" +
+                    "      },\n" +
+                    "      \"leftYAxis\": {\n" +
+                    "        \"enabled\": \"true\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"min\": \"-10\",\n" +
+                    "        \"max\": \"100\",\n" +
+                    "        \"invert\": \"false\",\n" +
+                    "        \"spaceTop\": \"20\",\n" +
+                    "        \"spaceBottom\": \"20\",\n" +
+                    "        \"unit\": \"명\",\n" +
+                    "        \"valueFormat\" : \"%1o\"\n" +
+                    "      },\n" +
+                    "      \"rightYAxis\": {\n" +
+                    "        \"enabled\": \"true\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"min\": \"0\",\n" +
+                    "        \"max\": \"110\",\n" +
+                    "        \"invert\": \"false\",\n" +
+                    "        \"spaceTop\": \"30\",\n" +
+                    "        \"spaceBottom\": \"30\",\n" +
+                    "        \"unit\": \"마리\",\n" +
+                    "        \"valueFormat\" : \"%2o\"\n" +
+                    "      },\n" +
+                    "      \"tooltip\": {\n" +
+                    "        \"leftSide\": \"index\",\n" +
+                    "        \"skipZero\": \"all\"\n" +
+                    "      },\n" +
+                    "      \"legend\": {\n" +
+                    "        \"position\": \"BELOW_CHART_CENTER\",\n" +
+                    "        \"form\": \"CIRCLE\",\n" +
+                    "        \"formSize\": \"2\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"7\",\n" +
+                    "        \"legendSpace\": \"1\"\n" +
+                    "      },\n" +
+                    "      \"data\": [\n" +
+                    "        {\n" +
+                    "          \"xValues\": [\n" +
+                    "            \"일11\",\n" +
+                    "            \"월21\",\n" +
+                    "            \"화31\",\n" +
+                    "            \"수41\",\n" +
+                    "            \"목51\",\n" +
+                    "            \"금61\",\n" +
+                    "            \"토71\"\n" +
+                    "          ],\n" +
+                    "          \"yValues\": [\n" +
+                    "            \"0\",\n" +
+                    "            \"0\",\n" +
+                    "            \"92\",\n" +
+                    "            \"95\",\n" +
+                    "            \"93\",\n" +
+                    "            \"49\",\n" +
+                    "            \"5\"\n" +
+                    "          ],\n" +
+                    "          \"label\": \"테스트5\",\n" +
+                    "          \"axisDepend\": \"LEFT\",\n" +
+                    "          \"textEnable\": \"true\",\n" +
+                    "          \"textColor\": \"#ff0000\",\n" +
+                    "          \"textSize\": \"5\",\n" +
+                    "          \"unit\": \"비\",\n" +
+                    "          \"valueFormat\" : \"%3o\",\n" +
+                    "          \"color\": \"#ff00ff\",\n" +
+                    "          \"bar_space\": \"15\",\n" +
+                    "          \"bar_groupSpace\": \"80\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "          \"xValues\": [\n" +
+                    "            \"일12\",\n" +
+                    "            \"월22\",\n" +
+                    "            \"화32\",\n" +
+                    "            \"수42\",\n" +
+                    "            \"목52\",\n" +
+                    "            \"금62\",\n" +
+                    "            \"토72\"\n" +
+                    "          ],\n" +
+                    "          \"yValues\": [\n" +
+                    "            \"1\",\n" +
+                    "            \"1\",\n" +
+                    "            \"92\",\n" +
+                    "            \"92\",\n" +
+                    "            \"90\",\n" +
+                    "            \"90\",\n" +
+                    "            \"5\"\n" +
+                    "          ],\n" +
+                    "          \"label\": \"테스트6\",\n" +
+                    "          \"axisDepend\": \"LEFT\",\n" +
+                    "          \"textEnable\": \"true\",\n" +
+                    "          \"textColor\": \"#ff0000\",\n" +
+                    "          \"textSize\": \"5\",\n" +
+                    "          \"unit\": \"비\",\n" +
+                    "          \"valueFormat\" : \"%o\",\n" +
+                    "          \"color\": \"#ff00ff\",\n" +
+                    "          \"bar_space\": \"15\",\n" +
+                    "          \"bar_groupSpace\": \"80\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "          \"xValues\": [\n" +
+                    "            \"일23\",\n" +
+                    "            \"월33\",\n" +
+                    "            \"화33\",\n" +
+                    "            \"수33\",\n" +
+                    "            \"목23\",\n" +
+                    "            \"금23\",\n" +
+                    "            \"토23\"\n" +
+                    "          ],\n" +
+                    "          \"yValues\": [\n" +
+                    "            \"73\",\n" +
+                    "            \"4\",\n" +
+                    "            \"84\",\n" +
+                    "            \"85\",\n" +
+                    "            \"6\",\n" +
+                    "            \"99\",\n" +
+                    "            \"1\"\n" +
+                    "          ],\n" +
+                    "          \"label\": \"테스트7\",\n" +
+                    "          \"axisDepend\": \"RIGHT\",\n" +
+                    "          \"textEnable\": \"true\",\n" +
+                    "          \"textColor\": \"#ffd200\",\n" +
+                    "          \"textSize\": \"5\",\n" +
+                    "          \"unit\": \"눈\",\n" +
+                    "          \"valueFormat\" : \"%o\",\n" +
+                    "          \"color\": \"#ffd210\",\n" +
+                    "          \"bar_space\": \"15\",\n" +
+                    "          \"bar_groupSpace\": \"80\"\n" +
+                    "        }\n" +
+                    "      ]\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"category\": \"combined\",\n" +
+                    "      \"chartBGColor\": \"#00ffffff\",\n" +
+                    "      \"graphBGColor\": \"#ffffff\",\n" +
+                    "      \"xAxis\": {\n" +
+                    "        \"enabled\": \"true\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"gap\": \"-1\",\n" +
+                    "        \"position\": \"BOTTOM\"\n" +
+                    "      },\n" +
+                    "      \"leftYAxis\": {\n" +
+                    "        \"enabled\": \"true\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"min\": \"0\",\n" +
+                    "        \"max\": \"100\",\n" +
+                    "        \"invert\": \"false\",\n" +
+                    "        \"spaceTop\": \"20\",\n" +
+                    "        \"spaceBottom\": \"20\",\n" +
+                    "        \"unit\": \"명\",\n" +
+                    "        \"valueFormat\" : \"%x\"\n" +
+                    "      },\n" +
+                    "      \"rightYAxis\": {\n" +
+                    "        \"enabled\": \"true\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"10\",\n" +
+                    "        \"gridColor\": \"#f0f0f0\",\n" +
+                    "        \"gridWidth\": \"1\",\n" +
+                    "        \"min\": \"0\",\n" +
+                    "        \"max\": \"100\",\n" +
+                    "        \"invert\": \"false\",\n" +
+                    "        \"spaceTop\": \"20\",\n" +
+                    "        \"spaceBottom\": \"20\",\n" +
+                    "        \"unit\": \"마리\",\n" +
+                    "        \"valueFormat\" : \"%1x\"\n" +
+                    "      },\n" +
+                    "      \"tooltip\": {\n" +
+                    "        \"leftSide\": \"label\",\n" +
+                    "        \"skipZero\": \"bar\"\n" +
+                    "      },\n" +
+                    "      \"legend\": {\n" +
+                    "        \"position\": \"BELOW_CHART_CENTER\",\n" +
+                    "        \"form\": \"line\",\n" +
+                    "        \"formSize\": \"7\",\n" +
+                    "        \"textColor\": \"#000000\",\n" +
+                    "        \"textSize\": \"5\",\n" +
+                    "        \"legendSpace\": \"0\"\n" +
+                    "      },\n" +
+                    "      \"data\": [\n" +
+                    "        {\n" +
+                    "          \"xValues\": [\n" +
+                    "            \"일\",\n" +
+                    "            \"월\",\n" +
+                    "            \"화\",\n" +
+                    "            \"수\",\n" +
+                    "            \"목\",\n" +
+                    "            \"금\",\n" +
+                    "            \"토\"\n" +
+                    "          ],\n" +
+                    "          \"yValues\": [\n" +
+                    "            \"100\",\n" +
+                    "            \"0\",\n" +
+                    "            \"0\",\n" +
+                    "            \"75\",\n" +
+                    "            \"90\",\n" +
+                    "            \"0\",\n" +
+                    "            \"0\"\n" +
+                    "          ],\n" +
+                    "          \"label\": \"테스트8\",\n" +
+                    "          \"axisDepend\": \"LEFT\",\n" +
+                    "          \"textEnable\": \"true\",\n" +
+                    "          \"textColor\": \"#ff0000\",\n" +
+                    "          \"textSize\": \"5\",\n" +
+                    "          \"unit\": \"비\",\n" +
+                    "          \"valueFormat\" : \"%2x\",\n" +
+                    "          \"color\": \"#ff0da0\",\n" +
+                    "          \"line_width\": \"2\",\n" +
+                    "          \"line_circleSize\": \"4\",\n" +
+                    "          \"line_circleColor\": \"#00b2ff\",\n" +
+                    "          \"line_innerCircleColor\": \"#ffffff\",\n" +
+                    "          \"line_dash\": {\n" +
+                    "            \"line_length\": \"4\",\n" +
+                    "            \"line_spaceLength\": \"6\"\n" +
+                    "          }\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "          \"xValues\": [\n" +
+                    "            \"일\",\n" +
+                    "            \"월\",\n" +
+                    "            \"화\",\n" +
+                    "            \"수\",\n" +
+                    "            \"목\",\n" +
+                    "            \"금\",\n" +
+                    "            \"토\"\n" +
+                    "          ],\n" +
+                    "          \"yValues\": [\n" +
+                    "            \"83\",\n" +
+                    "            \"94\",\n" +
+                    "            \"4\",\n" +
+                    "            \"95\",\n" +
+                    "            \"96\",\n" +
+                    "            \"9\",\n" +
+                    "            \"1\"\n" +
+                    "          ],\n" +
+                    "          \"label\": \"테스트9\",\n" +
+                    "          \"axisDepend\": \"RIGHT\",\n" +
+                    "          \"textEnable\": \"true\",\n" +
+                    "          \"textColor\": \"#ffd200\",\n" +
+                    "          \"textSize\": \"5\",\n" +
+                    "          \"unit\": \"눈\",\n" +
+                    "          \"valueFormat\" : \"%3x\",\n" +
+                    "          \"color\": \"#ffd299\",\n" +
+                    "          \"line_width\": \"1\",\n" +
+                    "          \"line_circleSize\": \"2\",\n" +
+                    "          \"line_circleColor\": \"#ffffff\",\n" +
+                    "          \"line_innerCircleColor\": \"#99d9ea\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "          \"xValues\": [\n" +
+                    "            \"일\",\n" +
+                    "            \"월\",\n" +
+                    "            \"화\",\n" +
+                    "            \"수\",\n" +
+                    "            \"목\",\n" +
+                    "            \"금\",\n" +
+                    "            \"토\"\n" +
+                    "          ],\n" +
+                    "          \"yValues\": [\n" +
+                    "            \"0\",\n" +
+                    "            \"0\",\n" +
+                    "            \"0\",\n" +
+                    "            \"95\",\n" +
+                    "            \"0\",\n" +
+                    "            \"0\",\n" +
+                    "            \"0\"\n" +
+                    "          ],\n" +
+                    "          \"graphType\": \"bar\",\n" +
+                    "          \"bar_space\": \"15\",\n" +
+                    "          \"bar_groupSpace\": \"80\",\n" +
+                    "          \"label\": \"테스트10\",\n" +
+                    "          \"axisDepend\": \"LEFT\",\n" +
+                    "          \"textEnable\": \"true\",\n" +
+                    "          \"textColor\": \"#ff0022\",\n" +
+                    "          \"textSize\": \"5\",\n" +
+                    "          \"unit\": \"풍\",\n" +
+                    "          \"valueFormat\" : \"%4x\",\n" +
+                    "          \"color\": \"#ff0022\"\n" +
+                    "        }\n" +
+                    "      ]\n" +
                     "    }," +
-                    "    {" +
-                    "      \"category\": \"line\"," +
-                    "      \"chartBGColor\": \"#00ffffff\"," +
-                    "      \"graphBGColor\": \"#ffffff\"," +
-                    "      \"xAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"gap\": \"0\"," +
-                    "        \"position\": \"BOTTOM\"" +
-                    "      }," +
-                    "      \"leftYAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"min\": \"-10\"," +
-                    "        \"max\": \"100\"," +
-                    "        \"invert\": \"true\"," +
-                    "        \"spaceTop\": \"20\"," +
-                    "        \"spaceBottom\": \"20\"," +
-                    "        \"unit\": \"명\"" +
-                    "      }," +
-                    "      \"rightYAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"min\": \"0\"," +
-                    "        \"max\": \"110\"," +
-                    "        \"invert\": \"false\"," +
-                    "        \"spaceTop\": \"30\"," +
-                    "        \"spaceBottom\": \"30\"," +
-                    "        \"unit\": \"마리\"" +
-                    "      }," +
-                    "      \"tooltip\": {" +
-                    "        \"leftSide\": \"index\"," +
-                    "        \"unit\": \"대\"," +
-                    "        \"skipZero\": \"bar\"" +
-                    "      }," +
-                    "      \"legend\": {" +
-                    "        \"position\": \"BELOW_CHART_CENTER\"," +
-                    "        \"form\": \"CIRCLE\"," +
-                    "        \"formSize\": \"2\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"7\"," +
-                    "        \"legendSpace\": \"1\"" +
-                    "      }," +
-                    "      \"data\": [" +
-                    "        {" +
-                    "          \"xValues\": [" +
-                    "            \"일1\"," +
-                    "            \"월2\"," +
-                    "            \"화3\"," +
-                    "            \"수4\"," +
-                    "            \"목5\"," +
-                    "            \"금6\"," +
-                    "            \"토7\"" +
-                    "          ]," +
-                    "          \"yValues\": [" +
-                    "            \"0\"," +
-                    "            \"10\"," +
-                    "            \"20\"," +
-                    "            \"25\"," +
-                    "            \"30\"," +
-                    "            \"40\"," +
-                    "            \"50\"" +
-                    "          ]," +
-                    "          \"label\": \"테스트3\"," +
-                    "          \"axisDepend\": \"LEFT\"," +
-                    "          \"textEnable\": \"true\"," +
-                    "          \"textColor\": \"#ff0000\"," +
-                    "          \"textSize\": \"5\"," +
-                    "          \"unit\": \"비\"," +
-                    "          \"color\": \"#ff00ff\"," +
-                    "          \"line_width\": \"2\"," +
-                    "          \"line_circleSize\": \"4\"," +
-                    "          \"line_circleColor\": \"#00b2ff\"," +
-                    "          \"line_innerCircleColor\": \"#ffffff\"," +
-                    "          \"line_dash\": {" +
-                    "            \"line_length\": \"4\"," +
-                    "            \"line_spaceLength\": \"6\"" +
-                    "          }" +
-                    "        }," +
-                    "        {" +
-                    "          \"xValues\": [" +
-                    "            \"일2\"," +
-                    "            \"월3\"," +
-                    "            \"화3\"," +
-                    "            \"수3\"," +
-                    "            \"목2\"," +
-                    "            \"금2\"," +
-                    "            \"토2\"" +
-                    "          ]," +
-                    "          \"yValues\": [" +
-                    "            \"13\"," +
-                    "            \"34\"," +
-                    "            \"44\"," +
-                    "            \"45\"," +
-                    "            \"66\"," +
-                    "            \"69\"," +
-                    "            \"71\"" +
-                    "          ]," +
-                    "          \"label\": \"테스트4\"," +
-                    "          \"axisDepend\": \"RIGHT\"," +
-                    "          \"textEnable\": \"true\"," +
-                    "          \"textColor\": \"#ffd200\"," +
-                    "          \"textSize\": \"5\"," +
-                    "          \"unit\": \"눈\"," +
-                    "          \"color\": \"#ffd210\"," +
-                    "          \"line_width\": \"1\"," +
-                    "          \"line_circleSize\": \"2\"," +
-                    "          \"line_circleColor\": \"#ffffff\"," +
-                    "          \"line_innerCircleColor\": \"#99d9ea\"" +
-                    "        }" +
-                    "      ]" +
-                    "    }," +
-                    "    {" +
-                    "      \"category\": \"bar\"," +
-                    "      \"chartBGColor\": \"#00ffffff\"," +
-                    "      \"graphBGColor\": \"#ffffff\"," +
-                    "      \"xAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"gap\": \"-1\"," +
-                    "        \"position\": \"BOTTOM\"" +
-                    "      }," +
-                    "      \"leftYAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"min\": \"-10\"," +
-                    "        \"max\": \"100\"," +
-                    "        \"invert\": \"false\"," +
-                    "        \"spaceTop\": \"20\"," +
-                    "        \"spaceBottom\": \"20\"," +
-                    "        \"unit\": \"명\"" +
-                    "      }," +
-                    "      \"rightYAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"min\": \"0\"," +
-                    "        \"max\": \"110\"," +
-                    "        \"invert\": \"false\"," +
-                    "        \"spaceTop\": \"30\"," +
-                    "        \"spaceBottom\": \"30\"," +
-                    "        \"unit\": \"마리\"" +
-                    "      }," +
-                    "      \"tooltip\": {" +
-                    "        \"leftSide\": \"index\"," +
-                    "        \"unit\": \"대\"," +
-                    "        \"skipZero\": \"all\"" +
-                    "      }," +
-                    "      \"legend\": {" +
-                    "        \"position\": \"BELOW_CHART_CENTER\"," +
-                    "        \"form\": \"CIRCLE\"," +
-                    "        \"formSize\": \"2\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"7\"," +
-                    "        \"legendSpace\": \"1\"" +
-                    "      }," +
-                    "      \"data\": [" +
-                    "        {" +
-                    "          \"xValues\": [" +
-                    "            \"일11\"," +
-                    "            \"월21\"," +
-                    "            \"화31\"," +
-                    "            \"수41\"," +
-                    "            \"목51\"," +
-                    "            \"금61\"," +
-                    "            \"토71\"" +
-                    "          ]," +
-                    "          \"yValues\": [" +
-                    "            \"0\"," +
-                    "            \"10\"," +
-                    "            \"20\"," +
-                    "            \"25\"," +
-                    "            \"30\"," +
-                    "            \"40\"," +
-                    "            \"50\"" +
-                    "          ]," +
-                    "          \"label\": \"테스트5\"," +
-                    "          \"axisDepend\": \"LEFT\"," +
-                    "          \"textEnable\": \"true\"," +
-                    "          \"textColor\": \"#ff0000\"," +
-                    "          \"textSize\": \"5\"," +
-                    "          \"unit\": \"비\"," +
-                    "          \"color\": \"#ff00ff\"," +
-                    "          \"bar_space\": \"15\"," +
-                    "          \"bar_groupSpace\": \"80\"" +
-                    "        }," +
-                    "        {" +
-                    "          \"xValues\": [" +
-                    "            \"일12\"," +
-                    "            \"월22\"," +
-                    "            \"화32\"," +
-                    "            \"수42\"," +
-                    "            \"목52\"," +
-                    "            \"금62\"," +
-                    "            \"토72\"" +
-                    "          ]," +
-                    "          \"yValues\": [" +
-                    "            \"1\"," +
-                    "            \"15\"," +
-                    "            \"25\"," +
-                    "            \"29\"," +
-                    "            \"35\"," +
-                    "            \"45\"," +
-                    "            \"55\"" +
-                    "          ]," +
-                    "          \"label\": \"테스트6\"," +
-                    "          \"axisDepend\": \"LEFT\"," +
-                    "          \"textEnable\": \"true\"," +
-                    "          \"textColor\": \"#ff0000\"," +
-                    "          \"textSize\": \"5\"," +
-                    "          \"unit\": \"비\"," +
-                    "          \"color\": \"#0910c1\"," +
-                    "          \"bar_space\": \"15\"," +
-                    "          \"bar_groupSpace\": \"80\"" +
-                    "        }," +
-                    "        {" +
-                    "          \"xValues\": [" +
-                    "            \"일23\"," +
-                    "            \"월33\"," +
-                    "            \"화33\"," +
-                    "            \"수33\"," +
-                    "            \"목23\"," +
-                    "            \"금23\"," +
-                    "            \"토23\"" +
-                    "          ]," +
-                    "          \"yValues\": [" +
-                    "            \"13\"," +
-                    "            \"34\"," +
-                    "            \"44\"," +
-                    "            \"45\"," +
-                    "            \"66\"," +
-                    "            \"69\"," +
-                    "            \"71\"" +
-                    "          ]," +
-                    "          \"label\": \"테스트7\"," +
-                    "          \"axisDepend\": \"RIGHT\"," +
-                    "          \"textEnable\": \"true\"," +
-                    "          \"textColor\": \"#ffd200\"," +
-                    "          \"textSize\": \"5\"," +
-                    "          \"unit\": \"눈\"," +
-                    "          \"color\": \"#ffd210\"," +
-                    "          \"bar_space\": \"15\"," +
-                    "          \"bar_groupSpace\": \"80\"" +
-                    "        }" +
-                    "      ]" +
-                    "    }," +
-                    "    {" +
-                    "      \"category\": \"combined\"," +
-                    "      \"chartBGColor\": \"#00ffffff\"," +
-                    "      \"graphBGColor\": \"#ffffff\"," +
-                    "      \"xAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"gap\": \"-1\"," +
-                    "        \"position\": \"BOTTOM\"" +
-                    "      }," +
-                    "      \"leftYAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"min\": \"0\"," +
-                    "        \"max\": \"100\"," +
-                    "        \"invert\": \"false\"," +
-                    "        \"spaceTop\": \"20\"," +
-                    "        \"spaceBottom\": \"20\"," +
-                    "        \"unit\": \"명\"" +
-                    "      }," +
-                    "      \"rightYAxis\": {" +
-                    "        \"enabled\": \"true\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"min\": \"0\"," +
-                    "        \"max\": \"100\"," +
-                    "        \"invert\": \"false\"," +
-                    "        \"spaceTop\": \"20\"," +
-                    "        \"spaceBottom\": \"20\"," +
-                    "        \"unit\": \"마리\"" +
-                    "      }," +
-                    "      \"tooltip\": {" +
-                    "        \"leftSide\": \"label\"," +
-                    "        \"unit\": \"다스\"," +
-                    "        \"skipZero\": \"bar\"" +
-                    "      }," +
-                    "      \"legend\": {" +
-                    "        \"position\": \"BELOW_CHART_CENTER\"," +
-                    "        \"form\": \"line\"," +
-                    "        \"formSize\": \"7\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"5\"," +
-                    "        \"legendSpace\": \"0\"" +
-                    "      }," +
-                    "      \"data\": [" +
-                    "        {" +
-                    "          \"xValues\": [" +
-                    "            \"일\"," +
-                    "            \"월\"," +
-                    "            \"화\"," +
-                    "            \"수\"," +
-                    "            \"목\"," +
-                    "            \"금\"," +
-                    "            \"토\"" +
-                    "          ]," +
-                    "          \"yValues\": [" +
-                    "            \"0\"," +
-                    "            \"10\"," +
-                    "            \"20\"," +
-                    "            \"25\"," +
-                    "            \"30\"," +
-                    "            \"40\"," +
-                    "            \"50\"" +
-                    "          ]," +
-                    "          \"label\": \"테스트8\"," +
-                    "          \"axisDepend\": \"LEFT\"," +
-                    "          \"textEnable\": \"true\"," +
-                    "          \"textColor\": \"#ff0000\"," +
-                    "          \"textSize\": \"5\"," +
-                    "          \"unit\": \"비\"," +
-                    "          \"color\": \"#ff0da0\"," +
-                    "          \"line_width\": \"2\"," +
-                    "          \"line_circleSize\": \"4\"," +
-                    "          \"line_circleColor\": \"#00b2ff\"," +
-                    "          \"line_innerCircleColor\": \"#ffffff\"," +
-                    "          \"line_dash\": {" +
-                    "            \"line_length\": \"4\"," +
-                    "            \"line_spaceLength\": \"6\"" +
-                    "          }" +
-                    "        }," +
-                    "        {" +
-                    "          \"xValues\": [" +
-                    "            \"일\"," +
-                    "            \"월\"," +
-                    "            \"화\"," +
-                    "            \"수\"," +
-                    "            \"목\"," +
-                    "            \"금\"," +
-                    "            \"토\"" +
-                    "          ]," +
-                    "          \"yValues\": [" +
-                    "            \"13\"," +
-                    "            \"34\"," +
-                    "            \"44\"," +
-                    "            \"45\"," +
-                    "            \"66\"," +
-                    "            \"69\"," +
-                    "            \"71\"" +
-                    "          ]," +
-                    "          \"label\": \"테스트9\"," +
-                    "          \"axisDepend\": \"RIGHT\"," +
-                    "          \"textEnable\": \"true\"," +
-                    "          \"textColor\": \"#ffd200\"," +
-                    "          \"textSize\": \"5\"," +
-                    "          \"unit\": \"눈\"," +
-                    "          \"color\": \"#ffd299\"," +
-                    "          \"line_width\": \"1\"," +
-                    "          \"line_circleSize\": \"2\"," +
-                    "          \"line_circleColor\": \"#ffffff\"," +
-                    "          \"line_innerCircleColor\": \"#99d9ea\"" +
-                    "        }," +
-                    "        {" +
-                    "          \"xValues\": [" +
-                    "            \"일\"," +
-                    "            \"월\"," +
-                    "            \"화\"," +
-                    "            \"수\"," +
-                    "            \"목\"," +
-                    "            \"금\"," +
-                    "            \"토\"" +
-                    "          ]," +
-                    "          \"yValues\": [" +
-                    "            \"0\"," +
-                    "            \"0\"," +
-                    "            \"0\"," +
-                    "            \"75\"," +
-                    "            \"0\"," +
-                    "            \"0\"," +
-                    "            \"0\"" +
-                    "          ]," +
-                    "          \"graphType\": \"bar\"," +
-                    "          \"bar_space\": \"15\"," +
-                    "          \"bar_groupSpace\": \"80\"," +
-                    "          \"label\": \"테스트10\"," +
-                    "          \"axisDepend\": \"LEFT\"," +
-                    "          \"textEnable\": \"true\"," +
-                    "          \"textColor\": \"#ff0022\"," +
-                    "          \"textSize\": \"5\"," +
-                    "          \"unit\": \"풍\"," +
-                    "          \"color\": \"#ff0022\"" +
-                    "        }" +
-                    "      ]" +
-                    "    }," +
-                    "    {" +
-                    "      \"category\": \"pie\"," +
-                    "      \"chartBGColor\": \"#ffffff\"," +
-                    "      \"xAxis\": {" +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"gap\": \"-1\"," +
-                    "        \"position\": \"BOTTOM\"" +
-                    "      }," +
-                    "      \"leftYAxis\": {" +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"min\": \"0\"," +
-                    "        \"max\": \"100\"," +
-                    "        \"invert\": \"false\"," +
-                    "        \"spaceTop\": \"20\"," +
-                    "        \"spaceBottom\": \"20\"," +
-                    "        \"unit\": \"명\"" +
-                    "      }," +
-                    "      \"rightYAxis\": {" +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"10\"," +
-                    "        \"gridColor\": \"#f0f0f0\"," +
-                    "        \"gridWidth\": \"1\"," +
-                    "        \"min\": \"0\"," +
-                    "        \"max\": \"100\"," +
-                    "        \"invert\": \"false\"," +
-                    "        \"spaceTop\": \"20\"," +
-                    "        \"spaceBottom\": \"20\"," +
-                    "        \"unit\": \"마리\"" +
-                    "      }," +
-                    "      \"tooltip\": {" +
-                    "        \"leftSide\": \"label\"," +
-                    "        \"unit\": \"다스\"," +
-                    "        \"skipZero\": \"bar\"" +
-                    "      }," +
-                    "      \"legend\": {" +
-                    "        \"position\": \"BELOW_CHART_CENTER\"," +
-                    "        \"form\": \"square\"," +
-                    "        \"formSize\": \"7\"," +
-                    "        \"textColor\": \"#000000\"," +
-                    "        \"textSize\": \"5\"," +
-                    "        \"legendSpace\": \"3\"" +
-                    "      }," +
-                    "      \"data\": [" +
-                    "        {" +
-                    "          \"xValues\": [" +
-                    "            \"일\"," +
-                    "            \"월\"," +
-                    "            \"화\"," +
-                    "            \"수\"," +
-                    "            \"목\"," +
-                    "            \"금\"," +
-                    "            \"토\"" +
-                    "          ]," +
-                    "          \"yValues\": [" +
-                    "            \"0\"," +
-                    "            \"10\"," +
-                    "            \"20\"," +
-                    "            \"25\"," +
-                    "            \"30\"," +
-                    "            \"40\"," +
-                    "            \"50\"" +
-                    "          ]," +
-                    "          \"label\": \"테스트11\"," +
-                    "          \"axisDepend\": \"LEFT\"," +
-                    "          \"textEnable\": \"true\"," +
-                    "          \"textColor\": \"#123a0d\"," +
-                    "          \"textSize\": \"10\"," +
-                    "          \"unit\": \"비\"," +
-                    "          \"pie_colors\": [" +
-                    "            \"#ff0da0\"," +
-                    "            \"#ffaec9\"," +
-                    "            \"#b5e61d\"," +
-                    "            \"#99d9ea\"," +
-                    "            \"#c8bfe7\"," +
-                    "            \"#efe4b0\"," +
-                    "            \"#b97a57\"" +
-                    "          ]," +
-                    "          \"pie_sliceSpace\": \"3\"," +
-                    "          \"pie_emptyCenter\": \"60\"," +
-                    "          \"pie_centerText\": \"테스트11\"," +
-                    "          \"pie_centerTextColor\": \"#010101\"," +
-                    "          \"pie_centerTextSize\": \"15\"" +
-                    "        }" +
-                    "      ]" +
-                    "    }" +
+                    "{\n" +
+                    "  \"category\": \"pie\",\n" +
+                    "  \"chartBGColor\": \"#ffffff\",\n" +
+                    "  \"xAxis\": {\n" +
+                    "    \"textColor\": \"#000000\",\n" +
+                    "    \"textSize\": \"10\",\n" +
+                    "    \"gridColor\": \"#f0f0f0\",\n" +
+                    "    \"gridWidth\": \"1\",\n" +
+                    "    \"gap\": \"-1\",\n" +
+                    "    \"position\": \"BOTTOM\"\n" +
+                    "  },\n" +
+                    "  \"leftYAxis\": {\n" +
+                    "    \"textColor\": \"#000000\",\n" +
+                    "    \"textSize\": \"10\",\n" +
+                    "    \"gridColor\": \"#f0f0f0\",\n" +
+                    "    \"gridWidth\": \"1\",\n" +
+                    "    \"min\": \"0\",\n" +
+                    "    \"max\": \"100\",\n" +
+                    "    \"invert\": \"false\",\n" +
+                    "    \"spaceTop\": \"20\",\n" +
+                    "    \"spaceBottom\": \"20\",\n" +
+                    "    \"unit\": \"명\"\n" +
+                    "  },\n" +
+                    "  \"rightYAxis\": {\n" +
+                    "    \"textColor\": \"#000000\",\n" +
+                    "    \"textSize\": \"10\",\n" +
+                    "    \"gridColor\": \"#f0f0f0\",\n" +
+                    "    \"gridWidth\": \"1\",\n" +
+                    "    \"min\": \"0\",\n" +
+                    "    \"max\": \"100\",\n" +
+                    "    \"invert\": \"false\",\n" +
+                    "    \"spaceTop\": \"20\",\n" +
+                    "    \"spaceBottom\": \"20\",\n" +
+                    "    \"unit\": \"마리\"\n" +
+                    "  },\n" +
+                    "  \"tooltip\": {\n" +
+                    "    \"leftSide\": \"label\",\n" +
+                    "    \"unit\": \"다스\",\n" +
+                    "    \"skipZero\": \"bar\"\n" +
+                    "  },\n" +
+                    "  \"legend\": {\n" +
+                    "    \"position\": \"BELOW_CHART_CENTER\",\n" +
+                    "    \"form\": \"square\",\n" +
+                    "    \"formSize\": \"7\",\n" +
+                    "    \"textColor\": \"#000000\",\n" +
+                    "    \"textSize\": \"5\",\n" +
+                    "    \"legendSpace\": \"3\"\n" +
+                    "  },\n" +
+                    "  \"data\": [\n" +
+                    "    {\n" +
+                    "      \"xValues\": [\n" +
+                    "        \"일\",\n" +
+                    "        \"월\",\n" +
+                    "        \"화\",\n" +
+                    "        \"수\",\n" +
+                    "        \"목\",\n" +
+                    "        \"금\",\n" +
+                    "        \"토\"\n" +
+                    "      ],\n" +
+                    "      \"yValues\": [\n" +
+                    "        \"0\",\n" +
+                    "        \"10\",\n" +
+                    "        \"20\",\n" +
+                    "        \"25\",\n" +
+                    "        \"30\",\n" +
+                    "        \"40\",\n" +
+                    "        \"50\"\n" +
+                    "      ],\n" +
+                    "      \"label\": \"테스트11\",\n" +
+                    "      \"axisDepend\": \"LEFT\",\n" +
+                    "      \"textEnable\": \"true\",\n" +
+                    "      \"textColor\": \"#123a0d\",\n" +
+                    "      \"textSize\": \"10\",\n" +
+                    "      \"unit\": \"비\",\n" +
+                    "      \"pie_colors\": [\n" +
+                    "        \"#ff0da0\",\n" +
+                    "        \"#ffaec9\",\n" +
+                    "        \"#b5e61d\",\n" +
+                    "        \"#99d9ea\",\n" +
+                    "        \"#c8bfe7\",\n" +
+                    "        \"#efe4b0\",\n" +
+                    "        \"#b97a57\"\n" +
+                    "      ],\n" +
+                    "      \"pie_sliceSpace\": \"3\",\n" +
+                    "      \"pie_emptyCenter\": \"60\",\n" +
+                    "      \"pie_centerText\": \"테스트11\",\n" +
+                    "      \"pie_centerTextColor\": \"#010101\",\n" +
+                    "      \"pie_centerTextSize\": \"15\"\n" +
+                    "    }\n" +
+                    "  ]\n" +
+                    "}" +
                     "  ]" +
                     "}");
         } catch (JSONException e) {
             e.printStackTrace();
         }
+                    */
         parsingcCharts();
     }
 
@@ -887,14 +1029,8 @@ public class StaticsTest extends Activity implements JSONResponse {
 
         public void onBackPressed() {
             Configuration config = getResources().getConfiguration();
-            if (mode && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
+            if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
-                mode = false;
-                visible();
-            } else if (mode && config.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // 가로전환
-                mode = false;
-                visible();
             } else {
                 activity.finish();
             }

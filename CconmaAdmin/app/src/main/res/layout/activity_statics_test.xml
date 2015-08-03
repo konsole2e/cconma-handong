@@ -11,6 +11,33 @@
         android:orientation="vertical"
         android:padding="10dp">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:id="@+id/reload_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/reload_test"
+                android:layout_alignParentLeft="true"
+                android:text="Reload"
+                android:padding="5dp"
+                android:textSize="10dp"
+                />
+
+            <TextView
+                android:id="@+id/zoom_tv"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/reload_test"
+                android:text="크게보기"
+                android:padding="5dp"
+                android:textSize="10dp"
+                />
+        </RelativeLayout>
 
     </LinearLayout>
 

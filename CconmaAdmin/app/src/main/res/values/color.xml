@@ -9,7 +9,7 @@
     <color name="swipe_color2">#ffffbc00</color>
     <color name="swipe_color3">#ff12ffa0</color>
     <color name="swipe_color4">#ffff6724</color>
-    <color name="marker_white">#aaffffff</color>
+    <color name="marker_white">#ccffffff</color>
     <color name="statics_red">#ED561B</color>
     <color name="statics_green">#50B432</color>
     <color name="statics_yellow">#CCCF00</color>
@@ -18,6 +18,7 @@
     <color name="statics_blue">#058DC7</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
+    <color name="reload_test">#44ff0000</color>
 
     <integer-array name="colors">
         <item>@android:color/holo_red_light</item>

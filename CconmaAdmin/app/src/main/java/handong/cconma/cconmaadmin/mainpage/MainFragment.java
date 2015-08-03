@@ -49,7 +49,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         int position = getArguments().getInt(POSITION);
 
         if(position == 1){
-            rootView = inflater.inflate(R.layout.viewpager_b, container, false);
+            rootView = inflater.inflate(R.layout.board_viewpager, container, false);
 
             ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
             ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(),

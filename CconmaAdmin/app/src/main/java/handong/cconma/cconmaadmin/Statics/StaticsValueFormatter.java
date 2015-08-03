@@ -3,25 +3,41 @@ package handong.cconma.cconmaadmin.statics;
 import com.github.mikephil.charting.utils.ValueFormatter;
 
 import java.text.DecimalFormat;
+import java.text.Format;
+import java.util.FormatFlagsConversionMismatchException;
 
 public class StaticsValueFormatter implements ValueFormatter {
     private String unit = "";
-    private DecimalFormat mFormat;
+    private String format = "";
 
     public StaticsValueFormatter() {
-        mFormat = new DecimalFormat("###,###,###"); // use one decimal
     }
 
-
-    public StaticsValueFormatter(String str) {
-        mFormat = new DecimalFormat("###,###,###"); // use one decimal
-        unit = str;
+    public StaticsValueFormatter(String mFormat, String mUnit) {
+        if (mFormat.equals("")) {
+            mFormat = "%,d";
+        }
+        format = mFormat;
+        unit = mUnit;
     }
-
 
     @Override
     public String getFormattedValue(float value) {
-        return mFormat.format(value) + unit;
-
+        try {
+            if (format.contains("f")) {
+                return String.format(format, value) + unit;
+            } else {
+                format = format.replace(".", "");
+                if (format.contains("d")) {
+                    return String.format(format, (long) value) + unit;
+                } else {
+                    format = format.replace(",", "").replace("+", "");
+                    return String.format(format, (long) value) + unit;
+                }
+            }
+        }catch (FormatFlagsConversionMismatchException e){
+            e.printStackTrace();
+            return String.format("%,d", (long) value) + unit;
+        }
     }
 }

@@ -83,6 +83,8 @@ public class StaticsPieManager {
         try {
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject data = arr.getJSONObject(i);
+                String unit = "";
+                String format = "";
 
                 PieDataSet dataSet = new PieDataSet(parsingYValues(data.getJSONArray(StaticsVariables.yValues)), data.getString(StaticsVariables.label));
                 dataSet.setColors(parsingColors(data.getJSONArray(StaticsVariables.pie_colors)));
@@ -100,8 +102,12 @@ public class StaticsPieManager {
                     dataSet.setValueTextSize(Float.valueOf(data.getString(StaticsVariables.textSize)));
                 }
                 if (!data.optString(StaticsVariables.unit).equals("")) {
-                    dataSet.setValueFormatter(new StaticsValueFormatter(data.getString(StaticsVariables.unit)));
+                    unit = data.getString(StaticsVariables.unit);
                 }
+                if (!data.optString(StaticsVariables.valueFormat).equals("")) {
+                    format = data.getString(StaticsVariables.valueFormat);
+                }
+                dataSet.setValueFormatter(new StaticsValueFormatter(format, unit));
                 if (!data.optString(StaticsVariables.pie_sliceSpace).equals("")) {
                     dataSet.setSliceSpace(Float.valueOf(data.getString(StaticsVariables.pie_sliceSpace)));
                 }
@@ -144,7 +150,7 @@ public class StaticsPieManager {
         ArrayList<String> xValues = new ArrayList<>();
         try {
             for (int i = 0; i < jXs.length(); i++) {
-                xValues.add(jXs.getString(i) + "(" + String.format("%.1f" , yVals.get(i).getVal() / sum * 100) + ")");
+                xValues.add(jXs.getString(i) + "(" + String.format("%.1f", yVals.get(i).getVal() / sum * 100) + ")");
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -20,7 +20,7 @@ import java.util.Map;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.etc.HTTPConnector;
-import handong.cconma.cconmaadmin.etc.JSONResponse;
+import handong.cconma.cconmaadmin.http.JSONResponse;
 
 public class StaticsLike extends Activity implements JSONResponse {
     //Combine Chart private CombinedChart dailyChart;
@@ -69,9 +69,9 @@ public class StaticsLike extends Activity implements JSONResponse {
         setting.commonSetting((LineChart) weeklyChart);
         setting.commonSetting((LineChart) monthlyChart);
 
-        mvD.attachChart((BarChart) dailyChart, "", "명", "", 9);
-        mvW.attachChart((LineChart) weeklyChart, "", "명", "", 9);
-        mvM.attachChart((LineChart) monthlyChart, "", "명", "", 9);
+        mvD.attachChart((BarChart) dailyChart, "", "", 9);
+        mvW.attachChart((LineChart) weeklyChart, "", "", 9);
+        mvM.attachChart((LineChart) monthlyChart, "", "", 9);
 
         ((BarChart) dailyChart).setMarkerView(mvD);
         ((LineChart) weeklyChart).setMarkerView(mvW);
@@ -80,8 +80,6 @@ public class StaticsLike extends Activity implements JSONResponse {
         HTTPConnector hc = new HTTPConnector(this);
         hc.setProgressMessage("차트를 그리고 있습니다.");
         hc.execute(
-                "http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo",
-                "http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo",
                 "http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo"
         );
 
@@ -129,7 +127,7 @@ public class StaticsLike extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //dailyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting((BarChart) dailyChart);
+//                    setting.zoomSetting((BarChart) dailyChart);
                 }
             }
         });
@@ -142,7 +140,7 @@ public class StaticsLike extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     // weeklyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting((LineChart) weeklyChart);
+  //                  setting.zoomSetting((LineChart) weeklyChart);
                 }
             }
         });
@@ -155,7 +153,7 @@ public class StaticsLike extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting((LineChart) monthlyChart);
+    //                setting.zoomSetting((LineChart) monthlyChart);
                 }
             }
         });
@@ -189,14 +187,14 @@ public class StaticsLike extends Activity implements JSONResponse {
     }
 
     @Override
-    public void processFinish(ArrayList<JSONObject> output) {
+    public void processFinish(JSONObject output) {
 
         int i = 0;
-        ((BarChart) dailyChart).setData(manager.dailyChartSetting(output.get(i++)));
-        ((LineChart) weeklyChart).setData(manager.weeklyChartSetting(output.get(i)));
-        ((LineChart) weeklyChart).getAxisLeft().addLimitLine(manager.weeklkyAVG(output.get(i++)));
-        ((LineChart) monthlyChart).setData(manager.monthlyChartSetting(output.get(i)));
-        ((LineChart) monthlyChart).getAxisLeft().addLimitLine(manager.monthlyAVG(output.get(i++)));
+        ((BarChart) dailyChart).setData(manager.dailyChartSetting(output));
+        ((LineChart) weeklyChart).setData(manager.weeklyChartSetting(output));
+        ((LineChart) weeklyChart).getAxisLeft().addLimitLine(manager.weeklkyAVG(output));
+        ((LineChart) monthlyChart).setData(manager.monthlyChartSetting(output));
+        ((LineChart) monthlyChart).getAxisLeft().addLimitLine(manager.monthlyAVG(output));
         refresh();
         return;
     }
