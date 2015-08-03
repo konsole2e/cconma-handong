@@ -134,7 +134,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
     @Override
     public int getItemCount() {
-        Log.d("debugging", "dataItemList size: " + String.valueOf(dataItemList.size()));
+//        Log.d("debugging", "dataItemList size: " + String.valueOf(dataItemList.size()));
         return dataItemList.size();
         //return (null != dataItemList ? dataItemList.size() : 0);
     }

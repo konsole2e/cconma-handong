@@ -1,20 +1,16 @@
 package handong.cconma.cconmaadmin.etc;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.util.CircularArray;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.webkit.WebChromeClient;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.json.JSONObject;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
@@ -22,16 +18,15 @@ import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 import handong.cconma.cconmaadmin.data.StartUp;
-import handong.cconma.cconmaadmin.mainpage.BaseActivity;
 import handong.cconma.cconmaadmin.mainpage.MainActivity;
 
 /**
- * Created by Young Bin Kim on 2015-07-20.
+ * Created by Young Bin Kim on 2015-08-03.
  */
-public class LoginWebView extends AppCompatActivity {
+public class StartupWebView extends AppCompatActivity {
     private android.webkit.WebView webview;
     private CircularProgressBar circularProgressBar;
-    private int autoLogin;
+    private Boolean isPageLoaded;
     private String url;
 
     @Override
@@ -40,44 +35,40 @@ public class LoginWebView extends AppCompatActivity {
         setContentView(R.layout.webview);
 
         circularProgressBar= (CircularProgressBar) findViewById(R.id.progressbar_circular);
-
         webview = (WebView) findViewById(R.id.webView);
 
-        Intent data = getIntent();
-        autoLogin = data.getIntExtra("AUTO_LOGIN", 0);
-
-        url = "http://www.cconma.com/mobile/auth/index.pmv?path=http://www.cconma.com%2Fmobile%2Findex.pmv";
+        isPageLoaded = false;
+        url = "http://www.cconma.com/mobile/admin-app/startup.pmv";
+        String requestBody = "autoLoginAuthToken=" +
+                new IntegratedSharedPreferences(StartupWebView.this).
+                        getValue("AUTO_LOGIN_AUTH_TOKEN", "");
 
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
         webview.getSettings().setBuiltInZoomControls(true);
         String userAgent = webview.getSettings().getUserAgentString();
-        Cookies.getInstance(null).removeAllCookies();
         webview.getSettings().setUserAgentString(userAgent + ";com.cconma.app");
-        webview.loadUrl(url);
+        webview.postUrl(url, requestBody.getBytes());
         webview.setWebViewClient(new WebClient());
     }
 
     class WebClient extends WebViewClient {
-        public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
-            if(url.contains("index.pmv")) {
-                webview.setVisibility(View.GONE);
-                ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).start();
 
-                Log.d("debugging", "loginwebview thread start");
-                Intent intent = new Intent(LoginWebView.this, StartupWebView.class);
-                startActivity(intent);
-                finish();
-
-                return true;
-            }else {
-                return super.shouldOverrideUrlLoading(view, url);
-            }
+        public void onPageStarted(android.webkit.WebView view, String url, Bitmap favicon) {
+            webview.setVisibility(View.GONE);
+            ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).start();
+            String requestBody = "autoLoginAuthToken=" +
+                    new IntegratedSharedPreferences(StartupWebView.this).
+                    getValue("AUTO_LOGIN_AUTH_TOKEN", "");
+            Log.d("debugging", "AUTO LOGIN AUTH TOKEN: " + requestBody);
+            new StartUp(StartupWebView.this).post(requestBody);
         }
 
         public void onPageFinished(WebView view, String url){
-            Log.d("debugging", "LoginWebView onPageFinished");
-            ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).progressiveStop();
-            Cookies.getInstance(LoginWebView.this).updateCookies(url);
+                ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).progressiveStop();
+                Cookies.getInstance(StartupWebView.this).updateCookies(url);
+                isPageLoaded = true;
+                startActivity(new Intent(StartupWebView.this, MainActivity.class));
+                finish();
         }
     }
 }

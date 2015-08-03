@@ -12,10 +12,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Map;
 
 import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
@@ -51,6 +53,7 @@ public class HttpConnection  {
             conn.setConnectTimeout(2000);
             conn.setRequestProperty("Content-Language", "en-US");
             conn.setRequestProperty("Cookie", Cookies.getInstance(null).getCurrentCookies());
+            Log.d("debugging", "conn cookie: " + conn.getRequestProperty("Cookie"));
             conn.setRequestMethod(method);
             conn.setRequestProperty("Accept-Charset", "UTF-8");
             if(method.equals("POST")){
@@ -91,6 +94,7 @@ public class HttpConnection  {
             e.printStackTrace();
             Log.d(TAG, "IO EXCEPTION!!! " + e.getMessage());
         }
+
         Log.d(TAG, "Return string is " +  responseBody);
 
         conn.disconnect();

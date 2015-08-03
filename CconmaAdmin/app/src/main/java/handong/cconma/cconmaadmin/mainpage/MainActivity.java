@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
-
+        
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override

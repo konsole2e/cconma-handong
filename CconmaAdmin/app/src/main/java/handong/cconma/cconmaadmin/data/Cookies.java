@@ -38,7 +38,8 @@ public class Cookies extends Application {
         cookieManager = CookieManager.getInstance();
         String cookies = cookieManager.getCookie(url);
         Log.d(TAG, "Cookie is " + cookies);
-        saveAutoLoginToken(cookies);
+        if(url.contains("startup"))
+            saveAutoLoginToken(cookies);
         currentCookies = cookies;
     }
 
@@ -46,7 +47,8 @@ public class Cookies extends Application {
         cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
     }
-    public static String getCurrentCookies(){
+
+    public String getCurrentCookies(){
         Log.d(TAG, "cookie sent: " + currentCookies);
         return currentCookies;
     }

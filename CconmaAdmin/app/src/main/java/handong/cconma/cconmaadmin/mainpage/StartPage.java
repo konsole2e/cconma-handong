@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Camera;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,6 +36,7 @@ import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 import handong.cconma.cconmaadmin.data.StartUp;
 import handong.cconma.cconmaadmin.etc.LoginWebView;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
+import handong.cconma.cconmaadmin.etc.StartupWebView;
 import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
 import handong.cconma.cconmaadmin.http.HttpConnection;
 
@@ -50,6 +52,18 @@ public class StartPage extends AppCompatActivity{
 
     private IntegratedSharedPreferences pref;
     private JSONObject responseJson;
+
+    private int playServiceFlag = 0;
+
+    private Intent intent;
+
+    class doJob extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            return null;
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,18 +74,24 @@ public class StartPage extends AppCompatActivity{
         logoImage = (ImageView) findViewById(R.id.startup_image);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.progressbar_circular);
 
+        //getInstanceIdToken();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 pref = new IntegratedSharedPreferences(getApplicationContext());
                 if( pref.getValue("AUTO_LOGIN_AUTH_ENABLED", "").equals("1") ){
-                    String requestBody = pref.getValue("AUTO_LOGIN_AUTH_TOKEN", "");
-                    new StartUp(StartPage.this).post(requestBody);
-                    startActivity(new Intent(StartPage.this, MainActivity.class));
+                   // String requestBody = pref.getValue("AUTO_LOGIN_AUTH_TOKEN", "");
+                   // new StartUp(StartPage.this).post(requestBody);
+                    intent = new Intent(StartPage.this, StartupWebView.class);
+                    intent.putExtra("AUTO_LOGIN", 1);
+                    startActivity(intent);
                     finish();
                 }
                 else{
-                    startActivity(new Intent(StartPage.this, LoginWebView.class));
+                    intent = new Intent(StartPage.this, LoginWebView.class);
+                    intent.putExtra("AUTO_LOGIN", 0);
+                    startActivity(intent);
                     finish();
                 }
             }
@@ -124,13 +144,13 @@ public class StartPage extends AppCompatActivity{
     private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+            /*if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
                 Log.i(TAG, "This device is not supported.");
                 finish();
-            }
+            }*/
             return false;
         }
         return true;

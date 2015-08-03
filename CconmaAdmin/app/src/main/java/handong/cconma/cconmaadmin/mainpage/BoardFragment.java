@@ -43,15 +43,15 @@ public class BoardFragment extends Fragment {
 
     private static String TAG = "debugging";
 
-    private int mPage_no;
+    private String mPage_no;
     private RecyclerView recyclerView;
     private CircularProgressBar circularProgressBar;
     private View view;
     private BoardRecyclerAdapter adapter;
 
-    public static BoardFragment newInstance(int page, int page_no) {
+    public static BoardFragment newInstance(String page_no) {
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE_NO, page_no);
+        args.putString(ARG_PAGE_NO, page_no);
         BoardFragment fragment = new BoardFragment();
         fragment.setArguments(args);
 
@@ -61,7 +61,8 @@ public class BoardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage_no = getArguments().getInt(ARG_PAGE_NO);
+        mPage_no = getArguments().getString(ARG_PAGE_NO);
+        Log.d("debugging", "page no: " + mPage_no);
     }
 
     @Override
@@ -141,6 +142,18 @@ public class BoardFragment extends Fragment {
                 }
             });
 
+            /*recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(
+                    mLayoutManager) {
+                @Override
+                public void onLoadMore(int current_page) {
+                    // do somthing...
+
+                    loadMoreData(current_page);
+
+                }
+
+            });*/
+
             recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
                 @Override
                 public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
@@ -154,6 +167,8 @@ public class BoardFragment extends Fragment {
 
             });
             circularProgressBar.setVisibility(View.GONE);
+
+            adapter.notifyDataSetChanged();
             //((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).progressiveStop();
         }
     }

@@ -2,6 +2,7 @@ package handong.cconma.cconmaadmin.mainpage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.statics.StaticsLike;
 import handong.cconma.cconmaadmin.statics.StaticsMember;
@@ -80,6 +82,16 @@ public class MainFragment extends Fragment implements View.OnClickListener{
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
             tabLayout.setupWithViewPager(viewPager);
+
+            FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), BoardWriteActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
         else if(position == 2){
             rootView = inflater.inflate(R.layout.statics_main, container, false);

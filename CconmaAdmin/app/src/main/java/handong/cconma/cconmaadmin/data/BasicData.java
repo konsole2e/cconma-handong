@@ -9,8 +9,18 @@ import java.util.HashMap;
 public class BasicData {
     private String user_id, email, mem_no, name;
 
-    private HashMap admin_board_list;
-    private HashMap admin_board_hash_tag_list;
+    private HashMap admin_board_list = new HashMap();
+    private HashMap admin_board_hash_tag_list = new HashMap();
+    private static BasicData basicData;
+
+    public static BasicData getInstance(){
+            if (basicData == null) {
+                basicData = new BasicData();
+                return basicData;
+            }else{
+                return basicData;
+             }
+    }
 
     public void setUserInfo(String user_id, String email, String mem_no, String name){
         this.user_id = user_id;

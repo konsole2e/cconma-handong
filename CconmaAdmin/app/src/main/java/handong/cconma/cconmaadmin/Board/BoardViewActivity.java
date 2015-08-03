@@ -473,6 +473,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                     addingCount++;
                 }
             }
+
             holder.text_board_view_comment.setText(Html.fromHtml(data.comment));
             holder.text_board_view_comment.setMovementMethod(LinkMovementMethod.getInstance());
             holder.text_board_view_comment.setAutoLinkMask(Linkify.WEB_URLS);
@@ -663,7 +664,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 }
                 comment_reg_date = date;
 
-                String comment_content = Html.fromHtml(commentObj.getString("content")).toString();
+                String comment_content = commentObj.getString("content").toString();
                 String boardcomment_no = commentObj.getString("boardcomment_no");
                 JSONArray hashArr = commentObj.getJSONArray("comment_hash_tags");
                 HashMap commentHashMap = new HashMap();
