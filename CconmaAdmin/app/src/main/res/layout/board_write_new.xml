@@ -26,7 +26,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:text="공지사항"
-            android:buttonTint="#000000"
             style="@style/SmallBlack"/>
     </FrameLayout>
     <HorizontalScrollView
@@ -39,6 +38,11 @@
             android:paddingLeft="16dp"
             android:orientation="horizontal"/>
     </HorizontalScrollView>
+    <View
+        android:id="@+id/toolbar_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/rectangle" />
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
