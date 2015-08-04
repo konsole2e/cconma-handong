@@ -59,7 +59,7 @@
             android:layout_gravity="bottom|end"
             app:fabSize="normal"
             app:backgroundTint="#dd2c00"
-            />
+            android:visibility="gone"            />
     </android.support.design.widget.CoordinatorLayout>
     <!--
         <android.support.v7.widget.RecyclerView
