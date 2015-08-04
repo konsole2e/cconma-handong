@@ -28,11 +28,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,11 +43,16 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import android.os.Handler;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
+import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.SettingActivity;
 import handong.cconma.cconmaadmin.http.JSONResponse;
 import handong.cconma.cconmaadmin.push.PushView;
@@ -126,6 +133,20 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
+        LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.drawer_header, navigationView, false);
+        TextView textview = (TextView)view.findViewById(R.id.name);
+        try {
+            Log.d("NAME", BasicData.getInstance().getName());
+            String name = URLEncoder.encode(BasicData.getInstance().getName(), "euc-kr");
+            Log.d("NAME", name);
+            //textview.setText(name);
+            textview.setText("마을지기");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        navigationView.addHeaderView(view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override

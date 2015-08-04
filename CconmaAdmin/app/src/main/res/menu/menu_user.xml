@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:title="로그인"
-            android:checked="false"
-            android:id="@+id/user_login"
-            android:icon="@drawable/ic_board_selector"/>
-
-        <item
             android:title="설정"
             android:checked="false"
             android:id="@+id/user_settings"
+            android:icon="@drawable/ic_board_selector"/>
+
+        <item
+            android:title="로그아웃"
+            android:checked="false"
+            android:id="@+id/logout"
             android:icon="@drawable/ic_chart_selector"/>
     </group>
 </menu>

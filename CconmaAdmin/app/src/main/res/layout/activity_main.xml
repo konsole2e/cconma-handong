@@ -80,9 +80,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:textAppearance="?attr/textAppearanceListItem"
-        app:headerLayout="@layout/drawer_header"
-        app:itemIconTint="#9E9E9E"
         app:itemTextColor="#000000"
+        app:itemIconTint="#9E9E9E"
         app:menu="@menu/menu_default" />
 
 </android.support.v4.widget.DrawerLayout>

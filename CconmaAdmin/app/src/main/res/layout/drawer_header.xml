@@ -5,9 +5,9 @@
     android:id="@+id/drawer_header"
     android:layout_marginBottom="8dp"
     android:orientation="vertical"
-    android:background="#616161"
     android:clickable="true"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:background="@drawable/header">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,7 +46,7 @@
         android:layout_height="56dp"
         android:id="@+id/user_arrow"
         android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
-        android:background="#616161"
+        android:background="@android:color/transparent"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true" />
 

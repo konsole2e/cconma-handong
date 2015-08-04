@@ -47,6 +47,8 @@ public class BasicData {
         return temp;
     }
 
+    public String getName(){ return name; }
+
     public HashMap getBoardList(){
         return admin_board_list;
     }
@@ -59,7 +61,10 @@ public class BasicData {
         admin_chart_list.put(key, value);
     }
 
-    public HashMap getChartList(){
+    public HashMap getChartList() {
         return admin_chart_list;
+    }
+    public String getMem_no(){
+        return mem_no;
     }
 }

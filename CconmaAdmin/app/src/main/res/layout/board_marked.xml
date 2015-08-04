@@ -9,6 +9,9 @@
     <ListView
         android:id="@+id/list_board_marked"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        android:layout_marginLeft="2dp"
+        android:divider="#ffffff">
     </ListView>
 </LinearLayout>

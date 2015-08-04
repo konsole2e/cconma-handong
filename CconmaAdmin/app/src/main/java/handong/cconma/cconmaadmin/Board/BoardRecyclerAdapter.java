@@ -1,22 +1,34 @@
 package handong.cconma.cconmaadmin.board;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.data.BasicData;
+import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 
 /**
  * Created by Young Bin Kim on 2015-07-27.
@@ -24,6 +36,8 @@ import handong.cconma.cconmaadmin.R;
 public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdapter.ViewHolder> {
     private List<BoardData> dataItemList;
     private Context context;
+    private double width_notice;
+    int sum_of_width_notice;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView text_board_title;
@@ -33,12 +47,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         public ToggleButton btn_board_mark;
         public ImageView img_board_file;
 
-        public TextView text_notice1;
-        public TextView text_notice2;
-        public TextView text_notice3;
-        public TextView text_notice4;
-        public TextView text_notice5;
-        public TextView text_notice6;
+        public LinearLayout layout_notice;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -47,21 +56,18 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
             text_board_date = (TextView)itemView.findViewById(R.id.text_board_date);
             text_board_writer = (TextView)itemView.findViewById(R.id.text_board_writer);
             btn_board_mark = (ToggleButton)itemView.findViewById(R.id.btn_board_mark);
-            img_board_file = (ImageView)itemView.findViewById(R.id.img_board_file);
-
-            text_notice1 = (TextView)itemView.findViewById(R.id.text_notice1);
-            text_notice2 = (TextView)itemView.findViewById(R.id.text_notice2);
-            text_notice3 = (TextView)itemView.findViewById(R.id.text_notice3);
-            text_notice4 = (TextView)itemView.findViewById(R.id.text_notice4);
-            text_notice5 = (TextView)itemView.findViewById(R.id.text_notice5);
-            text_notice6 = (TextView)itemView.findViewById(R.id.text_notice6);
+            btn_board_mark.setFocusable(false);
+            layout_notice = (LinearLayout)itemView.findViewById(R.id.layout_notice);
         }
     }
 
     public BoardRecyclerAdapter(List<BoardData> dataItemList, Context context) {
         this.dataItemList = dataItemList;
         this.context = context;
+        Display dis = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        width_notice = dis.getWidth()*0.6;
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -75,12 +81,17 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        Log.d("debugging", "onBindViewHolder int i: " + String.valueOf(i));
-        BoardData dataItem = dataItemList.get(i);
+    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+        final BoardData dataItem = dataItemList.get(i);
 
         viewHolder.text_board_title.setText(dataItem.subject);
+        Pattern pattern = Pattern.compile("\\[완료\\]");
+        Matcher matcher = pattern.matcher(dataItem.subject);
+        if(matcher.find()){
+            viewHolder.text_board_title.setTextColor(Color.LTGRAY);
+        }
         viewHolder.text_board_writer.setText(dataItem.name);
+
 
         if(dataItem.comment_count != 0) {
             viewHolder.text_board_comment_num.setVisibility(View.VISIBLE);
@@ -104,32 +115,89 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         }
         viewHolder.text_board_date.setText(date);
 
+        viewHolder.layout_notice.removeAllViews();
         if(dataItem.hashMap.size() != 0) {
-            setNotice(viewHolder, dataItem);
+            sum_of_width_notice = 0;
+            int addingCount = 0;
+            int layout_num = 0;
+            LinearLayout l1 = new LinearLayout(context);
+            LinearLayout l2 = new LinearLayout(context);
+            LinearLayout l3 = new LinearLayout(context);
+            for(int j=0; j<dataItem.hashMap.size()/2; j++){
+                TextView textView = new TextView(context);
+                color(textView, dataItem, j);
+
+                textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth();
+
+                if(sum_of_width_notice > width_notice){
+                    addingCount = 0;
+                    layout_num++;
+                    sum_of_width_notice = textView.getMeasuredWidth() + 5;
+                }
+
+                if(layout_num == 0 && addingCount == 0){
+                    viewHolder.layout_notice.addView(l1);
+                }else if(layout_num == 1 && addingCount == 0){
+                    viewHolder.layout_notice.addView(l2);
+                }else if(layout_num == 2 && addingCount == 0){
+                    viewHolder.layout_notice.addView(l3);
+                }
+
+                switch(layout_num){
+                    case 0:
+                        l1.addView(textView);
+                        break;
+                    case 1:
+                        l2.addView(textView);
+                        break;
+                    case 2:
+                        l3.addView(textView);
+                        break;
+                }
+                addingCount++;
+            }
+
+          /*  Log.d("whywhywhy", dataItem.hashMap.toString());
+            TextView[] notice = new TextView[dataItem.hashMap.size()];
+            for(int j = 0; j < dataItem.hashMap.size(); j++) {
+                notice[j] = new TextView(context);
+                notice[j].setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                notice[j].setText("마을지기" + j);
+                viewHolder.layout_notice.addView(notice[j]);
+            }*/
         }
 
         viewHolder.btn_board_mark.setChecked(dataItem.board_marked);
-        //holder.btn_board_mark.setTag(position);
+        viewHolder.btn_board_mark.setTag(i);
         viewHolder.btn_board_mark.setClickable(false);
-        /*holder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
+        viewHolder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.btn_board_mark.isChecked()) {
+                BasicData basicData = BasicData.getInstance();
+                try {
+                    JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                            + dataItem.board_no
+                            + "/articles/" + dataItem.boardarticle_no
+                            + "/scraped_members/" + basicData.getMem_no()
+                            , "PUT", "").execute().get();
+                    Log.d("scrap", json.get("status").toString());
+                } catch (Exception e) {
+
+                }
+
+                if (viewHolder.btn_board_mark.isChecked()) {
+                    //Snackbar.make(viewHolder.getItemId(R.id.snackbarPosition), );
                     Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
-                    board_list_data.get((Integer) v.getTag()).board_marked = true;
+                    dataItemList.get((Integer) v.getTag()).board_marked = true;
                 } else {
 
                     Toast.makeText(context, "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
-                    board_list_data.get((Integer) v.getTag()).board_marked = false;
+                    dataItemList.get((Integer) v.getTag()).board_marked = false;
                 }
             }
-        });*/
-
-        if(dataItem.board_file)
-            viewHolder.img_board_file.setVisibility(View.VISIBLE);
-        else
-            viewHolder.img_board_file.setVisibility(View.GONE);
-
+        });
     }
 
     @Override
@@ -139,36 +207,13 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         //return (null != dataItemList ? dataItemList.size() : 0);
     }
 
-    public void setNotice(ViewHolder viewHolder, BoardData dataItem){
-        for(int j=0; j<dataItem.hashMap.size()/2; j++){
-            switch (j){
-                case 0:
-                    color(viewHolder.text_notice1, dataItem, j);
-                    break;
-                case 1:
-                    color(viewHolder.text_notice2, dataItem, j);
-                    break;
-                case 2:
-                    color(viewHolder.text_notice3, dataItem, j);
-                    break;
-                case 3:
-                    color(viewHolder.text_notice4, dataItem, j);
-                    break;
-                case 4:
-                    color(viewHolder.text_notice5, dataItem, j);
-                    break;
-                case 5:
-                    color(viewHolder.text_notice6, dataItem, j);
-                    break;
-            }
-        }
-    }
-
     public void color(TextView textView, BoardData boardData, int n){
         String hash_tag_type = boardData.hashMap.get("hash_tag_type"+n).toString();
         textView.setText(" "+boardData.hashMap.get("hash_tag" + n).toString()+" ");
-        textView.setVisibility(View.VISIBLE);
 
+        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        llp.setMargins(0, 0, 5, 2); // llp.setMargins(left, top, right, bottom);
+        textView.setLayoutParams(llp);
         Resources res = context.getResources();
         if(hash_tag_type.equals("notice_myteam")) {
             Drawable d = res.getDrawable(R.drawable.notice_myteam);
