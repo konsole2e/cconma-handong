@@ -28,11 +28,12 @@ import handong.cconma.cconmaadmin.statics.StaticsOrderH;
 import handong.cconma.cconmaadmin.statics.StaticsOrderRecent;
 import handong.cconma.cconmaadmin.statics.StaticsTest;
 import handong.cconma.cconmaadmin.statics.StaticsTrade;
+import handong.cconma.cconmaadmin.statics.StaticsViewPagerAdapter;
 
 /**
  * Created by Young Bin Kim on 2015-07-14.
  */
-public class MainFragment extends Fragment implements View.OnClickListener{
+public class MainFragment extends Fragment {
     public static final String POSITION = "0";
     private CharSequence TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
 
@@ -96,24 +97,19 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         else if(position == 2){
             rootView = inflater.inflate(R.layout.statics_main, container, false);
 
-            TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
-            tabLayout.setVisibility(View.GONE);
+            ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.statics_vp);
+            StaticsViewPagerAdapter svp = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity());
+            viewPager.setOffscreenPageLimit(svp.getCount());
+            viewPager.setAdapter(svp);
 
-            Button orderH = (Button)rootView.findViewById(R.id.order_hourly_btn);
-            orderH.setOnClickListener(this);
-            Button orderRcnt = (Button)rootView.findViewById(R.id.order_recent_btn);
-            Log.d("Debugging", String.valueOf(orderH.getId()));
-            orderRcnt.setOnClickListener(this);
-            Button trade = (Button)rootView.findViewById(R.id.trade_btn);
-            trade.setOnClickListener(this);
-            Button like = (Button)rootView.findViewById(R.id.like_btn);
-            like.setOnClickListener(this);
-            Button member = (Button)rootView.findViewById(R.id.member_btn);
-            member.setOnClickListener(this);
-            Button memberRcnt = (Button)rootView.findViewById(R.id.member_recent_btn);
-            memberRcnt.setOnClickListener(this);
-            Button test = (Button) rootView.findViewById(R.id.test_btn);
-            test.setOnClickListener(this);
+            TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
+            tabLayout.setVisibility(View.VISIBLE);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            tabLayout.setupWithViewPager(viewPager);
+
+            FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+            fab.setVisibility(View.GONE);
         }
         else {
             rootView = inflater.inflate(R.layout.webview, container, false);
@@ -154,7 +150,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         webview.setWebViewClient(new WebClient());
     }
 
-    @Override
+ /*   @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.order_hourly_btn :
@@ -179,7 +175,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                 startActivity(new Intent(getActivity(), StaticsTest.class));
                 break;
         }
-    }
+    }*/
 
     class WebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {

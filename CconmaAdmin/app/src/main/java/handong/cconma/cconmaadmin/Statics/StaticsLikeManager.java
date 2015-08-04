@@ -60,7 +60,7 @@ public class StaticsLikeManager {
         BarData data = new BarData(generateDailyXVals(), generateDailyBarData(json));
         //data.setData(generateDailyLineData());
         data.setGroupSpace(200f);
-        data.setValueFormatter(new StaticsValueFormatter());
+ //       data.setValueFormatter(new StaticsValueFormatter());
 
         return data;
     }
@@ -79,7 +79,7 @@ public class StaticsLikeManager {
         set.setCircleColor(set.getColor());
 
         LineData data = new LineData(generateXVals(10), set);
-        data.setValueFormatter(new StaticsValueFormatter());
+  //      data.setValueFormatter(new StaticsValueFormatter());
 
         return data;
     }

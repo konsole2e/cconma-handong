@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/statics_reload"
+        android:orderInCategory="300"
+        android:title="Reload"
+        android:icon="@drawable/ic_refresh_white_24dp"
+        app:showAsAction="ifRoom">
+    </item>
+
+    <item
+        android:id="@+id/statics_zoom"
+        android:orderInCategory="300"
+        android:title="Zoom"
+        android:icon="@drawable/ic_settings_overscan_white_24dp"
+        app:showAsAction="ifRoom">
+    </item>
+
+</menu>

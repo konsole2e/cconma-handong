@@ -20,7 +20,7 @@ import java.util.Map;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.etc.HTTPConnector;
-import handong.cconma.cconmaadmin.etc.JSONResponse;
+import handong.cconma.cconmaadmin.http.JSONResponse;
 
 public class StaticsTrade extends Activity implements JSONResponse {
     private CombinedChart hourlyChart;
@@ -48,10 +48,10 @@ public class StaticsTrade extends Activity implements JSONResponse {
         StaticsMarkerView mvW = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
         StaticsMarkerView mvM = new StaticsMarkerView(this, R.layout.statics_marker_view_layout);
 
-        RelativeLayout hTag = (RelativeLayout)findViewById(R.id.trade_hourly_rl);
-        RelativeLayout dTag = (RelativeLayout)findViewById(R.id.trade_daily_rl);
-        RelativeLayout wTag = (RelativeLayout)findViewById(R.id.trade_weekly_rl);
-        RelativeLayout mTag = (RelativeLayout)findViewById(R.id.trade_monthly_rl);
+        RelativeLayout hTag = (RelativeLayout) findViewById(R.id.trade_hourly_rl);
+        RelativeLayout dTag = (RelativeLayout) findViewById(R.id.trade_daily_rl);
+        RelativeLayout wTag = (RelativeLayout) findViewById(R.id.trade_weekly_rl);
+        RelativeLayout mTag = (RelativeLayout) findViewById(R.id.trade_monthly_rl);
 
         hourlyChart = (CombinedChart) findViewById(R.id.trade_hourly_combineChart);
         dailyChart = (BarChart) findViewById(R.id.trade_daily_barChart);
@@ -63,10 +63,10 @@ public class StaticsTrade extends Activity implements JSONResponse {
         setting.commonSetting(weeklyChart);
         setting.commonSetting(monthlyChart);
 
-        mvH.attachChart(hourlyChart, "", "원", "", 9);
-        mvD.attachChart(dailyChart,"", "원","",9);
-        mvW.attachChart(weeklyChart,"", "원","",9);
-        mvM.attachChart(monthlyChart,"", "원","",9);
+        mvH.attachChart(hourlyChart, "", "", 9);
+        mvD.attachChart(dailyChart, "", "", 9);
+        mvW.attachChart(weeklyChart, "", "", 9);
+        mvM.attachChart(monthlyChart, "", "", 9);
 
         hourlyChart.setMarkerView(mvH);
         dailyChart.setMarkerView(mvD);
@@ -151,7 +151,7 @@ public class StaticsTrade extends Activity implements JSONResponse {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //hourlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                    setting.zoomSetting(hourlyChart);
+//                    setting.zoomSetting(hourlyChart);
                     dailyChart.setVisibility(View.GONE);
                     weeklyChart.setVisibility(View.GONE);
                     monthlyChart.setVisibility(View.GONE);
@@ -170,7 +170,7 @@ public class StaticsTrade extends Activity implements JSONResponse {
                     mode = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //dailyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                    setting.zoomSetting(dailyChart);
+//                    setting.zoomSetting(dailyChart);
                     hourlyChart.setVisibility(View.GONE);
                     weeklyChart.setVisibility(View.GONE);
                     monthlyChart.setVisibility(View.GONE);
@@ -190,7 +190,7 @@ public class StaticsTrade extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     // weeklyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting(weeklyChart);
+//                    setting.zoomSetting(weeklyChart);
                 }
             }
         });
@@ -203,7 +203,7 @@ public class StaticsTrade extends Activity implements JSONResponse {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 가로전환
                     //   monthlyChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     gone();
-                    setting.zoomSetting(monthlyChart);
+//                    setting.zoomSetting(monthlyChart);
                 }
             }
         });
@@ -234,14 +234,14 @@ public class StaticsTrade extends Activity implements JSONResponse {
     }
 
     @Override
-    public void processFinish(ArrayList<JSONObject> output) {
+    public void processFinish(JSONObject output) {
         int i = 0;
-        hourlyChart.setData(manager.hourlyChartSetting(output.get(i++)));
-        dailyChart.setData(manager.dailyChartSetting(output.get(i++)));
-        weeklyChart.setData(manager.weeklyChartSetting(output.get(i)));
-        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG(output.get(i++)));
-        monthlyChart.setData(manager.monthlyChartSetting(output.get(i)));
-        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG(output.get(i++)));
+        hourlyChart.setData(manager.hourlyChartSetting(output));
+        dailyChart.setData(manager.dailyChartSetting(output));
+        weeklyChart.setData(manager.weeklyChartSetting(output));
+        weeklyChart.getAxisLeft().addLimitLine(manager.weeklkyAVG(output));
+        monthlyChart.setData(manager.monthlyChartSetting(output));
+        monthlyChart.getAxisLeft().addLimitLine(manager.monthlyAVG(output));
         refresh();
         return;
     }

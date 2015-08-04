@@ -3,6 +3,7 @@ package handong.cconma.cconmaadmin.mainpage;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -41,6 +42,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import android.os.Handler;
 
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
@@ -52,6 +54,7 @@ import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.SettingActivity;
+import handong.cconma.cconmaadmin.http.JSONResponse;
 import handong.cconma.cconmaadmin.push.PushView;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
 import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private CharSequence mTitle;
 
-    class loadingData extends AsyncTask<Void, Void, Void>{
+    class loadingData extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -211,7 +214,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         return true;
     }
 
@@ -241,14 +243,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Configuration config = getResources().getConfiguration();
         int count = getFragmentManager().getBackStackEntryCount();
 
-        if(count == 0){
-            finish();
+        if(position == 2 && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
         }
-        else{
+        if (count == 0) {
+            finish();
+        } else {
             getFragmentManager().popBackStack();
         }
+
     }
 
     /*@Override
@@ -333,21 +339,22 @@ public class MainActivity extends AppCompatActivity {
 
                 getSupportActionBar().setTitle(TITLES[position - 1]);
             } else {*/
-               // tabLayout.setVisibility(View.GONE);
-               // floatingActionButton.setVisibility(View.GONE);
-                Fragment fragment = new MainFragment();
-                Bundle args = new Bundle();
-                args.putInt(MainFragment.POSITION, position);
-                fragment.setArguments(args);
+        // tabLayout.setVisibility(View.GONE);
+        // floatingActionButton.setVisibility(View.GONE);
+        Fragment fragment = new MainFragment();
+        Bundle args = new Bundle();
+        args.putInt(MainFragment.POSITION, position);
+        fragment.setArguments(args);
 
-                fragmentManager = getSupportFragmentManager();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.replace(R.id.main_content_frame, fragment, "fragment" + String.valueOf(position));
-                ft.addToBackStack(null);
-                Log.d(TAG, "fragment stack: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
-                ft.commit();
-            //}
+        fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.main_content_frame, fragment, "fragment" + String.valueOf(position));
+        ft.addToBackStack(null);
+        Log.d(TAG, "fragment stack: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
+        ft.commit();
+        //}
     }
+
     private void setSwipeToRefresh() {
         //set SwipeToRefresh on the activity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

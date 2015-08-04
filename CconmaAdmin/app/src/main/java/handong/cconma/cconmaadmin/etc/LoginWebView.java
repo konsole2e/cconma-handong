@@ -43,10 +43,11 @@ public class LoginWebView extends AppCompatActivity {
 
         webview = (WebView) findViewById(R.id.webView);
 
+        //Intent data = getIntent();
+        //url = data.getStringExtra("URL");
+        url = "http://www.cconma.com/mobile/auth/index.pmv?path=http://www.cconma.com%2Fmobile%2Findex.pmv";
         Intent data = getIntent();
         autoLogin = data.getIntExtra("AUTO_LOGIN", 0);
-
-        url = "http://www.cconma.com/mobile/auth/index.pmv?path=http://www.cconma.com%2Fmobile%2Findex.pmv";
 
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
         webview.getSettings().setBuiltInZoomControls(true);

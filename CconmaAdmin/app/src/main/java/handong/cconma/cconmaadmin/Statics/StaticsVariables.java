@@ -6,11 +6,16 @@ package handong.cconma.cconmaadmin.statics;
 public class StaticsVariables {
     public static final String chart = "chart";
     public static final String category = "category";
+    public static final String description = "description";
+    public static final String valueFormat = "valueFormat";
+    public static final String height = "height";
     public static final String line = "line";
     public static final String bar = "bar";
     public static final String combined = "combined";
     public static final String pie = "pie";
     public static final String xAxis = "xAxis";
+    public static final String axisWidth = "axisWidth";
+    public static final String axisColor = "axisColor";
     public static final String enabled = "enabled";
     public static final String color = "color";
     public static final String chartBGColor = "chartBGColor";
