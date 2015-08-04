@@ -63,6 +63,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 
 /**
@@ -72,6 +73,7 @@ import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 public class BoardViewActivity extends AppCompatActivity implements Html.ImageGetter{
     private Toolbar toolbar;
     boolean firstTime=true;
+    boolean marked=false;
     int width_notice=0;
     TextView text_board_view_title;
     LinearLayout layout_view_notice;
@@ -101,6 +103,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
 
         board_no = this.getIntent().getStringExtra("board_no");
         boardarticle_no = this.getIntent().getStringExtra("boardarticle_no");
+        marked = this.getIntent().getBooleanExtra("marked", false);
 
 
         Display dis = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -108,7 +111,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         View header = getLayoutInflater().inflate(R.layout.board_list_header, null, false);
 
         header.setLongClickable(false);
-        
+
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -180,7 +183,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                             }
 
                             //adapter_comment.updateComment((Integer) edit_board_view_comment.getTag(),
-                                    //edit_board_view_comment.getText().toString());
+                            //edit_board_view_comment.getText().toString());
                             //adapter_comment.notifyDataSetChanged();
                             edit_board_view_comment.setTag(null);
                             adapter_comment.board_comment_list_data.clear();
@@ -574,6 +577,16 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 String reg_date = json.getString("reg_date");
                 String content = json.getString("content");
 
+
+                JSONObject scrap = json.getJSONObject("scrap_info");
+                String scrap_on = scrap.getString("scraped");
+
+                if(scrap_on.equals("on"))
+                    marked = true;
+                else
+                    marked = false;
+
+
                 JSONArray noticeArr = json.getJSONArray("article_hash_tags");
                 if (noticeArr.length() != 0) {
                     int sum_of_width_notice = 0;
@@ -634,6 +647,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 text_board_view_content.setText(spanned);
                 text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
             }
+
 
             JSONArray jsonArray = json.getJSONArray("comments");
             for(int i=0; i<jsonArray.length(); i++){
@@ -737,10 +751,57 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 finish();
                 return true;
             case R.id.favorite:
-                item.setIcon(getResources().getDrawable(R.drawable.ic_star_white_24dp));
+                AlertDialog.Builder alert_build = new AlertDialog.Builder(this);
+                String alertStr = "";
+                if(!marked){
+                    alertStr = "이 글을 즐겨찾기 등록하시겠습니까?";
+                }else{
+                    alertStr = "이 글을 즐겨찾기 해제하시겠습니까?";
+
+                }
+                alert_build.setMessage(alertStr).setCancelable(false)
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //수정하거나 삭제하는 코드.
+                                BasicData basicData = BasicData.getInstance();
+                                try{
+                                    JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                                            + board_no
+                                            + "/articles/" + boardarticle_no
+                                            + "/scraped_members/" + basicData.getMem_no()
+                                            , "PUT", "").execute().get();
+                                    Log.d("scrap", json.get("status").toString());
+                                }catch(Exception e){
+
+                                }
+
+                                if (!marked) {
+                                    Toast.makeText(getApplicationContext(), "즐겨찾기 추가되었습니다", Toast.LENGTH_SHORT).show();
+                                    marked = true;
+                                }else {
+
+                                    Toast.makeText(getApplicationContext(), "즐겨찾기 해제되었습니다", Toast.LENGTH_SHORT).show();
+                                    marked = false;
+                                }
+
+
+
+                            }
+                        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alert = alert_build.create();
+                alert.setCanceledOnTouchOutside(true);
+                alert.show();
+                //item.setIcon(getResources().getDrawable(R.drawable.ic_star_white_24dp));
                 break;
             case R.id.complete:
-                item.setIcon(getResources().getDrawable(R.drawable.ic_check_box_white_24dp));
+                //item.setIcon(getResources().getDrawable(R.drawable.ic_check_box_white_24dp));
                 break;
             case R.id.modify:
                 dialog(0, 0);

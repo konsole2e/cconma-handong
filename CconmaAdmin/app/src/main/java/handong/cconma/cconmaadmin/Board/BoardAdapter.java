@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -80,8 +81,10 @@ public class BoardAdapter extends BaseAdapter{
         holder.text_board_comment_num = (TextView)convertView.findViewById(R.id.text_board_comment_num);
         holder.text_board_date = (TextView)convertView.findViewById(R.id.text_board_date);
         holder.text_board_writer = (TextView)convertView.findViewById(R.id.text_board_writer);
-        holder.btn_board_mark = (ToggleButton)convertView.findViewById(R.id.btn_board_mark);
-        holder.btn_board_mark.setFocusable(false);
+        holder.short_board_name = (TextView)convertView.findViewById(R.id.short_board_name);
+        holder.mark_check_delete = (CheckBox)convertView.findViewById(R.id.mark_check_delete);
+        //holder.btn_board_mark = (ToggleButton)convertView.findViewById(R.id.btn_board_mark);
+        //holder.btn_board_mark.setFocusable(false);
         //holder.img_board_file = (ImageView)convertView.findViewById(R.id.img_board_file);
 
         holder.layout_notice = (LinearLayout)convertView.findViewById(R.id.layout_notice);
@@ -100,7 +103,7 @@ public class BoardAdapter extends BaseAdapter{
             holder.text_board_comment_num.setVisibility(View.VISIBLE);
             holder.text_board_comment_num.setText(data.comment_nicknames);
         }
-            //holder.text_board_comment_num.setText("+" + data.comment_count);
+        //holder.text_board_comment_num.setText("+" + data.comment_count);
 
         StringTokenizer st = new StringTokenizer(data.reg_date, "-:");
         int count=0;
@@ -117,6 +120,8 @@ public class BoardAdapter extends BaseAdapter{
             count++;
         }
         holder.text_board_date.setText(date);
+
+        holder.short_board_name.setText(data.board_short_name);
 
         int sum_of_width_notice = 0;
         if(data.hashMap.size() != 0) {
@@ -163,10 +168,10 @@ public class BoardAdapter extends BaseAdapter{
 
         holder.text_board_writer.setText(data.name);
 
-        holder.btn_board_mark.setChecked(data.board_marked);
-        holder.btn_board_mark.setTag(position);
-        holder.btn_board_mark.setClickable(false);
-        holder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
+        //holder.btn_board_mark.setChecked(data.board_marked);
+        //holder.btn_board_mark.setTag(position);
+        //holder.btn_board_mark.setClickable(false);
+        /*holder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -209,7 +214,7 @@ public class BoardAdapter extends BaseAdapter{
 
                 }
             }
-        });
+        });*/
 
 
 
@@ -268,12 +273,15 @@ public class BoardAdapter extends BaseAdapter{
         public TextView text_board_comment_num;
         public TextView text_board_date;
         public TextView text_board_writer;
-        public ToggleButton btn_board_mark;
+        //public ToggleButton btn_board_mark;
         //public ImageView img_board_file;
 
         public LinearLayout layout_for_mark;
 
         public LinearLayout layout_notice;
+
+        public TextView short_board_name;
+        public CheckBox mark_check_delete;
 
     }
 
@@ -305,5 +313,6 @@ public class BoardAdapter extends BaseAdapter{
             textView.setTextColor(Color.rgb(255, 255, 255));
         }
     }
+
 }
 

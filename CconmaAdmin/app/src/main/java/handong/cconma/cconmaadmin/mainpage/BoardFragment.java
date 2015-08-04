@@ -40,6 +40,7 @@ import handong.cconma.cconmaadmin.http.HttpConnection;
  * Created by Young Bin Kim on 2015-07-27.
  */
 public class BoardFragment extends Fragment {
+    private static final float DEFAULT_HDIP_DENSITY_SCALE = 1.5f;
     public static final String ARG_PAGE_NO = "ARG_PAGE_NO";
     private List<BoardData> boardDataList;
 
@@ -146,19 +147,23 @@ public class BoardFragment extends Fragment {
             final GestureDetector mGestureDetector = new GestureDetector(getActivity().getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
-                    View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                    int position = recyclerView.getChildAdapterPosition(view);
-                    // handle single tap
-                    if(view != null) {
-                        Intent i = new Intent(getActivity(), BoardViewActivity.class);
+                    if(e.getX()>100) {
 
-                        Log.d(TAG, boardDataList.get(position).board_no.toString() + " " + boardDataList.get(position).boardarticle_no.toString() + " " +
-                                boardDataList.get(position).boardarticle_no);
-                        i.putExtra("board_no", boardDataList.get(position).board_no);
-                        i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
-                        i.putExtra("number", boardDataList.get(position).boardarticle_no);
+                        View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                        int position = recyclerView.getChildAdapterPosition(view);
+                        // handle single tap
+                        if (view != null) {
+                            Intent i = new Intent(getActivity(), BoardViewActivity.class);
 
-                        startActivity(i);
+                            Log.d(TAG, boardDataList.get(position).board_no.toString() + " " + boardDataList.get(position).boardarticle_no.toString() + " " +
+                                    boardDataList.get(position).boardarticle_no);
+                            i.putExtra("board_no", boardDataList.get(position).board_no);
+                            i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
+                            i.putExtra("number", boardDataList.get(position).boardarticle_no);
+                            i.putExtra("marked", boardDataList.get(position).board_marked);
+
+                            startActivity(i);
+                        }
                     }
                     return super.onSingleTapConfirmed(e);
                 }
@@ -353,4 +358,5 @@ public class BoardFragment extends Fragment {
             Log.d(TAG, "Exception in BoardFragement Line 125: " + e.getMessage());
         }
     }
+
 }

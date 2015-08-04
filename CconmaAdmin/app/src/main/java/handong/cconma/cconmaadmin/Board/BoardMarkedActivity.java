@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -62,6 +63,12 @@ public class BoardMarkedActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(BoardMarkedActivity.this, BoardViewActivity.class);
+                i.putExtra("board_no", ((BoardData)adapter_marked.getItem(position)).board_no);
+                i.putExtra("boardarticle_no", ((BoardData)adapter_marked.getItem(position)).boardarticle_no);
+
+                BoardData data = (BoardData)adapter_marked.getItem(position);
+                i.putExtra("number", data.boardarticle_no);
+
                 startActivity(i);
             }
         });
@@ -73,8 +80,20 @@ public class BoardMarkedActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.delete:
+
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_mark, menu);
+
+        return true;
     }
 
     public void jsonParser(){
@@ -82,7 +101,7 @@ public class BoardMarkedActivity extends AppCompatActivity {
         try{
             JSONObject jason = new MainAsyncTask("http://www.cconma.com/admin/api/member/v1/"
                     + mem_no + "/scraped_article"
-                    + "?page=" + page + "&n=20", "GET", "").execute().get();
+                    + "?page=" + page + "&n=50", "GET", "").execute().get();
 
             JSONArray jsonArray = jason.getJSONArray("articles");
 
