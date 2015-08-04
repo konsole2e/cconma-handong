@@ -54,7 +54,7 @@ public class StaticsTest extends Activity implements JSONResponse {
         setting = new StaticsCommonSetting();
         ll = (LinearLayout) findViewById(R.id.statics_test_ll);
 
-        MainAsyncTask mat = new MainAsyncTask("http://local.cconma.com/admin/api/stat/v1/sample_chart", "GET", "", this);
+        MainAsyncTask mat = new MainAsyncTask("http://www.cconma.com/admin/api/stat/v1/sample_chart", "GET", "", this);
         mat.setMessage("차트를 그리고 있습니다.");
         mat.execute();
     }

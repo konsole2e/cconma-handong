@@ -46,25 +46,12 @@ public class RegistrationIntentService extends IntentService {
         try{
             token = instanceID.getToken(default_senderId,
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            pref.put("TOKEN", token);
-            String device_id = Settings.Secure.getString(getApplicationContext().getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
-            Log.d(TAG, device_id);
+            pref.put("PUSH_ID", token);
 
             Log.d(TAG, "TOKEN saved. TOKEN key: " + pref.getValue("TOKEN", ""));
 
-            JSONObject json = new JSONObject();
-            try{
-                json.put("token", token);
-                json.put("device_id", device_id);
-            }catch(JSONException e){
-                Log.d(TAG, e.getMessage());
-            }
-
-
-
-            gcmAsyncTask task = new gcmAsyncTask(device_id);
-            task.execute(json);
+            //gcmAsyncTask task = new gcmAsyncTask(device_id);
+            //task.execute(json);
 
         }catch(IOException e){
             Log.d(TAG, e.getMessage());

@@ -38,11 +38,16 @@ public class StartupWebView extends AppCompatActivity {
         webview = (WebView) findViewById(R.id.webView);
 
         isPageLoaded = false;
+        IntegratedSharedPreferences pref = new IntegratedSharedPreferences(StartupWebView.this);
+
         url = "http://www.cconma.com/mobile/admin-app/startup.pmv";
         String requestBody = "autoLoginAuthToken=" +
-                new IntegratedSharedPreferences(StartupWebView.this).
-                        getValue("AUTO_LOGIN_AUTH_TOKEN", "");
+                pref.getValue("AUTO_LOGIN_AUTH_TOKEN", "");
+        requestBody += "&push_id=" + pref.getValue("PUSH_ID", "");
+        requestBody += "&app_ver=" + pref.getValue("APP_VERSION", "1.0.0");
+        requestBody += "&android_id=" + pref.getValue("ANDROID_ID", "1");
 
+        Log.d("debugging", "REQEUST: " + requestBody);
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
         webview.getSettings().setBuiltInZoomControls(true);
         String userAgent = webview.getSettings().getUserAgentString();
@@ -56,9 +61,13 @@ public class StartupWebView extends AppCompatActivity {
         public void onPageStarted(android.webkit.WebView view, String url, Bitmap favicon) {
             webview.setVisibility(View.GONE);
             ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).start();
-            String requestBody = "autoLoginAuthToken=" +
-                    new IntegratedSharedPreferences(StartupWebView.this).
-                    getValue("AUTO_LOGIN_AUTH_TOKEN", "");
+            IntegratedSharedPreferences pref = new IntegratedSharedPreferences(StartupWebView.this);
+
+            String requestBody = "autoLoginAuthToken=" + pref.getValue("AUTO_LOGIN_AUTH_TOKEN", "")
+                    + "&push_id=" + pref.getValue("PUSH_ID", "") + "&app_ver=" +
+                    pref.getValue("APP_VERSION", "1.0.0") + "&android_id=" +
+                    pref.getValue("ANDROID_ID", "1");
+
             Log.d("debugging", "AUTO LOGIN AUTH TOKEN: " + requestBody);
             new StartUp(StartupWebView.this).post(requestBody);
         }

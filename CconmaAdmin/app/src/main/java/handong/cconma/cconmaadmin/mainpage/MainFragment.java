@@ -16,10 +16,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+import java.util.HashMap;
+
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
+import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.statics.StaticsLike;
 import handong.cconma.cconmaadmin.statics.StaticsMember;
@@ -39,6 +42,7 @@ public class MainFragment extends Fragment {
     private ViewPager vp;
     private WebView webview;
     private CircularProgressBar circularProgressBar;
+    ViewPager viewPager;
 
     public MainFragment(){
     }
@@ -73,8 +77,8 @@ public class MainFragment extends Fragment {
         if(position == 1){
             rootView = inflater.inflate(R.layout.board_viewpager, container, false);
 
-            ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
-            viewPager.setOffscreenPageLimit(2);
+            viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
+            //viewPager.setOffscreenPageLimit(2);
             ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
             viewPager.setAdapter(viewPagerAdapter);
 
@@ -90,6 +94,15 @@ public class MainFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), BoardWriteActivity.class);
+                    int board = viewPager.getCurrentItem();
+                    if (board == 0) {
+                        board = 12;
+                    } else {
+                        HashMap board_list =  BasicData.getInstance().getBoardList();
+                        board = Integer.parseInt(board_list.get("board_no" + board).toString());
+                    }
+                    intent.putExtra("board", board);
+                    Log.d("debugging", String.valueOf(board));
                     startActivity(intent);
                 }
             });

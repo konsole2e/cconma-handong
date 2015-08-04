@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background"
+        android:alpha="0.6"/>
     <LinearLayout
         android:id="@+id/top"
         android:layout_width="fill_parent"
@@ -13,56 +18,55 @@
         <FrameLayout
             android:id="@+id/board_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#ffffff"/>
+            android:layout_height="match_parent"/>
 
 
-        <RelativeLayout
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <FrameLayout
+            android:id="@+id/layout_board_search"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-            <FrameLayout
-                android:id="@+id/layout_board_search"
+            <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="40dp"
-                    android:orientation="horizontal"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:background="#ffffff">
-                    <Spinner
-                        android:id="@+id/spinner_board_condition"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="5dp"
-                        style="@style/SmallBlack"
-                        />
-                    <EditText
-                        android:id="@+id/edit_board_search"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.5"
-                        android:textSize="14sp"
-                        android:hint="입력하세요"/>
-                    <Button
-                        android:id="@+id/btn_board_search"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
-                        android:text="검색하기"/>
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+                <Spinner
+                    android:id="@+id/spinner_board_condition"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    style="@style/SmallBlack"
+                    />
+                <EditText
+                    android:id="@+id/edit_board_search"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:textSize="14sp"
+                    android:singleLine="true"
+                    android:hint="입력하세요"/>
+                <Button
+                    android:id="@+id/btn_board_search"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:text="검색"/>
 
-                </LinearLayout>
+            </LinearLayout>
 
-            </FrameLayout>
-        </RelativeLayout>
+        </FrameLayout>
+    </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     </LinearLayout>
 

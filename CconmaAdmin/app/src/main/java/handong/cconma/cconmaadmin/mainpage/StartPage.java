@@ -2,10 +2,13 @@ package handong.cconma.cconmaadmin.mainpage;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -74,7 +77,23 @@ public class StartPage extends AppCompatActivity{
         logoImage = (ImageView) findViewById(R.id.startup_image);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.progressbar_circular);
 
-        //getInstanceIdToken();
+        getInstanceIdToken();
+
+        String device_id = Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        Log.d(TAG, "device id: " + device_id);
+        new IntegratedSharedPreferences(StartPage.this).put("ANDROID_ID", device_id);
+
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+            Log.d(TAG, "VERSION: " + version);
+            new IntegratedSharedPreferences(StartPage.this).
+                    put("APP_VERSION", version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         new Thread(new Runnable() {
             @Override
@@ -129,15 +148,15 @@ public class StartPage extends AppCompatActivity{
     public void getInstanceIdToken() {
         if (checkPlayServices()) {
             IntegratedSharedPreferences pref = new IntegratedSharedPreferences(getApplicationContext());
-            String token = pref.getValue("TOKEN", "");
-            if(token.equals("")) {
+            String token = pref.getValue("PUSH_ID", "");
+            //if(token.equals("")) {
                 // Start IntentService to register this application with GCM.
                 Intent intent = new Intent(this, RegistrationIntentService.class);
                 startService(intent);
-            }
-            else{
+           // }
+            //else{
                 Log.d(TAG, "TOKEN already exists!!! Your token is " + token);
-            }
+           // }
         }
     }
 
