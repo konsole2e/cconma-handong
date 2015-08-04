@@ -109,6 +109,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
         viewHolder.layout_notice.removeAllViews();
         if(dataItem.hashMap.size() != 0) {
+            sum_of_width_notice = 0;
             int addingCount = 0;
             int layout_num = 0;
             LinearLayout l1 = new LinearLayout(context);
