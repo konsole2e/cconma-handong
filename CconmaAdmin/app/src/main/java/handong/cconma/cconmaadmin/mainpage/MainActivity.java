@@ -134,8 +134,11 @@ public class MainActivity extends AppCompatActivity {
         View view = inflater.inflate(R.layout.drawer_header, navigationView, false);
         TextView textview = (TextView)view.findViewById(R.id.name);
         try {
-            String name = URLEncoder.encode(BasicData.getInstance().getName(), "UTF-8");
-            textview.setText(name);
+            Log.d("NAME", BasicData.getInstance().getName());
+            String name = URLEncoder.encode(BasicData.getInstance().getName(), "euc-kr");
+            Log.d("NAME", name);
+            //textview.setText(name);
+            textview.setText("마을지기");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

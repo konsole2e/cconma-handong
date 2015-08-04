@@ -2,6 +2,7 @@ package handong.cconma.cconmaadmin.mainpage;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,13 +14,21 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +49,7 @@ import handong.cconma.cconmaadmin.http.HttpConnection;
  * Created by Young Bin Kim on 2015-07-27.
  */
 public class BoardFragment extends Fragment {
+    private static final float DEFAULT_HDIP_DENSITY_SCALE = 1.5f;
     public static final String ARG_PAGE_NO = "ARG_PAGE_NO";
     private List<BoardData> boardDataList;
 
@@ -56,6 +66,17 @@ public class BoardFragment extends Fragment {
     private Boolean isLoading = false;
     private Boolean isReload = false;
     private int total;
+    int isSearch;
+
+    FrameLayout layout_board_search;
+    Spinner spinner_board_condition;
+    EditText edit_board_search;
+    Button btn_board_search;
+
+    String search_keyword="";
+    String search_cond = "";
+
+    InputMethodManager input_manager;
 
     public static BoardFragment newInstance(String page_no) {
         Bundle args = new Bundle();
@@ -79,6 +100,58 @@ public class BoardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.board_layout, container, false);
+
+        //검색창 열기/닫기 버튼
+        /*btn_board_search_view = (ToggleButton)view.findViewById(R.id.btn_board_search_view);
+        btn_board_search_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (btn_board_search_view.isChecked()) {
+                    layout_board_search.setVisibility(View.VISIBLE);
+                } else {
+                    layout_board_search.setVisibility(View.GONE);
+                }
+            }
+        });*/
+        //검색창 Frame Layout
+        layout_board_search = (FrameLayout)view.findViewById(R.id.layout_board_search);
+        //검색 조건 spinner
+        spinner_board_condition = (Spinner)view.findViewById(R.id.spinner_board_condition);
+        String[] cond = getResources().getStringArray(R.array.board_condition);
+        final SpinnerAdapter adapter = new SpinnerAdapter(getActivity().getApplicationContext(),
+                android.R.layout.simple_spinner_item, cond);
+        spinner_board_condition.setAdapter(adapter);
+        spinner_board_condition.setSelection(0);
+        //검색 입력
+        edit_board_search = (EditText)view.findViewById(R.id.edit_board_search);
+        //검색하기 버튼
+        btn_board_search = (Button)view.findViewById(R.id.btn_board_search);
+        btn_board_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(spinner_board_condition.getSelectedItem().equals("작성자"))
+                    search_cond = "/writers/all?search_field=name&keyword=";
+                else if(spinner_board_condition.getSelectedItem().equals("내용"))
+                    search_cond = "/writers/all?search_field=content&keyword=";
+                else if(spinner_board_condition.getSelectedItem().equals("제목"))
+                    search_cond = "/writers/all?search_field=subject&keyword=";
+
+                search_keyword = String.valueOf(edit_board_search.getText());
+                try {
+                    search_keyword = URLEncoder.encode(search_keyword, "UTF-8");
+                }catch(Exception e){
+
+                }
+                isSearch = 1;
+                new BoardAsyncTask(getActivity().getApplicationContext()).execute("http://www.cconma.com/admin/api/board/v1/boards/"
+                        + board_no + "/writers/all?page=" + "1" + "&n=20", "GET", "");
+                Log.d("test", search_cond);
+
+                input_manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
+            }
+        });
+
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
         linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -96,7 +169,54 @@ public class BoardFragment extends Fragment {
                     + board_no + "/writers/all?page=" + "1" + "&n=20", "GET", "");
     }
 
-    class LoadMoreData extends AsyncTask<String, Void, Integer>{
+    public class SpinnerAdapter extends ArrayAdapter<String> {
+
+        Context context;
+        String items[];
+        public SpinnerAdapter(final Context context, final int textViewResourceId, final String[] objects){
+            super(context, textViewResourceId, objects);
+            this.items = objects;
+            this.context = context;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(
+                        android.R.layout.simple_spinner_dropdown_item, parent, false);
+            }
+
+            TextView tv = (TextView)convertView
+                    .findViewById(android.R.id.text1);
+            tv.setText(items[position]);
+            tv.setTextColor(Color.BLACK);
+            tv.setTextSize(15);
+            return convertView;
+        }
+
+        /**
+         * 기본 스피너 View 정의
+         */
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(
+                        android.R.layout.simple_spinner_item, parent, false);
+            }
+
+            TextView tv = (TextView) convertView
+                    .findViewById(android.R.id.text1);
+            tv.setText(items[position]);
+            tv.setTextColor(Color.BLACK);
+            tv.setTextSize(15);
+            return convertView;
+        }
+    }
+
+    class LoadSearch extends AsyncTask<String, Void, Integer>{
         private String sResult;
 
         @Override
@@ -106,7 +226,7 @@ public class BoardFragment extends Fragment {
 
         @Override
         protected Integer doInBackground(String... params) {
-            loadMoreData();
+            loadData();
             return 1;
         }
 
@@ -139,26 +259,28 @@ public class BoardFragment extends Fragment {
         @Override
         protected void onPostExecute(Integer result) {
             adapter = new BoardRecyclerAdapter(boardDataList, context);
-            Log.d("number", "set Adapter");
-            if(isReload == false) {
-                recyclerView.setAdapter(adapter);
-            }
+            recyclerView.setAdapter(adapter);
+
             final GestureDetector mGestureDetector = new GestureDetector(getActivity().getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
-                    View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                    int position = recyclerView.getChildAdapterPosition(view);
-                    // handle single tap
-                    if(view != null) {
-                        Intent i = new Intent(getActivity(), BoardViewActivity.class);
+                    if(e.getX()>100) {
 
-                        Log.d(TAG, boardDataList.get(position).board_no.toString() + " " + boardDataList.get(position).boardarticle_no.toString() + " " +
-                                boardDataList.get(position).boardarticle_no);
-                        i.putExtra("board_no", boardDataList.get(position).board_no);
-                        i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
-                        i.putExtra("number", boardDataList.get(position).boardarticle_no);
+                        View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                        int position = recyclerView.getChildAdapterPosition(view);
+                        // handle single tap
+                        if (view != null) {
+                            Intent i = new Intent(getActivity(), BoardViewActivity.class);
 
-                        startActivity(i);
+                            Log.d(TAG, boardDataList.get(position).board_no.toString() + " " + boardDataList.get(position).boardarticle_no.toString() + " " +
+                                    boardDataList.get(position).boardarticle_no);
+                            i.putExtra("board_no", boardDataList.get(position).board_no);
+                            i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
+                            i.putExtra("number", boardDataList.get(position).boardarticle_no);
+                            i.putExtra("marked", boardDataList.get(position).board_marked);
+
+                            startActivity(i);
+                        }
                     }
                     return super.onSingleTapConfirmed(e);
                 }
@@ -227,9 +349,17 @@ public class BoardFragment extends Fragment {
 
     public void loadData(){
         String sResult;
-        try{
-            HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
-                    + board_no + "/writers/all?page=" + String.valueOf(page_no) + "&n=50", "GET", "");
+        try {
+            String url = "";
+            if (isSearch == 0) {
+                url = "http://www.cconma.com/admin/api/board/v1/boards/"
+                        + board_no + "/writers/all?page=" + String.valueOf(page_no) + "&n=50";
+            } else{
+               url = "http://www.cconma.com/admin/api/board/v1/boards/"
+                       + board_no + search_cond + search_keyword;
+            }
+
+            HttpConnection connection = new HttpConnection(url, "GET", "");
             sResult = connection.init();
             Log.d(TAG, sResult);
 
@@ -269,6 +399,16 @@ public class BoardFragment extends Fragment {
                 while(matcher.find()){
                     data.comment_count++;
                 }
+
+                JSONObject scrap = jsonObject.getJSONObject("scrap_info");
+                String scrap_on = scrap.getString("scraped");
+
+                if(scrap_on.equals("on"))
+                    data.board_marked = true;
+                else
+                    data.board_marked = false;
+
+
 
                 boardDataList.add(data);
                 isReload = false;
@@ -325,6 +465,16 @@ public class BoardFragment extends Fragment {
                     data.comment_count++;
                 }
 
+                JSONObject scrap = jsonObject.getJSONObject("scrap_info");
+                String scrap_on = scrap.getString("scraped");
+
+                if(scrap_on.equals("on"))
+                    data.board_marked = true;
+                else
+                    data.board_marked = false;
+
+
+
                 boardDataList.add(data);
                 isReload = true;
                 adapter.notifyDataSetChanged();
@@ -333,4 +483,5 @@ public class BoardFragment extends Fragment {
             Log.d(TAG, "Exception in BoardFragement Line 125: " + e.getMessage());
         }
     }
+
 }
