@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
         Configuration config = getResources().getConfiguration();
         int count = getFragmentManager().getBackStackEntryCount();
 
-        if(position == 2 && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
+        if (position == 2 && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
         }
         if (count == 0) {

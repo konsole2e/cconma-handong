@@ -96,7 +96,7 @@ public class BoardWriteActivity extends AppCompatActivity {
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, noticeArr);
+                R.layout.custom_simple_dropdown_item_1line, noticeArr);
         spinner_notice.setAdapter(adapter);
         spinner_notice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
