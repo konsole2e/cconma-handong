@@ -18,6 +18,8 @@ import android.widget.ToggleButton;
 
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import handong.cconma.cconmaadmin.R;
 
@@ -27,7 +29,7 @@ import handong.cconma.cconmaadmin.R;
 public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdapter.ViewHolder> {
     private List<BoardData> dataItemList;
     private Context context;
-    private int width_notice;
+    private double width_notice;
     int sum_of_width_notice;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -56,7 +58,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         this.dataItemList = dataItemList;
         this.context = context;
         Display dis = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        width_notice = dis.getWidth()*6/7;
+        width_notice = dis.getWidth()*0.7;
     }
 
 
@@ -76,6 +78,11 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         BoardData dataItem = dataItemList.get(i);
 
         viewHolder.text_board_title.setText(dataItem.subject);
+        Pattern pattern = Pattern.compile("\\[완료\\]");
+        Matcher matcher = pattern.matcher(dataItem.subject);
+        if(matcher.find()){
+            viewHolder.text_board_title.setTextColor(Color.LTGRAY);
+        }
         viewHolder.text_board_writer.setText(dataItem.name);
 
         if(dataItem.comment_count != 0) {
@@ -112,7 +119,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
                 color(textView, dataItem, j);
 
                 textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth() + 5;
+                sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth();
 
                 if(sum_of_width_notice > width_notice){
                     addingCount = 0;
