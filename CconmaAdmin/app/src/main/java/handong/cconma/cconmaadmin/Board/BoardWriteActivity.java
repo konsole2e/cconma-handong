@@ -1,6 +1,7 @@
 package handong.cconma.cconmaadmin.board;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -53,12 +54,15 @@ public class BoardWriteActivity extends AppCompatActivity {
     boolean[] noticeAdd;
 
     BasicData basicData;
+    int board;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_write_new);
 
+        board = getIntent().getExtras().getInt("board", 12);
 
+        Log.d("debugging", "accepted board no: " + board);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ActionBar haha = getSupportActionBar();
@@ -161,17 +165,18 @@ public class BoardWriteActivity extends AppCompatActivity {
                     String content = edit_content.getText().toString().replace("\n", "<br>");
 
                     String requestBody ="subject=" + String.valueOf(edit_title.getText())
-                            + "&content=" + tag + content + "<br> - From App" + "&filename=" +
+                            + "&content=" + tag + "<br>" + content + "<br><br><br> - From App" + "&filename=" +
                             "" + "&filename2=" + "";
 
                     Log.d("debugging", requestBody);
-                    new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/board_no/12", "POST", requestBody).execute().get();
+                    Log.d("debugging", "async task: " + String.valueOf(board));
+                    new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/" + board, "POST", requestBody).execute().get();
                 } catch (Exception e) {
                     Log.d("debugging", "Exception in BoardWriteActivity line 212 " + e.getMessage());
                     e.printStackTrace();
                 }
-
                 Toast.makeText(context, "글이 등록되었습니다", Toast.LENGTH_SHORT).show();
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);

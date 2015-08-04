@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -128,23 +129,17 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
+
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
-
         LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.drawer_header, navigationView, false);
         TextView textview = (TextView)view.findViewById(R.id.name);
-        try {
-            Log.d("NAME", BasicData.getInstance().getName());
-            String name = URLEncoder.encode(BasicData.getInstance().getName(), "euc-kr");
-            Log.d("NAME", name);
-            //textview.setText(name);
-            textview.setText("마을지기");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+
+        textview.setText(BasicData.getInstance().getName());
+        //textview.setText("마을지기");
 
         navigationView.addHeaderView(view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -234,8 +229,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, BoardMarkedActivity.class);
             startActivity(intent);
         } else if (id == R.id.notification) {
-            Intent intent = new Intent(this, StartPage.class);
-            startActivity(intent);
+            //Intent intent = new Intent(this, StartPage.class);
+            //startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
