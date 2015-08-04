@@ -270,6 +270,16 @@ public class BoardFragment extends Fragment {
                     data.comment_count++;
                 }
 
+                JSONObject scrap = jsonObject.getJSONObject("scrap_info");
+                String scrap_on = scrap.getString("scraped");
+
+                if(scrap_on.equals("on"))
+                    data.board_marked = true;
+                else
+                    data.board_marked = false;
+
+
+
                 boardDataList.add(data);
                 isReload = false;
 
@@ -324,6 +334,16 @@ public class BoardFragment extends Fragment {
                 while(matcher.find()){
                     data.comment_count++;
                 }
+
+                JSONObject scrap = jsonObject.getJSONObject("scrap_info");
+                String scrap_on = scrap.getString("scraped");
+
+                if(scrap_on.equals("on"))
+                    data.board_marked = true;
+                else
+                    data.board_marked = false;
+
+
 
                 boardDataList.add(data);
                 isReload = true;

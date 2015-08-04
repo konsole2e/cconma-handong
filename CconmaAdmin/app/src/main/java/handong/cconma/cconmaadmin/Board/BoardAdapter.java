@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.data.BasicData;
+import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 
 
 /**
@@ -44,7 +47,7 @@ public class BoardAdapter extends BaseAdapter{
         super();
         this.context = context;
         Display dis = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        width_notice = dis.getWidth()*5/7;
+        width_notice = dis.getWidth()*6/10;
 
     }
 
@@ -64,7 +67,7 @@ public class BoardAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, final ViewGroup parent) {
         final ViewHolder holder;
         //Context convertContext = null;
         //if(convertView == null){
@@ -89,7 +92,7 @@ public class BoardAdapter extends BaseAdapter{
         //    holder = (ViewHolder)convertView.getTag();
         //}
 
-        BoardData data = board_list_data.get(position);
+        final BoardData data = board_list_data.get(position);
 
         holder.text_board_title.setText(data.subject);
         String date = "";
@@ -161,11 +164,24 @@ public class BoardAdapter extends BaseAdapter{
         holder.text_board_writer.setText(data.name);
 
         holder.btn_board_mark.setChecked(data.board_marked);
-        //holder.btn_board_mark.setTag(position);
+        holder.btn_board_mark.setTag(position);
         holder.btn_board_mark.setClickable(false);
-        /*holder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
+        holder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                BasicData basicData = BasicData.getInstance();
+                try{
+                    JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                            + data.board_no
+                            + "/articles/" + data.boardarticle_no
+                            + "/scraped_members/" + basicData.getMem_no()
+                            , "PUT", "").execute().get();
+                    Log.d("scrap", json.get("status").toString());
+                }catch(Exception e){
+
+                }
+
                 if (holder.btn_board_mark.isChecked()) {
                     Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
                     board_list_data.get((Integer) v.getTag()).board_marked = true;
@@ -175,7 +191,7 @@ public class BoardAdapter extends BaseAdapter{
                     board_list_data.get((Integer) v.getTag()).board_marked = false;
                 }
             }
-        });*/
+        });
 
 
         holder.layout_for_mark.setTag(position);
@@ -216,7 +232,7 @@ public class BoardAdapter extends BaseAdapter{
     //파싱한 데이터 저장하기
     public void addItem(String notice_type, String board_no, String boardarticle_no, String name,
                         String subject, String mem_no, String reg_date, String ip, String hit,
-                        String board_short_name, HashMap hashMap, String comment_nicknames){
+                        String board_short_name, HashMap hashMap, String comment_nicknames, boolean board_marked){
 
         BoardData addData = new BoardData();
 
@@ -236,6 +252,7 @@ public class BoardAdapter extends BaseAdapter{
 
 
         addData.comment_nicknames = comment_nicknames;
+        addData.board_marked = board_marked;
 
         Pattern pattern = Pattern.compile("\\(");
         Matcher matcher = pattern.matcher(comment_nicknames);

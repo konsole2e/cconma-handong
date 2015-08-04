@@ -574,9 +574,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 String reg_date = json.getString("reg_date");
                 String content = json.getString("content");
 
-                JSONArray scrapArr = json.getJSONArray("scrap_info");
-                
-
                 JSONArray noticeArr = json.getJSONArray("article_hash_tags");
                 if (noticeArr.length() != 0) {
                     int sum_of_width_notice = 0;

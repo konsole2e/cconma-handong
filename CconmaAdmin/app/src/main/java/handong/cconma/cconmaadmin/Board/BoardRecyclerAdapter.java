@@ -14,12 +14,17 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.StringTokenizer;
 
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.data.BasicData;
+import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 
 /**
  * Created by Young Bin Kim on 2015-07-27.
@@ -47,7 +52,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
             text_board_date = (TextView)itemView.findViewById(R.id.text_board_date);
             text_board_writer = (TextView)itemView.findViewById(R.id.text_board_writer);
             btn_board_mark = (ToggleButton)itemView.findViewById(R.id.btn_board_mark);
-            img_board_file = (ImageView)itemView.findViewById(R.id.img_board_file);
+            btn_board_mark.setFocusable(false);
             layout_notice = (LinearLayout)itemView.findViewById(R.id.layout_notice);
         }
     }
@@ -56,7 +61,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         this.dataItemList = dataItemList;
         this.context = context;
         Display dis = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        width_notice = dis.getWidth()*6/7;
+        width_notice = dis.getWidth()*7/10;
     }
 
 
@@ -72,11 +77,12 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        BoardData dataItem = dataItemList.get(i);
+    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+        final BoardData dataItem = dataItemList.get(i);
 
         viewHolder.text_board_title.setText(dataItem.subject);
         viewHolder.text_board_writer.setText(dataItem.name);
+
 
         if(dataItem.comment_count != 0) {
             viewHolder.text_board_comment_num.setVisibility(View.VISIBLE);
@@ -154,21 +160,33 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         }
 
         viewHolder.btn_board_mark.setChecked(dataItem.board_marked);
-        //holder.btn_board_mark.setTag(position);
+        viewHolder.btn_board_mark.setTag(i);
         viewHolder.btn_board_mark.setClickable(false);
-        /*holder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
+        viewHolder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.btn_board_mark.isChecked()) {
+                BasicData basicData = BasicData.getInstance();
+                try{
+                    JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                            + dataItem.board_no
+                            + "/articles/" + dataItem.boardarticle_no
+                            + "/scraped_members/" + basicData.getMem_no()
+                            , "PUT", "").execute().get();
+                    Log.d("scrap", json.get("status").toString());
+                }catch(Exception e){
+
+                }
+
+                if (viewHolder.btn_board_mark.isChecked()) {
                     Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
-                    board_list_data.get((Integer) v.getTag()).board_marked = true;
+                    dataItemList.get((Integer) v.getTag()).board_marked = true;
                 } else {
 
                     Toast.makeText(context, "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
-                    board_list_data.get((Integer) v.getTag()).board_marked = false;
+                    dataItemList.get((Integer) v.getTag()).board_marked = false;
                 }
             }
-        });*/
+        });
     }
 
     @Override

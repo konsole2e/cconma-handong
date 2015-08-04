@@ -54,7 +54,7 @@ public class PageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String ARG_PAGE_NO = "ARG_PAGE_NO";
     private int mPage;
-    private int mPage_no;
+    private String mPage_no;
     private int jsonPage = 0;
 
     boolean searchON = false;
@@ -81,21 +81,22 @@ public class PageFragment extends Fragment {
     View view;
 
 
-    public static PageFragment newInstance(int page, int page_no) {
+    public static PageFragment newInstance(String page_no) {
+
+
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
-        args.putInt(ARG_PAGE_NO, page_no);
+        args.putString(ARG_PAGE_NO, page_no);
         PageFragment fragment = new PageFragment();
         fragment.setArguments(args);
 
         return fragment;
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
-        mPage_no = getArguments().getInt(ARG_PAGE_NO);
+        mPage_no = getArguments().getString(ARG_PAGE_NO);
     }
 
     @Override
@@ -328,9 +329,20 @@ public class PageFragment extends Fragment {
                     }
                     String comment_nicknames = jsonObject.getString("comment_nicknames");
 
+                    JSONObject scrap = jsonObject.getJSONObject("scrap_info");
+                    String scrap_on = scrap.getString("scraped");
+
+                    boolean board_marked;
+                    if(scrap_on.equals("on"))
+                        board_marked = true;
+                    else
+                        board_marked = false;
+
+
+
                     adapter_board.addItem(notice_type, board_no, boardarticle_no, name,
                             subject, mem_no, reg_date, ip, hit,
-                            board_short_name, hashMap, comment_nicknames);
+                            board_short_name, hashMap, comment_nicknames, board_marked);
                 }
 
             } catch (Exception e) {
@@ -370,9 +382,19 @@ public class PageFragment extends Fragment {
                     }
                     String comment_nicknames = jsonObject.getString("comment_nicknames");
 
+                    JSONObject scrap = jsonObject.getJSONObject("scrap_info");
+                    String scrap_on = scrap.getString("scraped");
+
+                    boolean board_marked;
+                    if(scrap_on.equals("on"))
+                        board_marked = true;
+                    else
+                        board_marked = false;
+
+
                     adapter_board.addItem(notice_type, board_no, boardarticle_no, name,
                             subject, mem_no, reg_date, ip, hit,
-                            board_short_name, hashMap, comment_nicknames);
+                            board_short_name, hashMap, comment_nicknames, board_marked);
                 }
 
 

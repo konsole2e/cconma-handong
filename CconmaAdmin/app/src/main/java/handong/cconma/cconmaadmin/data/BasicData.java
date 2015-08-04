@@ -56,4 +56,8 @@ public class BasicData {
     public HashMap getHashTagList(){
         return admin_board_hash_tag_list;
     }
+
+    public String getMem_no(){
+        return mem_no;
+    }
 }
