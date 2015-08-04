@@ -38,6 +38,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     private Context context;
     private double width_notice;
     int sum_of_width_notice;
+    public View Snackbar;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView text_board_title;
@@ -48,6 +49,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         public ImageView img_board_file;
 
         public LinearLayout layout_notice;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -85,6 +87,11 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         final BoardData dataItem = dataItemList.get(i);
 
         viewHolder.text_board_title.setText(dataItem.subject);
+        viewHolder.text_board_title.setAlpha(1.0f);
+        viewHolder.text_board_title.setTextColor(Color.BLACK);
+        viewHolder.text_board_writer.setAlpha(1.0f);
+
+        viewHolder.text_board_title.setTextColor(Color.BLACK);
         Pattern pattern = Pattern.compile("\\[완료\\]");
         Matcher matcher = pattern.matcher(dataItem.subject);
         if(matcher.find()){
@@ -92,6 +99,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         }
         viewHolder.text_board_writer.setText(dataItem.name);
 
+        viewHolder.text_board_comment_num.setVisibility(View.GONE);
 
         if(dataItem.comment_count != 0) {
             viewHolder.text_board_comment_num.setVisibility(View.VISIBLE);
@@ -114,6 +122,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
             count++;
         }
         viewHolder.text_board_date.setText(date);
+        viewHolder.text_board_date.setAlpha(1.0f);
 
         viewHolder.layout_notice.removeAllViews();
         if(dataItem.hashMap.size() != 0) {
@@ -188,7 +197,6 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
                 }
 
                 if (viewHolder.btn_board_mark.isChecked()) {
-                    //Snackbar.make(viewHolder.getItemId(R.id.snackbarPosition), );
                     Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
                     dataItemList.get((Integer) v.getTag()).board_marked = true;
                 } else {

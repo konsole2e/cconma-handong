@@ -31,7 +31,7 @@
                 android:fillViewport="true"
                 android:background="#FFFFFF"
                 app:tabSelectedTextColor="@color/ColorPrimary"
-                app:tabTextColor="#9B9B9B"
+                app:tabTextColor="#666666"
                 app:tabIndicatorColor="@color/ColorPrimary"
                 app:tabIndicatorHeight="4dp"
                 app:tabTextAppearance="?android:attr/textAppearanceSmall" />
