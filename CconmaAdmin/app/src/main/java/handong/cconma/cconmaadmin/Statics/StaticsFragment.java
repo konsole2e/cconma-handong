@@ -9,6 +9,8 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -53,6 +55,7 @@ public class StaticsFragment extends Fragment {
     private StaticsCommonSetting setting;
     private Activity thisActivity;
     private FrameLayout cpb_fl;
+    private ProgressDialog pd;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -104,7 +107,7 @@ public class StaticsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-   //     setMenuVisibility(true);
+        //     setMenuVisibility(true);
         mChartPath = getArguments().getString(ARG_CHART_PATH);
         Log.d("debugging", "page no: " + mChartPath);
     }
@@ -135,7 +138,6 @@ public class StaticsFragment extends Fragment {
 
 
     public void parsingcCharts() {
-
         try {
             if (result == null) {
                 Toast.makeText(thisActivity.getApplicationContext(), "받아온 데이터가 없습니다.", Toast.LENGTH_SHORT).show();
@@ -198,14 +200,16 @@ public class StaticsFragment extends Fragment {
     }
 
     public void generateZoomBtn(String desc) {
-        int dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()); // 10dp
+        int dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics()); // 10dp
         RelativeLayout rl = new RelativeLayout(thisActivity);
-        rl.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ((RelativeLayout.LayoutParams) rl.getLayoutParams()).setMargins(0, dpInPx, 0, 0);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, dpInPx, 0, 0);
+        rl.setLayoutParams(layoutParams);
 
         TextView title = new TextView(thisActivity);
         title.setText(desc);
         title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+        dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         title.setPadding(dpInPx, dpInPx, dpInPx, dpInPx);
         title.setBackgroundColor(getResources().getColor(R.color.transparent));
         RelativeLayout.LayoutParams titleParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -234,7 +238,11 @@ public class StaticsFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             cpb_fl.setVisibility(View.VISIBLE);
-
+            pd = new ProgressDialog(thisActivity);
+            pd.setMessage("차트를 그리고 있습니다.");
+            pd.setIndeterminate(true);
+            pd.setCancelable(false);
+            pd.show();
         }
 
         @Override
@@ -257,6 +265,7 @@ public class StaticsFragment extends Fragment {
             result = jsonObject;
             parsingcCharts();
             cpb_fl.setVisibility(View.GONE);
+            pd.dismiss();
         }
     }
 }

@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
         LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.drawer_header, navigationView, false);
-        TextView textview = (TextView)view.findViewById(R.id.name);
+        TextView textview = (TextView) view.findViewById(R.id.name);
         try {
             Log.d("NAME", BasicData.getInstance().getName());
             String name = URLEncoder.encode(BasicData.getInstance().getName(), "euc-kr");
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
         Configuration config = getResources().getConfiguration();
         int count = getFragmentManager().getBackStackEntryCount();
 
-        if(position == 2 && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
+        if (position == 2 && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
         }
         if (count == 0) {

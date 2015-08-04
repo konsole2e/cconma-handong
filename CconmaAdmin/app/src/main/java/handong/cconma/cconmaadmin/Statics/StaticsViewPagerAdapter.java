@@ -1,6 +1,7 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,6 +20,7 @@ public class StaticsViewPagerAdapter extends FragmentPagerAdapter {
     private HashMap chart_list;
     private ArrayList<String> chartPaths;
     private ArrayList<String> chartNames;
+    private String ARG_PAGE_PATH = "ARG_PAGE_PATH";
 
     public StaticsViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -50,5 +52,18 @@ public class StaticsViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return chartNames.get(position);
+    }
+
+    @Override
+    public int getItemPosition(Object item) {
+        StaticsFragment fragment = (StaticsFragment)item;
+        String title = fragment.getArguments().getString(ARG_PAGE_PATH);
+        int position = chartPaths.indexOf(title);
+
+        if (position >= 0) {
+            return position;
+        } else {
+            return POSITION_NONE;
+        }
     }
 }
