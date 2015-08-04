@@ -200,14 +200,16 @@ public class StaticsFragment extends Fragment {
     }
 
     public void generateZoomBtn(String desc) {
-        int dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()); // 10dp
+        int dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics()); // 10dp
         RelativeLayout rl = new RelativeLayout(thisActivity);
-        rl.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ((RelativeLayout.LayoutParams) rl.getLayoutParams()).setMargins(0, dpInPx, 0, 0);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, dpInPx, 0, 0);
+        rl.setLayoutParams(layoutParams);
 
         TextView title = new TextView(thisActivity);
         title.setText(desc);
         title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+        dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         title.setPadding(dpInPx, dpInPx, dpInPx, dpInPx);
         title.setBackgroundColor(getResources().getColor(R.color.transparent));
         RelativeLayout.LayoutParams titleParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
