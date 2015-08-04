@@ -165,7 +165,7 @@ public class BoardWriteActivity extends AppCompatActivity {
                             "" + "&filename2=" + "";
 
                     Log.d("debugging", requestBody);
-                    new MainAsyncTask("http://local.cconma.com/admin/api/board/v1/board_no/12", "POST", requestBody).execute().get();
+                    new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/board_no/12", "POST", requestBody).execute().get();
                 } catch (Exception e) {
                     Log.d("debugging", "Exception in BoardWriteActivity line 212 " + e.getMessage());
                     e.printStackTrace();
