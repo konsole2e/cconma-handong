@@ -17,6 +17,7 @@ public class StaticsCommonSetting {
         // 차트에 설명문구 제거
         pie.setDescription("");
         pie.setTouchEnabled(true);
+   //     pie.animateX(2500);
         // 세로 모드에서 Tooltip 금지
 //        pie.setDrawMarkerViews(false);
         // 세로 모드에서 차트 조작 불가
@@ -38,7 +39,7 @@ public class StaticsCommonSetting {
         line.setDoubleTapToZoomEnabled(false);
         // 확대 금지
         line.setScaleEnabled(false);
-
+ //       line.animateX(2500);
         // 차트 드래그 가속도 비활성화
 //        line.setDragDecelerationEnabled(false);
         // 차트 확대 상태 초기화
@@ -73,7 +74,7 @@ public class StaticsCommonSetting {
         bar.setDoubleTapToZoomEnabled(false);
         // 확대 금지
         bar.setScaleEnabled(false);
-
+ //       bar.animateY(2500);
         // 차트 드래그 가속도 비활성화
 //        bar.setDragDecelerationEnabled(false);
         // 차트 확대 상태 초기화
@@ -109,6 +110,7 @@ public class StaticsCommonSetting {
         // 확대 금지
         combine.setScaleEnabled(false);
 
+  //      combine.animateX(2500);
 
         // 차트 드래그 가속도 비활성화
 //        combine.setDragDecelerationEnabled(false);

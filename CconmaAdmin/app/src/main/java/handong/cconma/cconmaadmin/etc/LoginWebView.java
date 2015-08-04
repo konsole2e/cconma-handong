@@ -45,7 +45,7 @@ public class LoginWebView extends AppCompatActivity {
 
         //Intent data = getIntent();
         //url = data.getStringExtra("URL");
-        url = "http://local.cconma.com/mobile/auth/index.pmv?path=http://local.cconma.com%2Fmobile%2Findex.pmv";
+        url = "http://www.cconma.com/mobile/auth/index.pmv?path=http://www.cconma.com%2Fmobile%2Findex.pmv";
         Intent data = getIntent();
         autoLogin = data.getIntExtra("AUTO_LOGIN", 0);
 

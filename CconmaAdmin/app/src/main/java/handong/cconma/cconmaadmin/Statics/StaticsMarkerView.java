@@ -100,7 +100,7 @@ public class StaticsMarkerView extends MarkerView {
                 params.gravity = Gravity.CENTER;
                 tv.setLayoutParams(params);
                 tv.setTextColor(lineChart.getLineData().getDataSetByIndex(i).getColor());
-                if (left.equals("INDEX")) {
+                if (left.toUpperCase().equals("INDEX")) {
                     tv.setText(lineChart.getXValue(eXIndex) + " : " + lineChart.getLineData().getDataSetByIndex(i).getValueFormatter().getFormattedValue(set.get(i).getVal()));
                     //tv.setText(lineChart.getXValue(eXIndex) + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
                 } else {
@@ -132,7 +132,7 @@ public class StaticsMarkerView extends MarkerView {
                 params.gravity = Gravity.CENTER;
                 tv.setLayoutParams(params);
                 tv.setTextColor(barChart.getBarData().getDataSetByIndex(i).getColor());
-                if (left.equals("INDEX")) {
+                if (left.toUpperCase().equals("INDEX")) {
                     tv.setText(barChart.getXValue(eXIndex) + " : " + barChart.getBarData().getDataSetByIndex(i).getValueFormatter().getFormattedValue(set.get(i).getVal()));
 //                    tv.setText(barChart.getXValue(eXIndex) + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
                 } else {
@@ -164,7 +164,7 @@ public class StaticsMarkerView extends MarkerView {
                 params.gravity = Gravity.CENTER;
                 tv.setLayoutParams(params);
                 tv.setTextColor(combinedChart.getData().getDataSetByIndex(i).getColor());
-                if (left.equals("INDEX")) {
+                if (left.toUpperCase().equals("INDEX")) {
                     tv.setText(combinedChart.getXValue(eXIndex) + " : " + combinedChart.getData().getDataSetByIndex(i).getValueFormatter().getFormattedValue(set.get(i).getVal()));
 //                    tv.setText(combinedChart.getXValue(eXIndex) + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
                 } else {

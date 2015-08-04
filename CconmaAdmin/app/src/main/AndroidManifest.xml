@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="handong.cconma.cconmaadmin" >
+    package="handong.cconma.cconmaadmin">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -32,29 +32,28 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".mainpage.MainActivity" android:screenOrientation="portrait"/>
-
-        <activity android:name=".etc.LoginWebView"/>
-        <activity android:name=".etc.StartupWebView"/>
-        <activity android:name=".etc.MyWebView"/>
-
         <activity
-            android:name=".etc.SettingActivity"/>
+            android:name=".mainpage.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".board.BoardWriteActivity"/>
+        <activity android:name=".etc.LoginWebView" />
+        <activity android:name=".etc.StartupWebView" />
+        <activity android:name=".etc.MyWebView" />
 
-        <activity
-            android:name=".board.BoardModifyActivity"/>
+        <activity android:name=".etc.SettingActivity" />
+
+        <activity android:name=".board.BoardWriteActivity" />
+
+        <activity android:name=".board.BoardModifyActivity" />
 
         <activity
             android:name=".board.BoardViewActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name=".board.BoardMarkedActivity"/>
+        <activity android:name=".board.BoardMarkedActivity" />
 
-        <activity android:name=".push.PushView"/>
+        <activity android:name=".push.PushView" />
 
         <activity android:name=".statics.StaticsMain_B" />
         <activity
@@ -76,7 +75,7 @@
             android:name=".statics.StaticsMemberRecent"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
-        <service android:name="etc.IconService" >
+        <service android:name="etc.IconService">
             <intent-filter>
                 <action android:name="iconservice" />
             </intent-filter>
@@ -86,7 +85,7 @@
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
@@ -96,14 +95,14 @@
 
         <service
             android:name=".gcm.MyGcmListenerService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
             android:name=".gcm.MyInstanceIDListenerService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
@@ -115,8 +114,7 @@
         <activity
             android:name=".statics.StaticsTest"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_statics_test" >
-        </activity>
+            android:label="@string/title_activity_statics_test"></activity>
     </application>
 
 </manifest>

@@ -22,7 +22,7 @@ public class StaticsMain_B extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        orderH = (Button) findViewById(R.id.order_hourly_btn);
+    /*    orderH = (Button) findViewById(R.id.order_hourly_btn);
         orderH.setOnClickListener(this);
         orderRcnt = (Button) findViewById(R.id.order_recent_btn);
         orderRcnt.setOnClickListener(this);
@@ -33,13 +33,13 @@ public class StaticsMain_B extends Activity implements View.OnClickListener {
         member = (Button) findViewById(R.id.member_btn);
         member.setOnClickListener(this);
         memberRcnt = (Button) findViewById(R.id.member_recent_btn);
-        memberRcnt.setOnClickListener(this);
+        memberRcnt.setOnClickListener(this);*/
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.order_hourly_btn:
+     /*       case R.id.order_hourly_btn:
                 startActivity(new Intent(this, StaticsOrderH.class));
                 break;
             case R.id.order_recent_btn:
@@ -56,7 +56,7 @@ public class StaticsMain_B extends Activity implements View.OnClickListener {
                 break;
             case R.id.member_recent_btn:
                 startActivity(new Intent(this, StaticsMemberRecent.class));
-                break;
+                break;*/
         }
     }
 }

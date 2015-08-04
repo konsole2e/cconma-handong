@@ -1,8 +1,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ColorPanel"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:paddingBottom="60dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
         android:id="@+id/statics_test_ll"
@@ -11,34 +14,21 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-        <RelativeLayout
+        <FrameLayout
+            android:id="@+id/progressbar_circular_fl"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp">
-            <TextView
-                android:id="@+id/reload_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/reload_test"
-                android:layout_alignParentLeft="true"
-                android:text="Reload"
-                android:padding="5dp"
-                android:textSize="10dp"
-                />
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-            <TextView
-                android:id="@+id/zoom_tv"
-                android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/reload_test"
-                android:text="크게보기"
-                android:padding="5dp"
-                android:textSize="10dp"
-                />
-        </RelativeLayout>
+            <fr.castorflex.android.circularprogressbar.CircularProgressBar xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:indeterminate="true"
+                android:indeterminateOnly="false"
+                app:cpb_colors="@array/colors" />
 
+        </FrameLayout>
     </LinearLayout>
 
 </ScrollView>

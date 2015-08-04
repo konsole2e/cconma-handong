@@ -57,6 +57,14 @@ public class StartUp {
                 data.setHashTagList("hash_tag_type" + i, json.getString("hash_tag_type"));
                 data.setHashTagList("hash_tag" + i, json.getString("hash_tag"));
             }
+
+            jsonArray = responseJson.getJSONArray("admin_chart_menu_list");
+            for(int i = 0; i < jsonArray.length(); i++){
+                json = jsonArray.getJSONObject(i);
+
+                data.setChartList("chart_name" + i, json.getString("chart_menu_name"));
+                data.setChartList("chart_path" + i, json.getString("chart_api_path"));
+            }
         }catch(Exception e){
             Log.e("debugging", "Exception in StartPage line 127: " + e.getMessage());
         }
