@@ -27,11 +27,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -39,10 +41,16 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import android.os.Handler;
 
+import org.w3c.dom.Text;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
+import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.SettingActivity;
 import handong.cconma.cconmaadmin.push.PushView;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
@@ -121,7 +129,18 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        
+
+        LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.drawer_header, navigationView, false);
+        TextView textview = (TextView)view.findViewById(R.id.name);
+        try {
+            String name = URLEncoder.encode(BasicData.getInstance().getName(), "UTF-8");
+            textview.setText(name);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        navigationView.addHeaderView(view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override
