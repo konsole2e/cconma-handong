@@ -99,7 +99,7 @@ public class MainFragment extends Fragment {
 
             ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.statics_vp);
             StaticsViewPagerAdapter svp = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity());
-            viewPager.setOffscreenPageLimit(1);
+            viewPager.setOffscreenPageLimit(0);
             viewPager.setAdapter(svp);
 
             TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);

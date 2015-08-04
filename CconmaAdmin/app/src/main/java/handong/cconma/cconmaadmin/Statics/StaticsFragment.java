@@ -202,8 +202,8 @@ public class StaticsFragment extends Fragment {
     public void generateZoomBtn(String desc) {
         int dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics()); // 10dp
         RelativeLayout rl = new RelativeLayout(thisActivity);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, dpInPx, 0, 0);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.topMargin = dpInPx;
         rl.setLayoutParams(layoutParams);
 
         TextView title = new TextView(thisActivity);
@@ -212,7 +212,7 @@ public class StaticsFragment extends Fragment {
         dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         title.setPadding(dpInPx, dpInPx, dpInPx, dpInPx);
         title.setBackgroundColor(getResources().getColor(R.color.transparent));
-        RelativeLayout.LayoutParams titleParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams titleParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         titleParam.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         titleParam.addRule(CENTER_VERTICAL);
         title.setLayoutParams(titleParam);
