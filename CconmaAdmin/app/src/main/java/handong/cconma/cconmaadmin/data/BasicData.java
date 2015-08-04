@@ -47,6 +47,8 @@ public class BasicData {
         return temp;
     }
 
+    public String getName(){ return name; }
+
     public HashMap getBoardList(){
         return admin_board_list;
     }
