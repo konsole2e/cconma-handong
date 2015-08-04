@@ -36,7 +36,7 @@ import handong.cconma.cconmaadmin.statics.StaticsViewPagerAdapter;
 public class MainFragment extends Fragment {
     public static final String POSITION = "0";
     private CharSequence TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
-
+    private ViewPager vp;
     private WebView webview;
     private CircularProgressBar circularProgressBar;
 
@@ -101,7 +101,7 @@ public class MainFragment extends Fragment {
             StaticsViewPagerAdapter svp = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity());
             viewPager.setOffscreenPageLimit(0);
             viewPager.setAdapter(svp);
-
+            vp = viewPager;
 
             TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
             tabLayout.setVisibility(View.VISIBLE);
@@ -187,5 +187,9 @@ public class MainFragment extends Fragment {
             ((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).progressiveStop();
             Cookies.getInstance(getActivity().getApplicationContext()).updateCookies(url);
         }
+    }
+
+    public ViewPager getStaticsViewPager(){
+        return vp;
     }
 }

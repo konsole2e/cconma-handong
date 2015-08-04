@@ -40,6 +40,7 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.http.HttpConnection;
+import handong.cconma.cconmaadmin.mainpage.MainFragment;
 import handong.cconma.cconmaadmin.mainpage.StartPage;
 
 import static android.view.View.FOCUSABLES_TOUCH_MODE;
