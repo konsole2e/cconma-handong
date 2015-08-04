@@ -102,6 +102,7 @@ public class MainFragment extends Fragment {
             viewPager.setOffscreenPageLimit(0);
             viewPager.setAdapter(svp);
 
+
             TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
             tabLayout.setVisibility(View.VISIBLE);
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);

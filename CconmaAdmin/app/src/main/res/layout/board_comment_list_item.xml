@@ -8,8 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:minHeight="40dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:orientation="horizontal">
         <TextView
             android:id="@+id/text_board_view_comment_writer"
             android:layout_width="wrap_content"
@@ -42,7 +41,7 @@
             android:id="@+id/text_board_view_comment_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="right|top"
             android:textColor="#000000"
             android:hint="07/06\n14:22"/>
     </LinearLayout>
