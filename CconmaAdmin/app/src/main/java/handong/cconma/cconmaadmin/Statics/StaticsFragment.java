@@ -2,16 +2,12 @@ package handong.cconma.cconmaadmin.statics;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,13 +15,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -36,14 +32,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.R;
-import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.http.HttpConnection;
-import handong.cconma.cconmaadmin.mainpage.MainFragment;
-import handong.cconma.cconmaadmin.mainpage.StartPage;
 
-import static android.view.View.FOCUSABLES_TOUCH_MODE;
 import static android.widget.RelativeLayout.CENTER_VERTICAL;
 
 public class StaticsFragment extends Fragment {
@@ -52,35 +43,29 @@ public class StaticsFragment extends Fragment {
     private View view;
     private LinearLayout ll;
     private JSONObject result = null;
-    private ArrayList<View> charts = new ArrayList<>();
+    private ArrayList<View> charts;
     private StaticsCommonSetting setting;
     private Activity thisActivity;
-    private FrameLayout cpb_fl;
     private ProgressDialog pd;
 
     @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        refresh();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.statics_reload) {
-            Configuration config = getResources().getConfiguration();
-            if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {// 세로
-                thisActivity.recreate();
-                thisActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 가로전환
-
-            } else {
-                thisActivity.recreate();
-                thisActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // 가로전환
-            }
-        } else if (id == R.id.statics_zoom) {
+        if (id == R.id.statics_reload && !pd.isShowing()) {
+            gone();
+            new StaticsAsyncTask("http://www.cconma.com" + mChartPath, "GET", "").execute();
+        } else if (id == R.id.statics_zoom && !pd.isShowing()) {
             Configuration config = getResources().getConfiguration();
             if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {// 세로
                 thisActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // 가로전환
-
             } else {
                 thisActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 가로전환
             }
@@ -110,15 +95,14 @@ public class StaticsFragment extends Fragment {
         setHasOptionsMenu(true);
         //     setMenuVisibility(true);
         mChartPath = getArguments().getString(ARG_CHART_PATH);
-        Log.d("debugging", "page no: " + mChartPath);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_statics_test, container, false);
+        view = inflater.inflate(R.layout.statics_fragment, container, false);
+        charts = new ArrayList<>();
         ll = (LinearLayout) view.findViewById(R.id.statics_test_ll);
         setting = new StaticsCommonSetting();
-        cpb_fl = (FrameLayout) view.findViewById(R.id.progressbar_circular_fl);
         thisActivity = getActivity();
         return view;
     }
@@ -128,15 +112,6 @@ public class StaticsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         new StaticsAsyncTask("http://www.cconma.com" + mChartPath, "GET", "").execute();
     }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { // 세로 전환시 발생
-        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { // 가로 전환시 발생
-        }
-    }
-
 
     public void parsingcCharts() {
         try {
@@ -155,10 +130,16 @@ public class StaticsFragment extends Fragment {
         }
     }
 
+    private void gone() {
+        ll.removeAllViews();
+        charts.clear();
+    }
+
     public void refresh() {
         for (int i = 0; i < charts.size(); i++) {
-            View v = charts.get(i);
-            v.invalidate();
+            Chart v = (Chart)charts.get(i);
+            Bitmap b = v.getChartBitmap();
+            b.recycle();
         }
     }
 
@@ -194,7 +175,6 @@ public class StaticsFragment extends Fragment {
 
         chart.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Integer.valueOf(json.optString(StaticsVariables.height, "200")), getResources().getDisplayMetrics())));
         generateZoomBtn(json.optString(StaticsVariables.description, "차트"));
-        chart.invalidate();
 
         ll.addView(chart);
         charts.add(chart);
@@ -202,9 +182,9 @@ public class StaticsFragment extends Fragment {
 
     public void generateZoomBtn(String desc) {
         int dpInPx = 0;
-        if(charts.size() == 0){
+        if (charts.size() == 0) {
             dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()); // 10dp
-        }else {
+        } else {
             dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics()); // 10dp
         }
         RelativeLayout rl = new RelativeLayout(thisActivity);
@@ -232,7 +212,6 @@ public class StaticsFragment extends Fragment {
         private String method;
         private String requestBody;
         private String sResult;
-        private Context con = null;
 
         public StaticsAsyncTask(String url, String method, String requestBody) {
             this.url = url;
@@ -243,7 +222,6 @@ public class StaticsFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            cpb_fl.setVisibility(View.VISIBLE);
             pd = new ProgressDialog(thisActivity);
             pd.setMessage("차트를 그리고 있습니다.");
             pd.setIndeterminate(true);
@@ -270,7 +248,6 @@ public class StaticsFragment extends Fragment {
             super.onPostExecute(jsonObject);
             result = jsonObject;
             parsingcCharts();
-            cpb_fl.setVisibility(View.GONE);
             pd.dismiss();
         }
     }

@@ -1,25 +1,19 @@
 package handong.cconma.cconmaadmin.statics;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.PointF;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.renderer.LineChartRenderer;
 
 import java.util.List;
 
@@ -37,13 +31,11 @@ public class StaticsMarkerView extends MarkerView {
     private String left = "LABEL";
     private String skipZero = "";
     private int textSize;
-    //   private DisplayMetrics dm;
 
     public StaticsMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
         con = context;
         ll = (LinearLayout) findViewById(R.id.marker_ll);
-        //      dm = con.getApplicationContext().getResources().getDisplayMetrics();
     }
 
     public void attachChart(LineChart line, String leftSide, String skip, int size) {
@@ -70,8 +62,6 @@ public class StaticsMarkerView extends MarkerView {
         textSize = size;
     }
 
-    // callbacks everytime the MarkerView is redrawn, can be used to update the
-    // content (user-interface)
     @Override
     public void refreshContent(Entry e, int dataSetIndex) {
         entry = e;
@@ -102,10 +92,8 @@ public class StaticsMarkerView extends MarkerView {
                 tv.setTextColor(lineChart.getLineData().getDataSetByIndex(i).getColor());
                 if (left.toUpperCase().equals("INDEX")) {
                     tv.setText(lineChart.getXValue(eXIndex) + " : " + lineChart.getLineData().getDataSetByIndex(i).getValueFormatter().getFormattedValue(set.get(i).getVal()));
-                    //tv.setText(lineChart.getXValue(eXIndex) + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
                 } else {
                     tv.setText(lineChart.getLineData().getDataSetByIndex(i).getLabel() + " : " + lineChart.getLineData().getDataSetByIndex(i).getValueFormatter().getFormattedValue(set.get(i).getVal()));
-                    //tv.setText(lineChart.getLineData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
                 }
                 ll.addView(tv);
             }
@@ -134,10 +122,8 @@ public class StaticsMarkerView extends MarkerView {
                 tv.setTextColor(barChart.getBarData().getDataSetByIndex(i).getColor());
                 if (left.toUpperCase().equals("INDEX")) {
                     tv.setText(barChart.getXValue(eXIndex) + " : " + barChart.getBarData().getDataSetByIndex(i).getValueFormatter().getFormattedValue(set.get(i).getVal()));
-//                    tv.setText(barChart.getXValue(eXIndex) + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
                 } else {
                     tv.setText(barChart.getBarData().getDataSetByIndex(i).getLabel() + " : " + barChart.getBarData().getDataSetByIndex(i).getValueFormatter().getFormattedValue(set.get(i).getVal()));
-//                    tv.setText(barChart.getBarData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
                 }
                 ll.addView(tv);
             }
@@ -166,10 +152,8 @@ public class StaticsMarkerView extends MarkerView {
                 tv.setTextColor(combinedChart.getData().getDataSetByIndex(i).getColor());
                 if (left.toUpperCase().equals("INDEX")) {
                     tv.setText(combinedChart.getXValue(eXIndex) + " : " + combinedChart.getData().getDataSetByIndex(i).getValueFormatter().getFormattedValue(set.get(i).getVal()));
-//                    tv.setText(combinedChart.getXValue(eXIndex) + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
                 } else {
                     tv.setText(combinedChart.getData().getDataSetByIndex(i).getLabel() + " : " + combinedChart.getData().getDataSetByIndex(i).getValueFormatter().getFormattedValue(set.get(i).getVal()));
-//                    tv.setText(combinedChart.getData().getDataSetByIndex(i).getLabel() + " : " + String.format("%,d", (long) set.get(i).getVal()) + unit);
                 }
                 ll.addView(tv);
             }
@@ -189,7 +173,6 @@ public class StaticsMarkerView extends MarkerView {
             posX = ((LineChart) chart).getPosition(entry, ((LineChart) chart).getData().getDataSetForEntry(entry).getAxisDependency()).x;
             l = ((LineChart) chart).getLeft();
             r = ((LineChart) chart).getRight();
-            //int dmp = dm.widthPixels;
         } else if (barChart != null) {
             posX = ((BarChart) chart).getPosition(entry, ((BarChart) chart).getBarData().getDataSetForEntry(entry).getAxisDependency()).x;
             l = ((BarChart) chart).getLeft();
@@ -212,7 +195,6 @@ public class StaticsMarkerView extends MarkerView {
 
     @Override
     public int getYOffset() {
-        // this will cause the marker-view to be above the selected value
         return -(getHeight() + 10);
     }
 }

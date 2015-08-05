@@ -92,9 +92,6 @@ public class StaticsPieManager {
                 if (!data.optString(StaticsVariables.textEnable).equals("") && data.getString(StaticsVariables.textEnable).toLowerCase().equals("false")) {
                     dataSet.setDrawValues(false);
                 }
-          /*      if (!data.optString(StaticsVariables.axisDepend).equals("")) {
-                    dataSet.setAxisDependency(YAxis.AxisDependency.valueOf(data.getString(StaticsVariables.axisDepend).toUpperCase()));
-                }*/
                 if (!data.optString(StaticsVariables.textColor).equals("")) {
                     dataSet.setValueTextColor(Color.parseColor(data.getString(StaticsVariables.textColor)));
                 }

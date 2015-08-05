@@ -1,15 +1,12 @@
 package handong.cconma.cconmaadmin.mainpage;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -22,44 +19,21 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
-import android.os.Handler;
-
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
-import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
-import handong.cconma.cconmaadmin.etc.SettingActivity;
-import handong.cconma.cconmaadmin.http.JSONResponse;
-import handong.cconma.cconmaadmin.push.PushView;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
-import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
-import handong.cconma.cconmaadmin.statics.StaticsTest;
 
 /**
  * Created by YoungBinKim on 2015-07-06.
@@ -241,15 +215,15 @@ public class MainActivity extends AppCompatActivity {
         Configuration config = getResources().getConfiguration();
         int count = getFragmentManager().getBackStackEntryCount();
 
-        if (position == 2 && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
+        }else{
+            if (count == 0) {
+                finish();
+            } else {
+                getFragmentManager().popBackStack();
+            }
         }
-        if (count == 0) {
-            finish();
-        } else {
-            getFragmentManager().popBackStack();
-        }
-
     }
 
     /*@Override

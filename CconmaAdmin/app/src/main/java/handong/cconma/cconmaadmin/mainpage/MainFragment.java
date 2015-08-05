@@ -12,9 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.Toast;
-
 
 import java.util.HashMap;
 
@@ -24,13 +21,6 @@ import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.data.Cookies;
-import handong.cconma.cconmaadmin.statics.StaticsLike;
-import handong.cconma.cconmaadmin.statics.StaticsMember;
-import handong.cconma.cconmaadmin.statics.StaticsMemberRecent;
-import handong.cconma.cconmaadmin.statics.StaticsOrderH;
-import handong.cconma.cconmaadmin.statics.StaticsOrderRecent;
-import handong.cconma.cconmaadmin.statics.StaticsTest;
-import handong.cconma.cconmaadmin.statics.StaticsTrade;
 import handong.cconma.cconmaadmin.statics.StaticsViewPagerAdapter;
 
 /**
@@ -111,7 +101,7 @@ public class MainFragment extends Fragment {
             rootView = inflater.inflate(R.layout.statics_main, container, false);
 
             ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.statics_vp);
-            StaticsViewPagerAdapter svp = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity());
+            StaticsViewPagerAdapter svp = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
             viewPager.setOffscreenPageLimit(0);
             viewPager.setAdapter(svp);
             vp = viewPager;

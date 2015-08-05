@@ -1,8 +1,5 @@
 package handong.cconma.cconmaadmin.statics;
 
-/**
- * Created by JS on 2015-07-27.
- */
 public class StaticsVariables {
     public static final String chart = "chart";
     public static final String category = "category";

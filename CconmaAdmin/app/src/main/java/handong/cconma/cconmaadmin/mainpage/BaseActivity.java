@@ -19,7 +19,6 @@ import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 import handong.cconma.cconmaadmin.etc.MyWebView;
 import handong.cconma.cconmaadmin.etc.SettingActivity;
-import handong.cconma.cconmaadmin.statics.StaticsMain_B;
 
 /**
  * Created by Young Bin Kim on 2015-07-13.
@@ -139,7 +138,6 @@ public class BaseActivity extends AppCompatActivity {
                         case 2:
                             if(status == 0) {
                                 //statistics
-                                startActivity(new Intent(getApplicationContext(), StaticsMain_B.class));
                             }else{
                                 //logout
                             }
