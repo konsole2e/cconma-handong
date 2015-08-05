@@ -84,88 +84,92 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-        final BoardData dataItem = dataItemList.get(i);
+        if( dataItemList == null ){
 
-        viewHolder.text_board_title.setText(dataItem.subject);
-        viewHolder.text_board_title.setAlpha(1.0f);
-        viewHolder.text_board_title.setTextColor(Color.BLACK);
-        viewHolder.text_board_writer.setAlpha(1.0f);
-
-        viewHolder.text_board_title.setTextColor(Color.BLACK);
-        Pattern pattern = Pattern.compile("\\[완료\\]");
-        Matcher matcher = pattern.matcher(dataItem.subject);
-        if(matcher.find()){
-            viewHolder.text_board_title.setTextColor(Color.LTGRAY);
         }
-        viewHolder.text_board_writer.setText(dataItem.name);
+        else {
+            final BoardData dataItem = dataItemList.get(i);
 
-        viewHolder.text_board_comment_num.setVisibility(View.GONE);
+            viewHolder.text_board_title.setText(dataItem.subject);
+            viewHolder.text_board_title.setAlpha(1.0f);
+            viewHolder.text_board_title.setTextColor(Color.BLACK);
+            viewHolder.text_board_writer.setAlpha(1.0f);
 
-        if(dataItem.comment_count != 0) {
-            viewHolder.text_board_comment_num.setVisibility(View.VISIBLE);
-            viewHolder.text_board_comment_num.setText(dataItem.comment_nicknames);
-        }
-
-        StringTokenizer st = new StringTokenizer(dataItem.reg_date, "-:");
-        int count = 0;
-        String date = "";
-        while(st.hasMoreTokens()){
-            String stDate = st.nextToken();
-            if(count == 1){
-                date = date + stDate;
-            }else if(count ==2){
-                date = date + "/" +stDate;
-            }else if(count == 3){
-                date = date+ ":" + stDate;
-                break;
+            viewHolder.text_board_title.setTextColor(Color.BLACK);
+            Pattern pattern = Pattern.compile("\\[완료\\]");
+            Matcher matcher = pattern.matcher(dataItem.subject);
+            if (matcher.find()) {
+                viewHolder.text_board_title.setTextColor(Color.LTGRAY);
             }
-            count++;
-        }
-        viewHolder.text_board_date.setText(date);
-        viewHolder.text_board_date.setAlpha(1.0f);
+            viewHolder.text_board_writer.setText(dataItem.name);
 
-        viewHolder.layout_notice.removeAllViews();
-        if(dataItem.hashMap.size() != 0) {
-            sum_of_width_notice = 0;
-            int addingCount = 0;
-            int layout_num = 0;
-            LinearLayout l1 = new LinearLayout(context);
-            LinearLayout l2 = new LinearLayout(context);
-            LinearLayout l3 = new LinearLayout(context);
-            for(int j=0; j<dataItem.hashMap.size()/2; j++){
-                TextView textView = new TextView(context);
-                color(textView, dataItem, j);
+            viewHolder.text_board_comment_num.setVisibility(View.GONE);
 
-                textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth();
-
-                if(sum_of_width_notice > width_notice){
-                    addingCount = 0;
-                    layout_num++;
-                    sum_of_width_notice = textView.getMeasuredWidth() + 5;
-                }
-
-                if(layout_num == 0 && addingCount == 0){
-                    viewHolder.layout_notice.addView(l1);
-                }else if(layout_num == 1 && addingCount == 0){
-                    viewHolder.layout_notice.addView(l2);
-                }else if(layout_num == 2 && addingCount == 0){
-                    viewHolder.layout_notice.addView(l3);
-                }
-
-                switch(layout_num){
-                    case 0:
-                        l1.addView(textView);
-                        break;
-                    case 1:
-                        l2.addView(textView);
-                        break;
-                    case 2:
-                        l3.addView(textView);
-                        break;
-                }
-                addingCount++;
+            if (dataItem.comment_count != 0) {
+                viewHolder.text_board_comment_num.setVisibility(View.VISIBLE);
+                viewHolder.text_board_comment_num.setText(dataItem.comment_nicknames);
             }
+
+            StringTokenizer st = new StringTokenizer(dataItem.reg_date, "-:");
+            int count = 0;
+            String date = "";
+            while (st.hasMoreTokens()) {
+                String stDate = st.nextToken();
+                if (count == 1) {
+                    date = date + stDate;
+                } else if (count == 2) {
+                    date = date + "/" + stDate;
+                } else if (count == 3) {
+                    date = date + ":" + stDate;
+                    break;
+                }
+                count++;
+            }
+            viewHolder.text_board_date.setText(date);
+            viewHolder.text_board_date.setAlpha(1.0f);
+
+            viewHolder.layout_notice.removeAllViews();
+            if (dataItem.hashMap.size() != 0) {
+                sum_of_width_notice = 0;
+                int addingCount = 0;
+                int layout_num = 0;
+                LinearLayout l1 = new LinearLayout(context);
+                LinearLayout l2 = new LinearLayout(context);
+                LinearLayout l3 = new LinearLayout(context);
+                for (int j = 0; j < dataItem.hashMap.size() / 2; j++) {
+                    TextView textView = new TextView(context);
+                    color(textView, dataItem, j);
+
+                    textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                    sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth();
+
+                    if (sum_of_width_notice > width_notice) {
+                        addingCount = 0;
+                        layout_num++;
+                        sum_of_width_notice = textView.getMeasuredWidth() + 5;
+                    }
+
+                    if (layout_num == 0 && addingCount == 0) {
+                        viewHolder.layout_notice.addView(l1);
+                    } else if (layout_num == 1 && addingCount == 0) {
+                        viewHolder.layout_notice.addView(l2);
+                    } else if (layout_num == 2 && addingCount == 0) {
+                        viewHolder.layout_notice.addView(l3);
+                    }
+
+                    switch (layout_num) {
+                        case 0:
+                            l1.addView(textView);
+                            break;
+                        case 1:
+                            l2.addView(textView);
+                            break;
+                        case 2:
+                            l3.addView(textView);
+                            break;
+                    }
+                    addingCount++;
+                }
 
           /*  Log.d("whywhywhy", dataItem.hashMap.toString());
             TextView[] notice = new TextView[dataItem.hashMap.size()];
@@ -176,36 +180,37 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
                 notice[j].setText("마을지기" + j);
                 viewHolder.layout_notice.addView(notice[j]);
             }*/
-        }
-
-        viewHolder.btn_board_mark.setChecked(dataItem.board_marked);
-        viewHolder.btn_board_mark.setTag(i);
-        viewHolder.btn_board_mark.setClickable(false);
-        viewHolder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BasicData basicData = BasicData.getInstance();
-                try {
-                    JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
-                            + dataItem.board_no
-                            + "/articles/" + dataItem.boardarticle_no
-                            + "/scraped_members/" + basicData.getMem_no()
-                            , "PUT", "").execute().get();
-                    Log.d("scrap", json.get("status").toString());
-                } catch (Exception e) {
-
-                }
-
-                if (viewHolder.btn_board_mark.isChecked()) {
-                    Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
-                    dataItemList.get((Integer) v.getTag()).board_marked = true;
-                } else {
-
-                    Toast.makeText(context, "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
-                    dataItemList.get((Integer) v.getTag()).board_marked = false;
-                }
             }
-        });
+
+            viewHolder.btn_board_mark.setChecked(dataItem.board_marked);
+            viewHolder.btn_board_mark.setTag(i);
+            viewHolder.btn_board_mark.setClickable(false);
+            viewHolder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BasicData basicData = BasicData.getInstance();
+                    try {
+                        JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
+                                + dataItem.board_no
+                                + "/articles/" + dataItem.boardarticle_no
+                                + "/scraped_members/" + basicData.getMem_no()
+                                , "PUT", "").execute().get();
+                        Log.d("scrap", json.get("status").toString());
+                    } catch (Exception e) {
+
+                    }
+
+                    if (viewHolder.btn_board_mark.isChecked()) {
+                        Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
+                        dataItemList.get((Integer) v.getTag()).board_marked = true;
+                    } else {
+
+                        Toast.makeText(context, "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
+                        dataItemList.get((Integer) v.getTag()).board_marked = false;
+                    }
+                }
+            });
+        }
     }
 
     @Override
