@@ -56,4 +56,5 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return tabTitles.get(position);
         //return tabTitles[position];
     }
+
 }

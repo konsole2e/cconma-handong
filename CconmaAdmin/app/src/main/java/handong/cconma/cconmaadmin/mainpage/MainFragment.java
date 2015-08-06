@@ -69,7 +69,7 @@ public class MainFragment extends Fragment {
 
             viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
             //viewPager.setOffscreenPageLimit(2);
-            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
+            final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
             viewPager.setAdapter(viewPagerAdapter);
 
             TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
@@ -88,7 +88,7 @@ public class MainFragment extends Fragment {
                     if (board == 0) {
                         board = 12;
                     } else {
-                        HashMap board_list =  BasicData.getInstance().getBoardList();
+                        HashMap board_list = BasicData.getInstance().getBoardList();
                         board = Integer.parseInt(board_list.get("board_no" + board).toString());
                     }
                     intent.putExtra("board", board);
@@ -96,6 +96,18 @@ public class MainFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+
+            //리스트 최상단으로 가는 버튼
+            FloatingActionButton fab_up = (FloatingActionButton)getActivity().findViewById(R.id.fab_up);
+            fab_up.setVisibility(View.VISIBLE);
+            fab_up.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                }
+            });
+
         }
         else if(position == 2){
             rootView = inflater.inflate(R.layout.statics_main, container, false);
@@ -114,6 +126,8 @@ public class MainFragment extends Fragment {
 
             FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
             fab.setVisibility(View.GONE);
+            FloatingActionButton fab_up = (FloatingActionButton)getActivity().findViewById(R.id.fab_up);
+            fab_up.setVisibility(View.GONE);
         }
         else {
             rootView = inflater.inflate(R.layout.webview, container, false);

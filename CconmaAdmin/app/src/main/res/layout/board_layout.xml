@@ -5,11 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background"
-        android:alpha="0.6"/>
     <LinearLayout
         android:id="@+id/top"
         android:layout_width="fill_parent"
@@ -52,10 +47,11 @@
                     android:hint="입력하세요"/>
                 <Button
                     android:id="@+id/btn_board_search"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.8"
-                    android:text="검색"/>
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/btn_search"/>
 
             </LinearLayout>
 

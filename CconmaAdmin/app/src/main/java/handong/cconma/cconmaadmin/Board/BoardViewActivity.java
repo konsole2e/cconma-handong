@@ -1,6 +1,8 @@
 package handong.cconma.cconmaadmin.board;
 
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,6 +34,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -65,6 +70,7 @@ import java.util.regex.Pattern;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
+import handong.cconma.cconmaadmin.http.HttpConnection;
 
 /**
  * 게시판 목록에서 하나 선택하여 글 내용을 보여주는 화면
@@ -75,12 +81,17 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     boolean firstTime=true;
     boolean marked=false;
     int width_notice=0;
+
+
+    private CircularProgressBar circularProgressBar;
+
     TextView text_board_view_title;
     LinearLayout layout_view_notice;
     TextView text_board_view_writer;
     TextView text_board_view_date;
 
-    TextView text_board_view_content;
+    //TextView text_board_view_content;
+    WebView webView_content;
 
     ListView list_board_view_comment;
     BoardCommentAdapter adapter_comment;
@@ -108,9 +119,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
 
         Display dis = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         width_notice = dis.getWidth()*9/14;
-        View header = getLayoutInflater().inflate(R.layout.board_list_header, null, false);
 
-        header.setLongClickable(false);
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -118,28 +127,9 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        list_board_view_comment = (ListView)findViewById(R.id.list_board_view_comment);
-        list_board_view_comment.addHeaderView(header);
-        list_board_view_comment.setHeaderDividersEnabled(false);
-        adapter_comment = new BoardCommentAdapter(this);
-        list_board_view_comment.setAdapter(adapter_comment);
-        list_board_view_comment.setOnItemLongClickListener(itemClickListner);
-
-        list_board_view_comment.setFocusable(false);
-
-        layout_view_notice = (LinearLayout)findViewById(R.id.layout_view_notice);
-        edit_board_view_comment = (EditText)findViewById(R.id.edit_board_view_comment);
-        edit_board_view_comment.setOnClickListener(clickListener);
-        btn_board_view_comment = (Button)findViewById(R.id.btn_board_view_comment);
-        btn_board_view_comment.setOnClickListener(clickListener);
-
-        text_board_view_title = (TextView)header.findViewById(R.id.text_board_view_title);
-        text_board_view_writer = (TextView)header.findViewById(R.id.text_board_view_writer);
-        text_board_view_date = (TextView)header.findViewById(R.id.text_board_view_date);
-
-        text_board_view_content = (TextView)header.findViewById(R.id.text_board_view_content);
-
-        jsonParser();
+        circularProgressBar = (CircularProgressBar)findViewById(R.id.progressbar_circular);
+        new ViewAsyncTask().execute();
+        //jsonParser();
 
     }
 
@@ -297,6 +287,211 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
 
         return d;
     }
+
+    class ViewAsyncTask extends AsyncTask<String, Void, JSONObject>{
+
+        //private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            View header = getLayoutInflater().inflate(R.layout.board_list_header, null, false);
+
+            header.setLongClickable(false);
+
+            list_board_view_comment = (ListView)findViewById(R.id.list_board_view_comment);
+            list_board_view_comment.addHeaderView(header);
+            list_board_view_comment.setHeaderDividersEnabled(false);
+            adapter_comment = new BoardCommentAdapter(BoardViewActivity.this);
+            list_board_view_comment.setAdapter(adapter_comment);
+            list_board_view_comment.setOnItemLongClickListener(itemClickListner);
+
+            list_board_view_comment.setFocusable(false);
+
+            layout_view_notice = (LinearLayout)findViewById(R.id.layout_view_notice);
+            edit_board_view_comment = (EditText)findViewById(R.id.edit_board_view_comment);
+            edit_board_view_comment.setOnClickListener(clickListener);
+            btn_board_view_comment = (Button)findViewById(R.id.btn_board_view_comment);
+            btn_board_view_comment.setOnClickListener(clickListener);
+
+            text_board_view_title = (TextView)header.findViewById(R.id.text_board_view_title);
+            text_board_view_writer = (TextView)header.findViewById(R.id.text_board_view_writer);
+            text_board_view_date = (TextView)header.findViewById(R.id.text_board_view_date);
+
+            //text_board_view_content = (TextView)header.findViewById(R.id.text_board_view_content);
+            webView_content = (WebView)header.findViewById(R.id.webView_content);
+
+            circularProgressBar.setVisibility(View.VISIBLE);
+            //pDialog = new ProgressDialog(BoardViewActivity.this);
+            //pDialog.setMessage("Getting Data ...");
+            //pDialog.setIndeterminate(false);
+            //pDialog.setCancelable(true);
+            //pDialog.show();
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            try{
+                Log.d("test", "doInBackground");
+                HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
+                        +Integer.parseInt(board_no)+"/articles/"
+                        +Integer.parseInt(boardarticle_no), "GET", "");
+                String sResult = connection.init();
+
+                JSONObject json = new JSONObject(sResult);
+
+                Log.d("test", json.toString());
+                return json;
+            }catch(Exception e){
+                Log.e("JSON", Log.getStackTraceString(e));
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject json) {
+            //pDialog.dismiss();
+            try{
+                String subject = json.getString("subject");
+                String name = json.getString("name");
+                String reg_date = json.getString("reg_date");
+                String content = json.getString("content");
+
+
+                JSONObject scrap = json.getJSONObject("scrap_info");
+                String scrap_on = scrap.getString("scraped");
+
+                if(scrap_on.equals("on"))
+                    marked = true;
+                else
+                    marked = false;
+
+
+                JSONArray noticeArr = json.getJSONArray("article_hash_tags");
+                if (noticeArr.length() != 0) {
+                    int sum_of_width_notice = 0;
+                    int addingCount = 0;
+                    int layout_num = 0;
+                    LinearLayout l1 = new LinearLayout(getApplicationContext());
+                    LinearLayout l2 = new LinearLayout(getApplicationContext());
+                    LinearLayout l3 = new LinearLayout(getApplicationContext());
+                    for (int k = 0; k < noticeArr.length(); k++) {
+                        JSONObject noticeObj = noticeArr.getJSONObject(k);
+                        String notice_tag = noticeObj.getString("hash_tag");
+                        String notice_tag_type = noticeObj.getString("hash_tag_type");
+
+                        TextView textView = new TextView(getApplicationContext());
+                        color(textView, notice_tag, notice_tag_type);
+
+                        textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                        sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth() + 5;
+
+                        if (sum_of_width_notice > width_notice) {
+                            addingCount = 0;
+                            layout_num++;
+                            sum_of_width_notice = textView.getMeasuredWidth() + 5;
+                        }
+
+                        if (layout_num == 0 && addingCount == 0) {
+                            layout_view_notice.addView(l1);
+                        } else if (layout_num == 1 && addingCount == 0) {
+                            layout_view_notice.addView(l2);
+                        } else if (layout_num == 2 && addingCount == 0) {
+                            layout_view_notice.addView(l3);
+                        }
+
+                        switch (layout_num) {
+                            case 0:
+                                l1.addView(textView);
+                                break;
+                            case 1:
+                                l2.addView(textView);
+                                break;
+                            case 2:
+                                l3.addView(textView);
+                                break;
+                        }
+                        addingCount++;
+
+                    }
+                    firstTime = false;
+                }
+
+                text_board_view_date.setText(reg_date);
+                text_board_view_title.setText(subject);
+                text_board_view_title.setPaintFlags(text_board_view_title.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+                text_board_view_writer.setText(name);
+                text_board_view_writer.setPaintFlags(text_board_view_writer.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+
+                webView_content.loadData(content, "text/html; charset=utf-8", "UTF-8");
+                webView_content.getSettings().setBuiltInZoomControls(true);
+
+                webView_content.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
+                webView_content.setWebViewClient(new WebViewClient(){
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.loadUrl(url);
+                        return true;
+                    }
+                });
+
+                /*
+                Spanned spanned = Html.fromHtml(content, BoardViewActivity.this, null);
+                text_board_view_content.setText(spanned);
+                text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
+                */
+
+
+                JSONArray jsonArray = json.getJSONArray("comments");
+                for(int i=0; i<jsonArray.length(); i++){
+                    JSONObject commentObj = jsonArray.getJSONObject(i);
+                    String comment_name = commentObj.getString("name");
+
+
+                    String comment_reg_date = commentObj.getString("reg_date");
+                    StringTokenizer st = new StringTokenizer(comment_reg_date, "- :");
+                    int count=0;
+                    String date="";
+                    while(st.hasMoreTokens()){
+                        String stDate = st.nextToken();
+                        if(count == 1){
+                            date = date + stDate;
+                        }else if(count ==2){
+                            date = date + "/" +stDate;
+                        }else if(count == 3){
+                            date = date+ "\n" + stDate;
+                        }else if(count == 4){
+                            date = date + ":" +stDate;
+                            break;
+                        }
+                        count++;
+                    }
+                    comment_reg_date = date;
+
+                    String comment_content = commentObj.getString("content").toString();
+                    String boardcomment_no = commentObj.getString("boardcomment_no");
+                    JSONArray hashArr = commentObj.getJSONArray("comment_hash_tags");
+                    HashMap commentHashMap = new HashMap();
+                    if(hashArr.length()!=0) {
+                        for (int j = 0; j < hashArr.length(); j++) {
+                            JSONObject hashObj = hashArr.getJSONObject(j);
+                            commentHashMap.put("hash_tag"+j, hashObj.getString("hash_tag"));
+                            commentHashMap.put("hash_tag_type"+j, hashObj.getString("hash_tag_type"));
+                        }
+                    }
+                    adapter_comment.addItem(boardcomment_no, comment_name, comment_reg_date, comment_content, commentHashMap);
+                }
+                adapter_comment.notifyDataSetChanged();
+
+            }catch(Exception e){
+
+            }
+
+            circularProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+
     class LoadImage extends AsyncTask<Object, Void, Bitmap> {
 
         private LevelListDrawable mDrawable;
@@ -354,8 +549,8 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 mDrawable.setLevel(1);
                 // i don't know yet a better way to refresh TextView
                 // mTv.invalidate() doesn't work as expected
-                CharSequence t = text_board_view_content.getText();
-                text_board_view_content.setText(t);
+                //CharSequence t = text_board_view_content.getText();
+                //text_board_view_content.setText(t);
 
             }else{
                 Log.d("list", "bitmap is null!!!!!!!!!!!!!!!");
@@ -528,7 +723,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                                 for(int i=0; i<board_comment_list_data.get(position).comment_hashMap.size()/2; i++){
                                     tag = tag + "@" + board_comment_list_data.get(position).comment_hashMap.get("hash_tag"+i) + " ";
                                 }
-                                edit_board_view_comment.setText(tag + (board_comment_list_data.get(position).comment).toString());
+                                edit_board_view_comment.setText(tag + Html.fromHtml(board_comment_list_data.get(position).comment).toString());
                                 edit_board_view_comment.setTag(board_comment_list_data.get(position).boardcomment_no);
                                 //커서 위치 문자열 뒤쪽에 위치하도록.
                                 Editable edt = edit_board_view_comment.getText();
@@ -561,8 +756,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             alert.show();
         }
     }
-
-
 
     public void jsonParser(){
         try{
@@ -643,9 +836,9 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 text_board_view_writer.setText(name);
                 text_board_view_writer.setPaintFlags(text_board_view_writer.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
 
-                Spanned spanned = Html.fromHtml(content, this, null);
-                text_board_view_content.setText(spanned);
-                text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
+                //Spanned spanned = Html.fromHtml(content, this, null);
+                //text_board_view_content.setText(spanned);
+                //text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
             }
 
 
@@ -689,7 +882,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 adapter_comment.addItem(boardcomment_no, comment_name, comment_reg_date, comment_content, commentHashMap);
             }
             adapter_comment.notifyDataSetChanged();
-
         }catch(Exception e){
             Log.e("JSON", Log.getStackTraceString(e));
         }
@@ -812,7 +1004,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
