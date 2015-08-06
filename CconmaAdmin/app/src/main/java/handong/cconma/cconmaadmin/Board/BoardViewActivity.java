@@ -43,8 +43,10 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -63,6 +65,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,17 +75,19 @@ import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 import handong.cconma.cconmaadmin.http.HttpConnection;
 
+
 /**
  * 게시판 목록에서 하나 선택하여 글 내용을 보여주는 화면
  * Created by eundi on 15. 7. 6..
  */
+
+
 public class BoardViewActivity extends AppCompatActivity implements Html.ImageGetter{
     private Toolbar toolbar;
     boolean firstTime=true;
     boolean marked=false;
     int width_notice=0;
-
-
+    int insert_mode;
     private CircularProgressBar circularProgressBar;
 
     TextView text_board_view_title;
@@ -154,6 +159,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             switch(v.getId()){
                 case R.id.btn_board_view_comment:
                     if(!(edit_board_view_comment.getText().toString()).equals("")) {
+                        /*****************************     댓글 수정       ********************************/
                         long now = System.currentTimeMillis();
                         Date date = new Date(now);
                         SimpleDateFormat sdfNow = new SimpleDateFormat("MM/dd\nHH:mm");
@@ -181,26 +187,17 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                             edit_board_view_comment.setTag(null);
                             adapter_comment.board_comment_list_data.clear();
                             jsonParser();
+                            adapter_comment.notifyDataSetChanged();
 
                         }else{
-                            //HashMap hash = new HashMap();
-                            //adapter_comment.addItem("김은지", strNow, edit_board_view_comment.getText().toString(), hash);
+                            /*************************        댓글 입력         ****************************/
+                            HashMap hash = new HashMap();
 
-                            String comment_no = "";
+                            BasicData basicData = BasicData.getInstance();
+                            adapter_comment.addItem("123", basicData.getName(), strNow, edit_board_view_comment.getText().toString(), hash);
+                            adapter_comment.notifyDataSetChanged();
 
-                            String requestBody = "board_no=" + board_no
-                                    + "&boardarticle_no=" + boardarticle_no
-                                    +"&content=" + edit_board_view_comment.getText().toString();
-                            try{
-                                new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
-                                        +board_no+"/articles/" + boardarticle_no + "/comments", "POST", requestBody).execute().get();
-                            }catch(Exception e){
-
-                            }
-
-                            /*****************     일단은 다 지우고 다시 쓰도록 했는데  고쳐야함.*****************/
-                            adapter_comment.board_comment_list_data.clear();
-                            jsonParser();
+                            new InsertAsyncTask().execute();
                         }
                         edit_board_view_comment.setText("");
                         input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -271,7 +268,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                             //뒤로 돌아갔을때 변한 사항이 바로바로 반영되도록 해야한다.
 
                         } else{
-                            adapter_comment.dialog(1, position - 1);
+                            adapter_comment.dialogComment(1, position);
                         }
 
                     }
@@ -279,7 +276,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (index == 2)
-                    adapter_comment.dialog(0, position - 1);
+                    adapter_comment.dialogComment(0, position);
                 else
                     dialog.cancel();
             }
@@ -302,6 +299,104 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         return d;
     }
 
+
+    class InsertAsyncTask extends AsyncTask<String, Void, JSONObject>{
+        String requestBody;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            requestBody = "board_no=" + board_no
+                    + "&boardarticle_no=" + boardarticle_no
+                    +"&content=" + edit_board_view_comment.getText().toString();
+
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+
+
+
+            try{
+                if(insert_mode == 0) {
+                    HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
+                            + board_no + "/articles/" + boardarticle_no + "/comments", "POST", requestBody);
+                    String sResult = connection.init();
+
+                    JSONObject json = new JSONObject(sResult);
+                    String commentN = json.getString("boardcomment_no");
+
+                    HttpConnection conn = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
+                            + Integer.parseInt(board_no) + "/articles/"
+                            + Integer.parseInt(boardarticle_no), "GET", "");
+                    String sResults = conn.init();
+
+                    JSONObject jsonObject = new JSONObject(sResults);
+
+                    JSONArray jsonArray = jsonObject.getJSONArray("comments");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject commentObj = jsonArray.getJSONObject(i);
+                        String commentN2 = commentObj.getString("boardcomment_no");
+
+                        if (commentN.equals(commentN2)) {
+
+                            String comment_name = commentObj.getString("name");
+                            String comment_reg_date = commentObj.getString("reg_date");
+                            StringTokenizer st = new StringTokenizer(comment_reg_date, "- :");
+                            int count = 0;
+                            String date = "";
+                            while (st.hasMoreTokens()) {
+                                String stDate = st.nextToken();
+                                if (count == 1) {
+                                    date = date + stDate;
+                                } else if (count == 2) {
+                                    date = date + "/" + stDate;
+                                } else if (count == 3) {
+                                    date = date + "\n" + stDate;
+                                } else if (count == 4) {
+                                    date = date + ":" + stDate;
+                                    break;
+                                }
+                                count++;
+                            }
+                            comment_reg_date = date;
+
+                            String comment_content = commentObj.getString("content").toString();
+                            String boardcomment_no = commentObj.getString("boardcomment_no");
+                            JSONArray hashArr = commentObj.getJSONArray("comment_hash_tags");
+                            HashMap commentHashMap = new HashMap();
+                            if (hashArr.length() != 0) {
+                                for (int j = 0; j < hashArr.length(); j++) {
+                                    JSONObject hashObj = hashArr.getJSONObject(j);
+                                    commentHashMap.put("hash_tag" + j, hashObj.getString("hash_tag"));
+                                    commentHashMap.put("hash_tag_type" + j, hashObj.getString("hash_tag_type"));
+                                }
+                            }
+                            adapter_comment.board_comment_list_data.remove(adapter_comment.getCount() - 1);
+                            list_board_view_comment.clearChoices();
+                            adapter_comment.addItem(boardcomment_no, comment_name, comment_reg_date, comment_content, commentHashMap);
+                        }
+                    }
+                }else if(insert_mode == 1){
+                    //modify
+                }else if(insert_mode == 2){
+                    //delete
+                }
+
+
+            }catch(Exception e){
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            super.onPostExecute(jsonObject);
+            adapter_comment.notifyDataSetChanged();
+        }
+    }
+
     class ViewAsyncTask extends AsyncTask<String, Void, JSONObject>{
 
         //private ProgressDialog pDialog;
@@ -316,9 +411,12 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             list_board_view_comment = (ListView)findViewById(R.id.list_board_view_comment);
             list_board_view_comment.addHeaderView(header);
             list_board_view_comment.setHeaderDividersEnabled(false);
+
             adapter_comment = new BoardCommentAdapter(BoardViewActivity.this);
+
+
             list_board_view_comment.setAdapter(adapter_comment);
-            list_board_view_comment.setOnItemLongClickListener(itemClickListner);
+            //list_board_view_comment.setOnItemLongClickListener(itemClickListner);
 
             list_board_view_comment.setFocusable(false);
 
@@ -511,6 +609,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
     }
 
 
+
     class LoadImage extends AsyncTask<Object, Void, Bitmap> {
 
         private LevelListDrawable mDrawable;
@@ -606,7 +705,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             final ViewHolder holder;
             holder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -616,6 +715,13 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             holder.text_board_view_comment = (TextView)convertView.findViewById(R.id.text_board_view_comment);
             holder.text_board_view_comment_date = (TextView)convertView.findViewById(R.id.text_board_view_comment_date);
             holder.layout_comment_notice = (LinearLayout)convertView.findViewById(R.id.layout_comment_notice);
+            holder.btn_comment = (ImageButton)convertView.findViewById(R.id.btn_comment);
+            holder.btn_comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog(2, position);
+                }
+            });
 
             convertView.setTag(holder);
 
@@ -717,10 +823,14 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             public TextView text_board_view_comment;
             public TextView text_board_view_comment_date;
 
+            public ImageButton btn_comment;
+
+
             public LinearLayout layout_comment_notice;
+
         }
 
-        public void dialog(final int index, final int position){
+        public void dialogComment(final int index, final int position){
             String alert_message = "";
             AlertDialog.Builder alert_build = new AlertDialog.Builder(context);
             switch(index){
@@ -782,84 +892,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
             JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
                     +Integer.parseInt(board_no)+"/articles/"
                     +Integer.parseInt(boardarticle_no), "GET", "").execute().get();
-
-            if(firstTime) {
-                String subject = json.getString("subject");
-                String name = json.getString("name");
-                String reg_date = json.getString("reg_date");
-                String content = json.getString("content");
-
-
-                JSONObject scrap = json.getJSONObject("scrap_info");
-                String scrap_on = scrap.getString("scraped");
-
-                if(scrap_on.equals("on"))
-                    marked = true;
-                else
-                    marked = false;
-
-
-                JSONArray noticeArr = json.getJSONArray("article_hash_tags");
-                if (noticeArr.length() != 0) {
-                    int sum_of_width_notice = 0;
-                    int addingCount = 0;
-                    int layout_num = 0;
-                    LinearLayout l1 = new LinearLayout(getApplicationContext());
-                    LinearLayout l2 = new LinearLayout(getApplicationContext());
-                    LinearLayout l3 = new LinearLayout(getApplicationContext());
-                    for (int k = 0; k < noticeArr.length(); k++) {
-                        JSONObject noticeObj = noticeArr.getJSONObject(k);
-                        String notice_tag = noticeObj.getString("hash_tag");
-                        String notice_tag_type = noticeObj.getString("hash_tag_type");
-
-                        TextView textView = new TextView(getApplicationContext());
-                        color(textView, notice_tag, notice_tag_type);
-
-                        textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                        sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth() + 5;
-
-                        if (sum_of_width_notice > width_notice) {
-                            addingCount = 0;
-                            layout_num++;
-                            sum_of_width_notice = textView.getMeasuredWidth() + 5;
-                        }
-
-                        if (layout_num == 0 && addingCount == 0) {
-                            layout_view_notice.addView(l1);
-                        } else if (layout_num == 1 && addingCount == 0) {
-                            layout_view_notice.addView(l2);
-                        } else if (layout_num == 2 && addingCount == 0) {
-                            layout_view_notice.addView(l3);
-                        }
-
-                        switch (layout_num) {
-                            case 0:
-                                l1.addView(textView);
-                                break;
-                            case 1:
-                                l2.addView(textView);
-                                break;
-                            case 2:
-                                l3.addView(textView);
-                                break;
-                        }
-                        addingCount++;
-
-                    }
-                    firstTime = false;
-                }
-
-                text_board_view_date.setText(reg_date);
-                text_board_view_title.setText(subject);
-                text_board_view_title.setPaintFlags(text_board_view_title.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-                text_board_view_writer.setText(name);
-                text_board_view_writer.setPaintFlags(text_board_view_writer.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-
-                //Spanned spanned = Html.fromHtml(content, this, null);
-                //text_board_view_content.setText(spanned);
-                //text_board_view_content.setMovementMethod(LinkMovementMethod.getInstance());
-            }
-
 
             JSONArray jsonArray = json.getJSONArray("comments");
             for(int i=0; i<jsonArray.length(); i++){
@@ -1086,4 +1118,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
 
         return true;
     }
+
+
 }
