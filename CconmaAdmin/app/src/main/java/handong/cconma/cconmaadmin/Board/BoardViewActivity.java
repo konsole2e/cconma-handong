@@ -52,6 +52,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -64,7 +65,9 @@ import java.util.regex.Pattern;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.BasicData;
+import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
+import handong.cconma.cconmaadmin.mainpage.AdminApplication;
 
 /**
  * 게시판 목록에서 하나 선택하여 글 내용을 보여주는 화면
@@ -256,7 +259,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                             startActivity(intent);
                         } else if(index == 1){
                             //게시글 삭제하는 코드.
-
                             try{
                                 new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
                                         +board_no+"/articles/" + boardarticle_no, "DELETE", "").execute().get();
@@ -264,8 +266,26 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
 
                             }
 
-                            //뒤로 돌아갔을때 변한 사항이 바로바로 반영되도록 해야한다.
+                            ////////////
+                            HashMap board_list = BasicData.getInstance().getBoardList();
+                            ArrayList<String> tabTitles = new ArrayList<>();
+                            int index;
+                            String board_no;
 
+                            for( int i = 0; i < board_list.size() / 2; i++ ){
+                                tabTitles.add(board_list.get("board_title" + i).toString());
+                            }
+
+                            index = tabTitles.indexOf(getIntent().getStringExtra("board_no"));
+                            if( index != -1 ){
+                                board_no = tabTitles.get(index).split("e")[1];
+                                AdminApplication.getInstance().
+                                        setTabPosition(Integer.parseInt(board_no));
+                            }
+                            AdminApplication.getInstance().setRefresh(true);
+                            ////////////
+
+                            finish();
                         } else{
                             adapter_comment.dialog(1, position - 1);
                         }

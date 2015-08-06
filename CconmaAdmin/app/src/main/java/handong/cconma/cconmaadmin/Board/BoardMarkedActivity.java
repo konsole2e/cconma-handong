@@ -20,6 +20,7 @@ import java.util.HashMap;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
+import handong.cconma.cconmaadmin.mainpage.AdminApplication;
 
 
 /**
