@@ -107,6 +107,10 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
 
     JSONObject result;
 
+
+    String view_content="";
+    HashMap hashtag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +136,6 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         //jsonParser();
 
     }
-
 
     AbsListView.OnItemLongClickListener itemClickListner = new AbsListView.OnItemLongClickListener(){
 
@@ -219,7 +222,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
         AlertDialog.Builder alert_build = new AlertDialog.Builder(this);
         switch(index){
             case 0:
-                alert_message = "게시글을 수정하시겠습니까?";
+                alert_message = "게시글을 수정하시겠습니까?\n※ 사진이나 표가 포함된 글은 수정시 ";
                 pos_message = "YES";
                 neg_message = "NO";
                 break;
@@ -242,7 +245,18 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                         //수정하거나 삭제하는 코드.
                         if (index == 0) {
                             Intent intent = new Intent(BoardViewActivity.this, BoardModifyActivity.class);
-                            intent.putExtra("number", "7128");
+
+                            String tag="";
+                            for(int i=0; i<hashtag.size(); i++){
+                                tag = tag + "@" + hashtag.get("hash_tag"+i) + " ";
+                            }
+                            intent.putExtra("board_no", board_no);
+                            intent.putExtra("boardarticle_no", boardarticle_no);
+                            intent.putExtra("title", text_board_view_title.getText());
+                            intent.putExtra("content", view_content);
+                            intent.putExtra("tag", tag);
+
+
                             startActivity(intent);
                         } else if(index == 1){
                             //게시글 삭제하는 코드.
@@ -357,6 +371,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 String reg_date = json.getString("reg_date");
                 String content = json.getString("content");
 
+                view_content = Html.fromHtml(json.getString("content")).toString();
 
                 JSONObject scrap = json.getJSONObject("scrap_info");
                 String scrap_on = scrap.getString("scraped");
@@ -365,6 +380,8 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                     marked = true;
                 else
                     marked = false;
+
+                hashtag = new HashMap();
 
 
                 JSONArray noticeArr = json.getJSONArray("article_hash_tags");
@@ -378,6 +395,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                     for (int k = 0; k < noticeArr.length(); k++) {
                         JSONObject noticeObj = noticeArr.getJSONObject(k);
                         String notice_tag = noticeObj.getString("hash_tag");
+                        hashtag.put("hash_tag"+k, notice_tag);
                         String notice_tag_type = noticeObj.getString("hash_tag_type");
 
                         TextView textView = new TextView(getApplicationContext());
@@ -416,6 +434,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                     }
                     firstTime = false;
                 }
+
 
                 text_board_view_date.setText(reg_date);
                 text_board_view_title.setText(subject);
@@ -994,6 +1013,58 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                 break;
             case R.id.complete:
                 //item.setIcon(getResources().getDrawable(R.drawable.ic_check_box_white_24dp));
+                AlertDialog.Builder alert_builder = new AlertDialog.Builder(this);
+                String alertSt = "";
+                final String complete = text_board_view_title.getText().toString().substring(0, 4);
+                if(!complete.equals("[완료]")){
+                    alertSt = "이 글을 완료하시겠습니까?";
+                }else{
+                    alertSt = "이 글을 완료 해제하시겠습니까?";
+
+                }
+                alert_builder.setMessage(alertSt).setCancelable(false)
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //수정하거나 삭제하는 코드.
+                                BasicData basicData = BasicData.getInstance();
+
+                                if (!complete.equals("[완료]")) {
+                                    Toast.makeText(getApplicationContext(), "완료 되었습니다", Toast.LENGTH_SHORT).show();
+                                    text_board_view_title.setText("[완료]" + text_board_view_title.getText());
+                                }else {
+                                    Toast.makeText(getApplicationContext(), "완료 해제되었습니다", Toast.LENGTH_SHORT).show();
+                                    text_board_view_title.setText(text_board_view_title.getText().toString().substring(4));
+                                }
+
+                                try{
+
+                                    String requestBody = "subject=" + text_board_view_title.getText()
+                                            + "&content=" + view_content
+                                            + "&_METHOD=" + "PUT"
+                                            + "&filename1=" + ""
+                                            + "&filename2=" + "";
+
+                                    Log.d("test", requestBody);
+                                    new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/" + board_no
+                                            + "/articles/" + boardarticle_no, "POST", requestBody).execute().get();
+                                }catch(Exception e){
+
+                                }
+
+
+
+                            }
+                        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = alert_builder.create();
+                alertDialog.setCanceledOnTouchOutside(true);
+                alertDialog.show();
                 break;
             case R.id.modify:
                 dialog(0, 0);
