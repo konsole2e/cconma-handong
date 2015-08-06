@@ -51,7 +51,7 @@ public class StaticsFragment extends Fragment {
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-        refresh();
+        recycle();
     }
 
     @Override
@@ -135,7 +135,7 @@ public class StaticsFragment extends Fragment {
         charts.clear();
     }
 
-    public void refresh() {
+    public void recycle() {
         for (int i = 0; i < charts.size(); i++) {
             Chart v = (Chart)charts.get(i);
             Bitmap b = v.getChartBitmap();

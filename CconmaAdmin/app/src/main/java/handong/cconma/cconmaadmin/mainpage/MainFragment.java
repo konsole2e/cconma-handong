@@ -115,7 +115,24 @@ public class MainFragment extends Fragment {
             FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
             fab.setVisibility(View.GONE);
         }
-        else {
+        else if(position == 3) {
+            rootView = inflater.inflate(R.layout.statics_main, container, false);
+
+            ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.statics_vp);
+            StaticsViewPagerAdapter svp = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
+            viewPager.setOffscreenPageLimit(0);
+            viewPager.setAdapter(svp);
+            vp = viewPager;
+
+            TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
+            tabLayout.setVisibility(View.VISIBLE);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            tabLayout.setupWithViewPager(viewPager);
+
+            FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+            fab.setVisibility(View.GONE);
+        }else{
             rootView = inflater.inflate(R.layout.webview, container, false);
             circularProgressBar = (CircularProgressBar)rootView.findViewById(R.id.progressbar_circular);
 
