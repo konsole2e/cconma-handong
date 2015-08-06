@@ -1028,7 +1028,10 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                             public void onClick(DialogInterface dialog, int which) {
                                 //수정하거나 삭제하는 코드.
                                 BasicData basicData = BasicData.getInstance();
-
+                                String tag="";
+                                for(int i=0; i<hashtag.size(); i++){
+                                    tag = tag + "@" + hashtag.get("hash_tag"+i) + " ";
+                                }
                                 if (!complete.equals("[완료]")) {
                                     Toast.makeText(getApplicationContext(), "완료 되었습니다", Toast.LENGTH_SHORT).show();
                                     text_board_view_title.setText("[완료]" + text_board_view_title.getText());
@@ -1040,7 +1043,7 @@ public class BoardViewActivity extends AppCompatActivity implements Html.ImageGe
                                 try{
 
                                     String requestBody = "subject=" + text_board_view_title.getText()
-                                            + "&content=" + view_content
+                                            + "&content=" + tag + view_content
                                             + "&_METHOD=" + "PUT"
                                             + "&filename1=" + ""
                                             + "&filename2=" + "";
