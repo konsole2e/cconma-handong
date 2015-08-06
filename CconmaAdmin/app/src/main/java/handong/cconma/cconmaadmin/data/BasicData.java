@@ -64,6 +64,7 @@ public class BasicData {
     public HashMap getChartList() {
         return admin_chart_list;
     }
+
     public String getMem_no(){
         return mem_no;
     }

@@ -26,7 +26,7 @@ public class IntegratedSharedPreferences {
             SharedPreferences.Editor editor = pref.edit();
 
             editor.putString(key, value);
-            editor.apply();
+            editor.commit();
         }
 
         public void put(String key, boolean value) {
@@ -35,7 +35,7 @@ public class IntegratedSharedPreferences {
             SharedPreferences.Editor editor = pref.edit();
 
             editor.putBoolean(key, value);
-            editor.apply();
+            editor.commit();
         }
 
         public void put(String key, int value) {
@@ -44,7 +44,7 @@ public class IntegratedSharedPreferences {
             SharedPreferences.Editor editor = pref.edit();
 
             editor.putInt(key, value);
-            editor.apply();
+            editor.commit();
         }
 
         public void remove(String key){
@@ -52,7 +52,7 @@ public class IntegratedSharedPreferences {
             SharedPreferences.Editor editor = pref.edit();
 
             editor.remove(key);
-            editor.apply();
+            editor.commit();
         }
 
         public String getValue(String key, String dftValue) {
