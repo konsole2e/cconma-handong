@@ -79,13 +79,11 @@ public class BoardViewActivity extends AppCompatActivity{
     TextView text_board_view_writer;
     TextView text_board_view_date;
 
-    //TextView text_board_view_content;
     WebView webView_content;
 
     ListView list_board_view_comment;
     BoardCommentAdapter adapter_comment;
 
-    LinearLayout layout_board_view_comment;
     EditText edit_board_view_comment;
     Button btn_board_view_comment;
 
@@ -372,6 +370,7 @@ public class BoardViewActivity extends AppCompatActivity{
                             + adapter_comment.board_comment_list_data.get(modify_position).boardcomment_no, "DELETE", "");
                     connection.init();
 
+                    adapter_comment.board_comment_list_data.remove(modify_position);
                 }
             }catch(Exception e){
 
@@ -776,9 +775,6 @@ public class BoardViewActivity extends AppCompatActivity{
                                 list_board_view_comment.setSelectionFromTop(position, 0);
                             }
                             else {
-
-                                board_comment_list_data.remove(position);
-                                adapter_comment.notifyDataSetChanged();
                                 try{
                                     insert_mode = 2;
                                     modify_position = position;
