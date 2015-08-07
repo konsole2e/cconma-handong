@@ -191,7 +191,14 @@ public class BoardModifyActivity extends AppCompatActivity {
                 }catch(Exception e){
 
                 }
-                finish();
+
+                Intent intent = new Intent(this, BoardViewActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("board_no", board_no);
+                intent.putExtra("boardarticle_no", boardarticle_no);
+                startActivity(intent);
+
+
                 break;
         }
         return super.onOptionsItemSelected(item);

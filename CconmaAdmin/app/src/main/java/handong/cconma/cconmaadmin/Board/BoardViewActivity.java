@@ -143,6 +143,7 @@ public class BoardViewActivity extends AppCompatActivity{
                             edit_board_view_comment.setText("");
                         }else{
                             /*************************        댓글 입력         ****************************/
+                            insert_mode = 0;
                             HashMap hash = new HashMap();
                             BasicData basicData = BasicData.getInstance();
                             adapter_comment.addItem("123", basicData.getName(), strNow, edit_board_view_comment.getText().toString(), hash);
@@ -524,13 +525,13 @@ public class BoardViewActivity extends AppCompatActivity{
                 webView_content.getSettings().setBuiltInZoomControls(true);
 
                 webView_content.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
-                webView_content.setWebViewClient(new WebViewClient(){
+                /*webView_content.setWebViewClient(new WebViewClient(){
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
                         view.loadUrl(url);
                         return true;
                     }
-                });
+                });*/
 
                 JSONArray jsonArray = json.getJSONArray("comments");
                 for(int i=0; i<jsonArray.length(); i++){
