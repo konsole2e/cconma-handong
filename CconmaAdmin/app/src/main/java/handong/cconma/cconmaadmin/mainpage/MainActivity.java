@@ -14,15 +14,19 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.view.menu.MenuItemImpl;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.R;
@@ -43,6 +48,7 @@ import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
  */
 
 public class MainActivity extends AppCompatActivity {
+    public Menu mMenu;
     private Toolbar toolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -58,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout mSwipeRefresh;
     private FragmentManager fragmentManager;
     private CircularProgressBar circularProgressBar;
-
+    private boolean expanded = false;
 
     private String TITLESUSER[] = {"설정", "로그아웃"};
     private int ICONSUSER[] = {R.drawable.ic_setting_selector,
@@ -99,22 +105,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         getWindow().setBackgroundDrawable(null);
 
         mTitle = getTitle();
-
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-
-
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.drawer_header, navigationView, false);
-        TextView textview = (TextView)view.findViewById(R.id.name);
+        TextView textview = (TextView) view.findViewById(R.id.name);
 
         textview.setText(BasicData.getInstance().getName());
         //textview.setText("마을지기");
@@ -140,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.chart:
                             selectItem(2);
                             break;
-                        case 2:
+                        case R.id.text_chart:
+                            selectItem(3);
                             break;
                         case 3:
                             break;
@@ -185,8 +188,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        mMenu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem menuItem = menu.getItem(0);
+        View view = menuItem.getActionView();
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPause();
+            }
+        });
         return true;
     }
 
@@ -194,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -209,10 +222,12 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.notification) {
             //Intent intent = new Intent(this, StartPage.class);
             //startActivity(intent);
-        } else if (id == R.id.search){
+        } else if (id == R.id.search) {
+            for (int i = 1; i < mMenu.size(); i++) {
+                mMenu.getItem(i).setVisible(false);
+            }
 
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -223,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
-        }else{
+        } else {
             if (count == 0) {
                 finish();
             } else {
@@ -353,7 +368,8 @@ public class MainActivity extends AppCompatActivity {
 
         Context context;
         String items[];
-        public SpinnerAdapter(final Context context, final int textViewResourceId, final String[] objects){
+
+        public SpinnerAdapter(final Context context, final int textViewResourceId, final String[] objects) {
             super(context, textViewResourceId, objects);
             this.items = objects;
             this.context = context;
@@ -368,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
                         android.R.layout.simple_spinner_dropdown_item, parent, false);
             }
 
-            TextView tv = (TextView)convertView
+            TextView tv = (TextView) convertView
                     .findViewById(android.R.id.text1);
             tv.setText(items[position]);
             tv.setTextColor(Color.BLACK);

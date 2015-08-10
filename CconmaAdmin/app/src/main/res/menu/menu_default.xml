@@ -11,9 +11,15 @@
             android:icon="@drawable/ic_board_selector"/>
 
         <item
-            android:title="통계"
+            android:title="통계-그래프"
             android:checked="false"
             android:id="@+id/chart"
+            android:icon="@drawable/ic_chart_selector"/>
+
+        <item
+            android:title="통계-요약"
+            android:checked="false"
+            android:id="@+id/text_chart"
             android:icon="@drawable/ic_chart_selector"/>
 
         <item

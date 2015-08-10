@@ -69,7 +69,7 @@ public class BoardFragment extends Fragment {
     private int total;
     int isSearch;
 
-    FrameLayout layout_board_search;
+    //FrameLayout layout_board_search;
     Spinner spinner_board_condition;
     EditText edit_board_search;
     Button btn_board_search;
@@ -123,7 +123,7 @@ public class BoardFragment extends Fragment {
             }
         });*/
         //검색창 Frame Layout
-        layout_board_search = (FrameLayout)view.findViewById(R.id.layout_board_search);
+        //layout_board_search = (FrameLayout)view.findViewById(R.id.layout_board_search);
         //검색 조건 spinner
         spinner_board_condition = (Spinner)view.findViewById(R.id.spinner_board_condition);
         String[] cond = getResources().getStringArray(R.array.board_condition);

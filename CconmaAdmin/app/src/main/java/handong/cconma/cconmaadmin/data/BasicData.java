@@ -8,6 +8,7 @@ import java.util.HashMap;
  */
 public class BasicData {
     private String user_id, email, mem_no, name;
+    private HashMap admin_stat_list = new HashMap();
     private HashMap admin_chart_list = new HashMap();
     private HashMap admin_board_list = new HashMap();
     private HashMap admin_board_hash_tag_list = new HashMap();
@@ -64,7 +65,16 @@ public class BasicData {
     public HashMap getChartList() {
         return admin_chart_list;
     }
+
     public String getMem_no(){
         return mem_no;
+    }
+
+    public void setTextChartList(String key, String value){
+        admin_stat_list.put(key, value);
+    }
+
+    public HashMap getTextChartList() {
+        return admin_stat_list;
     }
 }

@@ -22,13 +22,14 @@ import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.statics.StaticsViewPagerAdapter;
+import handong.cconma.cconmaadmin.textStatics.TextStaticsViewPagerAdapter;
 
 /**
  * Created by Young Bin Kim on 2015-07-14.
  */
 public class MainFragment extends Fragment {
     public static final String POSITION = "0";
-    private CharSequence TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
+    private CharSequence TITLES[] = {"게시판","통계","통계","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
     private ViewPager vp;
     private WebView webview;
     private CircularProgressBar circularProgressBar;
@@ -113,10 +114,9 @@ public class MainFragment extends Fragment {
             rootView = inflater.inflate(R.layout.statics_main, container, false);
 
             ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.statics_vp);
-            StaticsViewPagerAdapter svp = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
+            StaticsViewPagerAdapter svpa = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
             viewPager.setOffscreenPageLimit(0);
-            viewPager.setAdapter(svp);
-            vp = viewPager;
+            viewPager.setAdapter(svpa);
 
             TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
             tabLayout.setVisibility(View.VISIBLE);
@@ -130,13 +130,12 @@ public class MainFragment extends Fragment {
             fab_up.setVisibility(View.GONE);
         }
         else if(position == 3) {
-            rootView = inflater.inflate(R.layout.statics_main, container, false);
+            rootView = inflater.inflate(R.layout.text_statics_main, container, false);
 
-            ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.statics_vp);
-            StaticsViewPagerAdapter svp = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
+            ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.text_statics_vp);
+            TextStaticsViewPagerAdapter tsvpa = new TextStaticsViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
             viewPager.setOffscreenPageLimit(0);
-            viewPager.setAdapter(svp);
-            vp = viewPager;
+            viewPager.setAdapter(tsvpa);
 
             TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
             tabLayout.setVisibility(View.VISIBLE);
@@ -146,6 +145,8 @@ public class MainFragment extends Fragment {
 
             FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
             fab.setVisibility(View.GONE);
+            FloatingActionButton fab_up = (FloatingActionButton)getActivity().findViewById(R.id.fab_up);
+            fab_up.setVisibility(View.GONE);
         }else{
             rootView = inflater.inflate(R.layout.webview, container, false);
             circularProgressBar = (CircularProgressBar)rootView.findViewById(R.id.progressbar_circular);
@@ -221,9 +222,5 @@ public class MainFragment extends Fragment {
             ((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).progressiveStop();
             Cookies.getInstance(getActivity().getApplicationContext()).updateCookies(url);
         }
-    }
-
-    public ViewPager getStaticsViewPager(){
-        return vp;
     }
 }

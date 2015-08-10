@@ -46,17 +46,4 @@ public class StaticsViewPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return chartNames.get(position);
     }
-
-    @Override
-    public int getItemPosition(Object item) {
-        StaticsFragment fragment = (StaticsFragment)item;
-        String title = fragment.getArguments().getString(ARG_PAGE_PATH);
-        int position = chartPaths.indexOf(title);
-
-        if (position >= 0) {
-            return position;
-        } else {
-            return POSITION_NONE;
-        }
-    }
 }

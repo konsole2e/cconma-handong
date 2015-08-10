@@ -22,9 +22,6 @@
                 android:id="@+id/tool_bar"
                 layout="@layout/tool_bar"/>
 
-
-
-
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"

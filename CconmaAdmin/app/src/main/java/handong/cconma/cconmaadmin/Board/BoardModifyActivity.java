@@ -49,7 +49,7 @@ public class BoardModifyActivity extends AppCompatActivity {
         EditText title = (EditText)findViewById(R.id.title);
         title.setText("load the title of "+number+"th text");
         EditText content = (EditText)findViewById(R.id.content);
-        content.setText("load the content of "+number+"th text\nthis activity is reusing the layout of write\nthe number of the text is passed by intent\nand load all data of the text at this activity");
+        content.setText("load the content of "+number+"th text\nthis activity is reusing the text_statics_chart of write\nthe number of the text is passed by intent\nand load all data of the text at this activity");
 
         String[] conditions = getResources().getStringArray(R.array.write_notice);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, conditions);

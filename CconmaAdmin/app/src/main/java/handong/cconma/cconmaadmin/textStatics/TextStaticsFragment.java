@@ -1,10 +1,7 @@
-package handong.cconma.cconmaadmin.statics;
+package handong.cconma.cconmaadmin.textStatics;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,12 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.Chart;
-import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.PieChart;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,22 +28,15 @@ import handong.cconma.cconmaadmin.http.HttpConnection;
 
 import static android.widget.RelativeLayout.CENTER_VERTICAL;
 
-public class StaticsFragment extends Fragment {
+public class TextStaticsFragment extends Fragment {
     public static final String ARG_CHART_PATH = "ARG_PAGE_PATH";
     private String mChartPath;
     private View view;
     private LinearLayout ll;
     private JSONObject result = null;
-    private ArrayList<View> charts;
-    private StaticsCommonSetting setting;
+    private ArrayList<RelativeLayout> textCharts;
     private Activity thisActivity;
     private ProgressDialog pd;
-
-    @Override
-    public void onDestroyView(){
-        super.onDestroyView();
-        recycle();
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -61,23 +45,15 @@ public class StaticsFragment extends Fragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.statics_reload && !pd.isShowing()) {
             gone();
-            new StaticsAsyncTask("http://www.cconma.com" + mChartPath, "GET", "").execute();
-        } else if (id == R.id.statics_zoom && !pd.isShowing()) {
-            Configuration config = getResources().getConfiguration();
-            if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {// 세로
-                thisActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // 가로전환
-            } else {
-                thisActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 가로전환
-            }
+             new TextStaticsAsyncTask("http://www.cconma.com" + mChartPath, "GET", "").execute();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    public static StaticsFragment newInstance(String chartPath) {
+    public static TextStaticsFragment newInstance(String chartPath) {
         Bundle args = new Bundle();
         args.putString(ARG_CHART_PATH, chartPath);
-        StaticsFragment fragment = new StaticsFragment();
+        TextStaticsFragment fragment = new TextStaticsFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,6 +63,7 @@ public class StaticsFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_statics, menu);
+        menu.removeItem(R.id.statics_zoom);
     }
 
     @Override
@@ -98,10 +75,9 @@ public class StaticsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.statics_fragment, container, false);
-        charts = new ArrayList<>();
-        ll = (LinearLayout) view.findViewById(R.id.statics_ll);
-        setting = new StaticsCommonSetting();
+        view = inflater.inflate(R.layout.text_statics_fragment, container, false);
+        textCharts = new ArrayList<>();
+        ll = (LinearLayout) view.findViewById(R.id.text_statics_ll);
         thisActivity = getActivity();
         return view;
     }
@@ -109,19 +85,19 @@ public class StaticsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        new StaticsAsyncTask("http://www.cconma.com" + mChartPath, "GET", "").execute();
+      new TextStaticsAsyncTask("http://www.cconma.com" + mChartPath, "GET", "").execute();
     }
 
-    public void parsingCharts() {
+
+    public void parsingTextCharts() {
         try {
             if (result == null) {
                 Toast.makeText(thisActivity.getApplicationContext(), "받아온 데이터가 없습니다.", Toast.LENGTH_SHORT).show();
             } else {
-                JSONArray jArray = result.getJSONArray(StaticsVariables.chart);
+                JSONArray jArray = result.getJSONArray(TextStaticsVariables.stat_list);
                 for (int i = 0; i < jArray.length(); i++) {
                     JSONObject obj = jArray.getJSONObject(i);
-                    String category = obj.getString(StaticsVariables.category).toLowerCase();
-                    generateChart(obj, category);
+                    generateTextChart(obj);
                 }
             }
         } catch (JSONException e) {
@@ -131,57 +107,26 @@ public class StaticsFragment extends Fragment {
 
     private void gone() {
         ll.removeAllViews();
-        charts.clear();
+        textCharts.clear();
     }
 
-    public void recycle() {
-        for (int i = 0; i < charts.size(); i++) {
-            Chart v = (Chart)charts.get(i);
-            Bitmap b = v.getChartBitmap();
-            b.recycle();
-        }
+    public void generateTextChart(JSONObject json) {
+        RelativeLayout rl = (RelativeLayout)thisActivity.getLayoutInflater().inflate(R.layout.text_statics_chart, null);
+        LinearLayout left = (LinearLayout) rl.findViewById(R.id.stat_left_ll);
+        LinearLayout right = (LinearLayout) rl.findViewById(R.id.stat_right_ll);
+
+        TextStaticsManager manager = new TextStaticsManager(thisActivity);
+        manager.setData(json, left, right);
+
+        generateTitle(json.optString(TextStaticsVariables.stat_title, "텍스트 차트"));
+
+        ll.addView(rl);
+        textCharts.add(rl);
     }
 
-    public void generateChart(JSONObject json, String category) {
-        View chart;
-        if (category.equals(StaticsVariables.line)) {
-            chart = new LineChart(thisActivity);
-            StaticsLineManager manager = new StaticsLineManager(thisActivity);
-            ((LineChart) chart).setData(manager.parsingLine(json, (LineChart) chart));
-            setting.commonSetting((LineChart) chart);
-
-        } else if (category.equals(StaticsVariables.bar)) {
-            chart = new BarChart(thisActivity);
-            StaticsBarManager manager = new StaticsBarManager(thisActivity);
-            ((BarChart) chart).setData(manager.parsingBar(json, (BarChart) chart));
-            setting.commonSetting((BarChart) chart);
-
-        } else if (category.equals(StaticsVariables.combined)) {
-            chart = new CombinedChart(thisActivity);
-            StaticsCombinedManager manager = new StaticsCombinedManager(thisActivity);
-            ((CombinedChart) chart).setData(manager.parsingCombined(json, (CombinedChart) chart));
-            setting.commonSetting((CombinedChart) chart);
-
-        } else if (category.equals(StaticsVariables.pie)) {
-            chart = new PieChart(thisActivity);
-            StaticsPieManager manager = new StaticsPieManager(thisActivity);
-            ((PieChart) chart).setData(manager.parsingPie(json, (PieChart) chart));
-            setting.commonSetting((PieChart) chart);
-
-        } else {
-            return;
-        }
-
-        chart.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Integer.valueOf(json.optString(StaticsVariables.height, "200")), getResources().getDisplayMetrics())));
-        generateTitle(json.optString(StaticsVariables.description, "차트"));
-
-        ll.addView(chart);
-        charts.add(chart);
-    }
-
-    public void generateTitle(String desc) {
+    public void generateTitle(String chartTitle) {
         int dpInPx = 0;
-        if (charts.size() == 0) {
+        if (textCharts.size() == 0) {
             dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()); // 10dp
         } else {
             dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics()); // 10dp
@@ -192,7 +137,7 @@ public class StaticsFragment extends Fragment {
         rl.setLayoutParams(layoutParams);
 
         TextView title = new TextView(thisActivity);
-        title.setText(desc);
+        title.setText(chartTitle);
         title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
         dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         title.setPadding(dpInPx, dpInPx, dpInPx, dpInPx);
@@ -206,13 +151,13 @@ public class StaticsFragment extends Fragment {
         ll.addView(rl);
     }
 
-    public class StaticsAsyncTask extends AsyncTask<JSONObject, Void, JSONObject> {
+    public class TextStaticsAsyncTask extends AsyncTask<JSONObject, Void, JSONObject> {
         private String url;
         private String method;
         private String requestBody;
         private String sResult;
 
-        public StaticsAsyncTask(String url, String method, String requestBody) {
+        public TextStaticsAsyncTask(String url, String method, String requestBody) {
             this.url = url;
             this.method = method;
             this.requestBody = requestBody;
@@ -222,7 +167,7 @@ public class StaticsFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             pd = new ProgressDialog(thisActivity);
-            pd.setMessage("차트를 그리고 있습니다.");
+            pd.setMessage("표를 그리고 있습니다.");
             pd.setIndeterminate(true);
             pd.setCancelable(false);
             pd.show();
@@ -246,7 +191,7 @@ public class StaticsFragment extends Fragment {
         protected void onPostExecute(JSONObject jsonObject) {
             super.onPostExecute(jsonObject);
             result = jsonObject;
-            parsingCharts();
+            parsingTextCharts();
             pd.dismiss();
         }
     }

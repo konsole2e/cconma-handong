@@ -74,7 +74,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         //LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        //View view = inflater.inflate(R.layout.board_item, viewGroup, false);
+        //View view = inflater.inflate(R.text_statics_chart.board_item, viewGroup, false);
 
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.board_item, viewGroup, false);

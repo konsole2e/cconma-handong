@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/stat_chart_rl"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+    <FrameLayout
+        android:id="@+id/stat_left_fl"
+        android:background="#000000"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:paddingLeft="1dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/stat_right_fl">
+
+        <LinearLayout
+            android:id="@+id/stat_left_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="left"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/stat_right_fl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:paddingRight="1dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:layout_alignParentRight="true">
+
+        <LinearLayout
+            android:id="@+id/stat_right_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="right"
+            android:orientation="vertical"
+            android:paddingRight="10dp" />
+    </FrameLayout>
+
+</RelativeLayout>
