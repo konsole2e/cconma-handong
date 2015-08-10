@@ -2,16 +2,11 @@ package handong.cconma.cconmaadmin.statics;
 
 import com.github.mikephil.charting.utils.ValueFormatter;
 
-import java.text.DecimalFormat;
-import java.text.Format;
 import java.util.FormatFlagsConversionMismatchException;
 
 public class StaticsValueFormatter implements ValueFormatter {
     private String unit = "";
     private String format = "";
-
-    public StaticsValueFormatter() {
-    }
 
     public StaticsValueFormatter(String mFormat, String mUnit) {
         if (mFormat.equals("")) {

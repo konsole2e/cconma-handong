@@ -14,9 +14,6 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.Toast;
-
 
 import java.util.HashMap;
 
@@ -84,7 +81,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 
             viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
             //viewPager.setOffscreenPageLimit(2);
-            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
+            final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
             viewPager.setAdapter(viewPagerAdapter);
 
             tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
@@ -104,7 +101,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
                     if (board == 0) {
                         board = 12;
                     } else {
-                        HashMap board_list =  BasicData.getInstance().getBoardList();
+                        HashMap board_list = BasicData.getInstance().getBoardList();
                         board = Integer.parseInt(board_list.get("board_no" + board).toString());
                     }
 
@@ -114,12 +111,24 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
                     startActivity(intent);
                 }
             });
+
+            //리스트 최상단으로 가는 버튼
+            FloatingActionButton fab_up = (FloatingActionButton)getActivity().findViewById(R.id.fab_up);
+            fab_up.setVisibility(View.VISIBLE);
+            fab_up.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                }
+            });
+
         }
         else if(position == 2){
             rootView = inflater.inflate(R.layout.statics_main, container, false);
 
             ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.statics_vp);
-            StaticsViewPagerAdapter svp = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity());
+            StaticsViewPagerAdapter svp = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
             viewPager.setOffscreenPageLimit(0);
             viewPager.setAdapter(svp);
 
@@ -131,6 +140,8 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 
             fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
             fab.setVisibility(View.GONE);
+            FloatingActionButton fab_up = (FloatingActionButton)getActivity().findViewById(R.id.fab_up);
+            fab_up.setVisibility(View.GONE);
         }
         else {
             rootView = inflater.inflate(R.layout.navi_webview, container, false);

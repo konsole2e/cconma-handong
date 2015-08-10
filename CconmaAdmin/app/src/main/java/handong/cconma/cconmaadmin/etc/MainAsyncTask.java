@@ -1,53 +1,23 @@
 package handong.cconma.cconmaadmin.etc;
 
-import android.app.FragmentManager;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
 import handong.cconma.cconmaadmin.http.HttpConnection;
-import handong.cconma.cconmaadmin.http.JSONResponse;
 
-/**
- * Created by Young Bin Kim on 2015-07-20.
- */
 public class MainAsyncTask extends AsyncTask<JSONObject, Void, JSONObject> {
     private final static String TAG = "debugging";
     private String url;
     private String method;
     private String requestBody;
     private String sResult;
-    private Context con = null;
-    private Fragment fg;
-    private String msg = "";
-    private ProgressDialog pd;
 
     public MainAsyncTask(String url, String method, String requestBody) {
         this.url = url;
         this.method = method;
         this.requestBody = requestBody;
-
-    }
-
-    public MainAsyncTask(String url, String method, String requestBody, Fragment fragment) {
-        this.url = url;
-        this.method = method;
-        this.requestBody = requestBody;
-        this.fg = fragment;
-    }
-
-    public MainAsyncTask(String url, String method, String requestBody, Context context) {
-        this.url = url;
-        this.method = method;
-        this.requestBody = requestBody;
-        this.con = context;
     }
 
     @Override
@@ -63,35 +33,5 @@ public class MainAsyncTask extends AsyncTask<JSONObject, Void, JSONObject> {
             e.printStackTrace();
         }
         return jsonObject;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        if (!msg.equals("")) {
-            if(con != null) {
-                pd = ProgressDialog.show(con, "", msg, true, true);
-            }else if(fg != null){
-                pd = ProgressDialog.show(fg.getActivity().getApplicationContext(), "", msg, true, true);
-            }
-        }
-    }
-
-    public void setMessage(String str) {
-        msg = str;
-    }
-
-    @Override
-    protected void onPostExecute(JSONObject jsonObject) {
-        super.onPostExecute(jsonObject);
-        if (!msg.equals("")) {
-            pd.dismiss();
-        }
-        if (fg != null) {
-            ((JSONResponse) fg).processFinish(jsonObject);
-        } else if (con != null) {
-            ((JSONResponse) con).processFinish(jsonObject);
-        }
-        return;
     }
 }

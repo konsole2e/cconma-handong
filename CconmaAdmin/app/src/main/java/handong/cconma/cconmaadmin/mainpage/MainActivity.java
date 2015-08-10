@@ -1,6 +1,5 @@
 package handong.cconma.cconmaadmin.mainpage;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -9,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -27,44 +25,26 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
+
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
-import android.os.Handler;
-
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.net.URLEncoder;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
-import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.LogoutWebView;
 import handong.cconma.cconmaadmin.etc.SettingActivity;
-import handong.cconma.cconmaadmin.http.JSONResponse;
 import handong.cconma.cconmaadmin.push.PushView;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
-import handong.cconma.cconmaadmin.gcm.RegistrationIntentService;
-import handong.cconma.cconmaadmin.statics.StaticsTest;
 
 /**
  * Created by YoungBinKim on 2015-07-06.
@@ -239,6 +219,8 @@ public class MainActivity extends AppCompatActivity{
         } else if (id == R.id.notification) {
             //Intent intent = new Intent(this, StartPage.class);
             //startActivity(intent);
+        } else if (id == R.id.search){
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -262,8 +244,14 @@ public class MainActivity extends AppCompatActivity{
         Configuration config = getResources().getConfiguration();
         int count = getFragmentManager().getBackStackEntryCount();
 
-        if (position == 2 && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
+        }else{
+            if (count == 0) {
+                finish();
+            } else {
+                getFragmentManager().popBackStack();
+            }
         }
 
         if (mOnKeyBackPressedListener != null) {
@@ -390,5 +378,53 @@ public class MainActivity extends AppCompatActivity{
             throw new RuntimeException("Could not get package name: " + e);
         }
     }
+
+    public class SpinnerAdapter extends ArrayAdapter<String> {
+
+        Context context;
+        String items[];
+        public SpinnerAdapter(final Context context, final int textViewResourceId, final String[] objects){
+            super(context, textViewResourceId, objects);
+            this.items = objects;
+            this.context = context;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(
+                        android.R.layout.simple_spinner_dropdown_item, parent, false);
+            }
+
+            TextView tv = (TextView)convertView
+                    .findViewById(android.R.id.text1);
+            tv.setText(items[position]);
+            tv.setTextColor(Color.BLACK);
+            tv.setTextSize(15);
+            return convertView;
+        }
+
+        /**
+         * 기본 스피너 View 정의
+         */
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(
+                        android.R.layout.simple_spinner_item, parent, false);
+            }
+
+            TextView tv = (TextView) convertView
+                    .findViewById(android.R.id.text1);
+            tv.setText(items[position]);
+            tv.setTextColor(Color.BLACK);
+            tv.setTextSize(15);
+            return convertView;
+        }
+    }
+
 }
 

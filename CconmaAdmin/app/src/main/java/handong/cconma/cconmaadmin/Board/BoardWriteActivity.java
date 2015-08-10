@@ -155,26 +155,32 @@ public class BoardWriteActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.write:
-                String tag ="";
-                for(int i=0; i<noticeArr.size()-1; i++){
-                    if(noticeAdd[i+1]){
-                        tag = tag + "@" + basicData.getHashTagList().get("hash_tag"+i) + " ";
+                if((!edit_title.getText().toString().equals("")) && (!edit_content.getText().toString().equals(""))) {
+                    String tag = "";
+                    for (int i = 0; i < noticeArr.size() - 1; i++) {
+                        if (noticeAdd[i + 1]) {
+                            tag = tag + "@" + basicData.getHashTagList().get("hash_tag" + i) + " ";
+                        }
                     }
-                }
 
-                try {
-                    String content = edit_content.getText().toString().replace("\n", "<br>");
+                    try {
+                        String content = edit_content.getText().toString().replace("\n", "<br>");
 
-                    String requestBody ="subject=" + String.valueOf(edit_title.getText())
-                            + "&content=" + tag + "<br>" + content + "<br><br><br> - From App" + "&filename=" +
-                            "" + "&filename2=" + "";
+                        String requestBody = "subject=" + String.valueOf(edit_title.getText())
+                                + "&content=" + tag + "<br>" + content + "<br><br><br> - From App" + "&filename=" +
+                                "" + "&filename2=" + "";
 
-                    Log.d("debugging", requestBody);
-                    Log.d("debugging", "async task: " + String.valueOf(board));
-                    new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/" + board, "POST", requestBody).execute().get();
-                } catch (Exception e) {
-                    Log.d("debugging", "Exception in BoardWriteActivity line 212 " + e.getMessage());
-                    e.printStackTrace();
+                        Log.d("debugging", requestBody);
+                        Log.d("debugging", "async task: " + String.valueOf(board));
+                        new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/" + board, "POST", requestBody).execute().get();
+                    } catch (Exception e) {
+                        Log.d("debugging", "Exception in BoardWriteActivity line 212 " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(context, "글이 등록되었습니다", Toast.LENGTH_SHORT).show();
+                    finish();
+                }else{
+                    Toast.makeText(context, "제목과 내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
                 Toast.makeText(context, "글이 등록되었습니다", Toast.LENGTH_SHORT).show();
                 AdminApplication.getInstance().setRefresh(true);

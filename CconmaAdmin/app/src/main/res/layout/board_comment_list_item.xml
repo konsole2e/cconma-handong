@@ -1,48 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="wrap_content"
-    android:paddingRight="10dp"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="40dp"
+    android:orientation="horizontal"
     android:paddingTop="8dp"
     android:paddingBottom="8dp">
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/text_board_view_comment_writer"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="40dp"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/text_board_view_comment_writer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:paddingRight="10dp"
-            android:paddingLeft="10dp"
-            android:layout_gravity="top"
-            android:hint="김은지"/>
+        android:textColor="#000000"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:layout_gravity="top"
+        android:hint="김은지"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical">
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:orientation="vertical">
-            <LinearLayout
-                android:id="@+id/layout_comment_notice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-            <TextView
-                android:id="@+id/text_board_view_comment"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:autoLink="web"/>
-        </LinearLayout>
-        <TextView
-            android:id="@+id/text_board_view_comment_date"
+            android:id="@+id/layout_comment_notice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right|top"
+            android:orientation="vertical"/>
+        <TextView
+            android:id="@+id/text_board_view_comment"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:textColor="#000000"
-            android:hint="07/06\n14:22"/>
+            android:autoLink="web"/>
     </LinearLayout>
-</FrameLayout>
+    <TextView
+        android:id="@+id/text_board_view_comment_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right|top"
+        android:textColor="#000000"
+        android:hint="07/06\n14:22"/>
+    <ImageButton
+        android:id="@+id/btn_comment"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/btn_search"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="top"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"/>
+</LinearLayout>

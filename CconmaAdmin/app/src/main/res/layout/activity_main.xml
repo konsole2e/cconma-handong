@@ -20,46 +20,60 @@
 
             <include
                 android:id="@+id/tool_bar"
-                layout="@layout/tool_bar"></include>
+                layout="@layout/tool_bar"/>
+
+
+
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
-                android:scrollbars="horizontal"
-                android:layout_below="@+id/tool_bar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:fillViewport="true"
+                android:layout_below="@+id/tool_bar"
                 android:background="#FFFFFF"
-                app:tabSelectedTextColor="@color/ColorPrimary"
-                app:tabTextColor="#666666"
+                android:fillViewport="true"
+                android:scrollbars="horizontal"
                 app:tabIndicatorColor="@color/ColorPrimary"
                 app:tabIndicatorHeight="4dp"
-                app:tabTextAppearance="?android:attr/textAppearanceSmall" />
+                app:tabSelectedTextColor="@color/ColorPrimary"
+                app:tabTextAppearance="?android:attr/textAppearanceSmall"
+                app:tabTextColor="#666666" />
 
             <View
                 android:id="@+id/toolbar_shadow"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@drawable/rectangle" />
-        </android.support.design.widget.AppBarLayout>
 
+        </android.support.design.widget.AppBarLayout>
         <FrameLayout
             android:id="@+id/main_content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        </FrameLayout>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             android:src="@drawable/ic_add_white_24dp"
-            android:layout_gravity="bottom|end"
-            app:fabSize="normal"
+            android:visibility="gone"
             app:backgroundTint="#dd2c00"
-            android:visibility="gone"            />
+            app:fabSize="normal" />
+
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+            android:layout_gravity="bottom|left"
+            app:fabSize="mini"
+            app:backgroundTint="#dd2c00" />
     </android.support.design.widget.CoordinatorLayout>
     <!--
         <android.support.v7.widget.RecyclerView
@@ -80,8 +94,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:textAppearance="?attr/textAppearanceListItem"
-        app:itemTextColor="#000000"
         app:itemIconTint="#9E9E9E"
+        app:itemTextColor="#000000"
         app:menu="@menu/menu_default" />
 
 </android.support.v4.widget.DrawerLayout>

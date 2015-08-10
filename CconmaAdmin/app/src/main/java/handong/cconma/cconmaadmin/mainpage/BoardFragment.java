@@ -44,6 +44,7 @@ import handong.cconma.cconmaadmin.http.HttpConnection;
  * Created by Young Bin Kim on 2015-07-27.
  */
 public class BoardFragment extends Fragment {
+    private static BoardFragment boardFragment;
     private static final float DEFAULT_HDIP_DENSITY_SCALE = 1.5f;
     public static final String ARG_PAGE_NO = "ARG_PAGE_NO";
     private List<BoardData> boardDataList;
@@ -86,6 +87,14 @@ public class BoardFragment extends Fragment {
         return fragment;
     }
 
+    public static BoardFragment getInstance(){
+        if (boardFragment == null) {
+            boardFragment = new BoardFragment();
+            return boardFragment;
+        }else{
+            return boardFragment;
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -157,7 +166,8 @@ public class BoardFragment extends Fragment {
         });
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
-        linearLayoutManager = new MyLinearLayoutManager(recyclerView.getContext());
+        recyclerView.setOnTouchListener(touchListener);
+        linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         circularProgressBar = (CircularProgressBar)view.findViewById(R.id.progressbar_circular);
 
@@ -622,4 +632,31 @@ public class BoardFragment extends Fragment {
         }
     }
 
+    View.OnTouchListener touchListener = new View.OnTouchListener() {
+        int prevY, curY, dy;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if(event.getAction() == MotionEvent.ACTION_DOWN){
+                prevY = (int)event.getY();
+            }else if(event.getAction() == MotionEvent.ACTION_MOVE){
+                curY = (int)event.getY();
+
+                if(prevY < curY){
+                    dy = curY-prevY;
+                    if(dy > 150){
+
+                    }
+                }else{
+                    dy = prevY -curY;
+                    if(dy > 150){
+                    }
+                }
+
+            }
+
+            return false;
+        }
+    };
 }

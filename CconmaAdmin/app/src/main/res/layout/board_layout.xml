@@ -49,10 +49,11 @@
                     android:hint="입력하세요"/>
                 <Button
                     android:id="@+id/btn_board_search"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.8"
-                    android:text="검색"/>
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/ic_search_white_24dp"/>
 
             </LinearLayout>
 
