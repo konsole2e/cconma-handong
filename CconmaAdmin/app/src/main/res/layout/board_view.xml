@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@color/ColorPanel">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/tool_bar">
+        </include>
+
+        <ListView
+            android:id="@+id/list_board_view_comment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="56dp"
+            android:divider="#C5C5C5"
+            android:dividerHeight="1dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#8C8C8C">
+        <LinearLayout
+            android:id="@+id/layout_board_view_comment"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_marginTop="1dp"
+            android:background="#ffffff">
+
+            <!--
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:paddingLeft="16dp"
+                style="@style/SmallBlack"
+                android:text="댓글"/>-->
+            <EditText
+                android:id="@+id/edit_board_view_comment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="44dp"
+                android:maxHeight="144dp"
+                android:layout_margin="6dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="15dp"
+                android:paddingLeft="7dp"
+                android:layout_weight="3"
+                style="@style/SmallBlack"
+                android:textColorHint="#C5C5C5"
+                android:background="@drawable/edit_comment"
+                android:isScrollContainer="true"
+                android:textColor="#000000"
+                android:hint="댓글을 입력하세요"/>
+            <Button
+                android:id="@+id/btn_board_view_comment"
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:text="입력"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <fr.castorflex.android.circularprogressbar.CircularProgressBar
+        android:id="@+id/progressbar_circular"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:indeterminate="true"
+        android:indeterminateOnly="false"
+        android:visibility="gone"
+        app:cpb_colors="@array/colors"
+        android:layout_gravity="center" />
+</FrameLayout>

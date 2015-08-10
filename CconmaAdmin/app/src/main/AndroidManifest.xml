@@ -1,34 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="handong.cconma.cconmaadmin" >
+    package="handong.cconma.cconmaadmin">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- uses-permissions for GCM -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.example.gcm.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
 
     <application
+        android:name=".mainpage.AdminApplication"
+        android:largeHeap="true"
         android:allowBackup="true"
+        android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:name=".mainpage.StartPage"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".BoardWrite"/>
+            android:name=".mainpage.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".etc.LoginWebView" />
+        <activity android:name=".etc.LogoutWebView" />
+        <activity android:name=".etc.StartupWebView" />
+        <activity android:name=".etc.MyWebView" />
+
+        <activity android:name=".etc.SettingActivity" />
+
+        <activity android:name=".board.BoardWriteActivity" />
+
+        <activity android:name=".board.BoardModifyActivity" />
+
         <activity
-            android:name=".BoardModify"/>
-        <activity
-            android:name=".paging"/>
-        <service
-            android:name=".IconService">
+            android:name=".board.BoardViewActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity android:name=".board.BoardMarkedActivity" />
+
+        <activity android:name=".push.PushView" />
+
+        <!-- GCM -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="iconservice"/>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="net.saltfactory.demo.gcm" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".gcm.MyGcmListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+        <service
+            android:name=".gcm.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".gcm.RegistrationIntentService"
+            android:exported="false" />
+        <!-- end of GCM -->
     </application>
-
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
 </manifest>

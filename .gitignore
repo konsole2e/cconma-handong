@@ -1,6 +1,8 @@
 *.class
 *.log
 *.exe
+Test/
+Cconma-Handong/
 
 # Android
 gen/
