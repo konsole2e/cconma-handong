@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -30,10 +31,12 @@ import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +50,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
@@ -54,6 +58,7 @@ import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
+import handong.cconma.cconmaadmin.etc.LogoutWebView;
 import handong.cconma.cconmaadmin.etc.SettingActivity;
 import handong.cconma.cconmaadmin.http.JSONResponse;
 import handong.cconma.cconmaadmin.push.PushView;
@@ -65,57 +70,24 @@ import handong.cconma.cconmaadmin.statics.StaticsTest;
  * Created by YoungBinKim on 2015-07-06.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     private Toolbar toolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView navigationView;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView.Adapter recyclerAdapter;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private RelativeLayout drawerHeader;
-    private handong.cconma.cconmaadmin.data.IntegratedSharedPreferences pref;
     private FloatingActionButton floatingActionButton;
-    private SwipeRefreshLayout mSwipeRefresh;
     private FragmentManager fragmentManager;
-    private CircularProgressBar circularProgressBar;
 
-    private String TITLESUSER[] = {"설정", "로그아웃"};
-    private int ICONSUSER[] = {R.drawable.ic_setting_selector,
-            R.drawable.ic_logout_selector};
-
-    private CharSequence TITLES[] = {"게시판", "통계", "1:1문의", "회원정보 조회", "주문조회", "마을지기 홈페이지"};
-    private int ICONS[] = {R.drawable.ic_board_selector, R.drawable.ic_chart_selector, R.drawable.ic_question_selector, R.drawable.ic_search_grey600_48dp, R.drawable.ic_shopping_cart_grey600_48dp, R.drawable.ic_home_selector};
     private int status = 0;
-    private String user_name = "개발";
-
-    public static final String PROPERTY_REG_ID = "registration_id";
-    public static final String PROPERTY_APP_VERSION = "1";
-    private static final String TAG = "debugging";
     private int position;
+    private Context context;
 
-    Context context;
+    private static final String TAG = "debugging";
 
-    /*
-    temp
-     */
     private CharSequence mTitle;
-
-    class loadingData extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-        }
-    }
+    private onKeyBackPressedListener mOnKeyBackPressedListener = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,17 +101,36 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
-
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         View view = inflater.inflate(R.layout.drawer_header, navigationView, false);
         TextView textview = (TextView)view.findViewById(R.id.name);
+        ImageButton userButton = (ImageButton)view.findViewById(R.id.user_arrow);
 
         textview.setText(BasicData.getInstance().getName());
-        //textview.setText("마을지기");
+
+        userButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                if( status == 1 ) {
+                    Menu menu = navigationView.getMenu();
+                    menu.removeGroup(R.id.menu_user);
+                    navigationView.inflateMenu(R.menu.menu_default);
+                    status = 0;
+                }
+                else{
+                    Menu menu = navigationView.getMenu();
+                    menu.removeGroup(R.id.menu_default);
+                    navigationView.inflateMenu(R.menu.menu_user);
+                    status = 1;
+                }
+            }
+        });
 
         navigationView.addHeaderView(view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -155,23 +146,40 @@ public class MainActivity extends AppCompatActivity {
 
                     position = menuItem.getItemId();
                     Log.d(TAG, String.valueOf(position));
-                    switch (position) {
-                        case R.id.board:
-                            selectItem(1);
-                            break;
-                        case R.id.chart:
-                            selectItem(2);
-                            break;
-                        case 2:
-                            break;
-                        case 3:
-                            break;
-                        case 4:
-                            break;
-                        case 5:
-                            break;
-                        case 6:
-                            break;
+
+                    if( status == 0 ) {
+                        switch (position) {
+                            case R.id.board:
+                                selectItem(1);
+                                break;
+                            case R.id.chart:
+                                selectItem(2);
+                                break;
+                            case R.id.qna:
+                                selectItem(3);
+                                break;
+                            case R.id.searchuser:
+                                selectItem(4);
+                                break;
+                            case R.id.searchorder:
+                                selectItem(5);
+                                break;
+                            case R.id.homepage:
+                                selectItem(6);
+                                break;
+                            case 6:
+                                break;
+                        }
+                    }
+                    else{
+                        switch( position ){
+                            case R.id.user_settings:
+                                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                                break;
+                            case R.id.logout:
+                                startActivity(new Intent(MainActivity.this, LogoutWebView.class));
+                                finish();
+                        }
                     }
                 }
                 return true;
@@ -236,6 +244,19 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public interface onKeyBackPressedListener {
+        void onBack();
+    }
+
+    public void setOnKeyBackPressedListener(onKeyBackPressedListener listener) {
+        if( position == 0 || position == R.id.board || position == R.id.chart ){
+            mOnKeyBackPressedListener = null;
+        }
+        else {
+            mOnKeyBackPressedListener = listener;
+        }
+    }
+
     @Override
     public void onBackPressed() {
         Configuration config = getResources().getConfiguration();
@@ -244,12 +265,12 @@ public class MainActivity extends AppCompatActivity {
         if (position == 2 && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
         }
-        if (count == 0) {
-            finish();
-        } else {
-            getFragmentManager().popBackStack();
-        }
 
+        if (mOnKeyBackPressedListener != null) {
+            mOnKeyBackPressedListener.onBack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     /*@Override

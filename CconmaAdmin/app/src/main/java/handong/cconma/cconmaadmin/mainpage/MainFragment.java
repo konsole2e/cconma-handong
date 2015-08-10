@@ -1,5 +1,6 @@
 package handong.cconma.cconmaadmin.mainpage;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -20,36 +22,39 @@ import java.util.HashMap;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.data.Cookies;
-import handong.cconma.cconmaadmin.statics.StaticsLike;
-import handong.cconma.cconmaadmin.statics.StaticsMember;
-import handong.cconma.cconmaadmin.statics.StaticsMemberRecent;
-import handong.cconma.cconmaadmin.statics.StaticsOrderH;
-import handong.cconma.cconmaadmin.statics.StaticsOrderRecent;
-import handong.cconma.cconmaadmin.statics.StaticsTest;
-import handong.cconma.cconmaadmin.statics.StaticsTrade;
 import handong.cconma.cconmaadmin.statics.StaticsViewPagerAdapter;
 
 /**
  * Created by Young Bin Kim on 2015-07-14.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements MainActivity.onKeyBackPressedListener {
     public static final String POSITION = "0";
     private CharSequence TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
 
-    private WebView webview;
-    private CircularProgressBar circularProgressBar;
-    ViewPager viewPager;
+    public static WebView webview;
+    private SmoothProgressBar progressBar;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+    private FloatingActionButton fab;
 
     public MainFragment(){
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
+        if( AdminApplication.getInstance().getRefresh() ){
+            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(),
+                    getActivity().getApplicationContext());
+            viewPager.setAdapter(viewPagerAdapter);
+            viewPager.setCurrentItem(AdminApplication.getInstance().getTabPosition());
+            AdminApplication.getInstance().setRefresh(false);
+        }
         Log.d("fragment", "RESUME");
     }
 
@@ -82,25 +87,28 @@ public class MainFragment extends Fragment {
             ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
             viewPager.setAdapter(viewPagerAdapter);
 
-            TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
+            tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
             tabLayout.setVisibility(View.VISIBLE);
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
             tabLayout.setupWithViewPager(viewPager);
 
-            FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+            fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), BoardWriteActivity.class);
                     int board = viewPager.getCurrentItem();
+                    AdminApplication.getInstance().setTabPosition(board);
+
                     if (board == 0) {
                         board = 12;
                     } else {
                         HashMap board_list =  BasicData.getInstance().getBoardList();
                         board = Integer.parseInt(board_list.get("board_no" + board).toString());
                     }
+
+                    Intent intent = new Intent(getActivity(), BoardWriteActivity.class);
                     intent.putExtra("board", board);
                     Log.d("debugging", String.valueOf(board));
                     startActivity(intent);
@@ -115,32 +123,36 @@ public class MainFragment extends Fragment {
             viewPager.setOffscreenPageLimit(0);
             viewPager.setAdapter(svp);
 
-
-            TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
+            tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
             tabLayout.setVisibility(View.VISIBLE);
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
             tabLayout.setupWithViewPager(viewPager);
 
-            FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+            fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
             fab.setVisibility(View.GONE);
         }
         else {
-            rootView = inflater.inflate(R.layout.webview, container, false);
-            circularProgressBar = (CircularProgressBar)rootView.findViewById(R.id.progressbar_circular);
+            rootView = inflater.inflate(R.layout.navi_webview, container, false);
+            progressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
+            String location = getResources().getString(R.string.www);
 
             switch(position){
                 case 3:
-                    openWebView(rootView, "http://www.cconma.com/admin/help_board/help_board_list.pmv");
+                    hideOtherViews();
+                    openWebView(rootView, location + "/admin/help_board/help_board_list.pmv");
                     break;
                 case 4:
-                    openWebView(rootView, "http://www.cconma.com/CconmaAdmin/member.fmv?cmd=list");
+                    hideOtherViews();
+                    openWebView(rootView, location + "/CconmaAdmin/member.fmv?cmd=list");
                     break;
                 case 5:
-                    openWebView(rootView, "http://www.cconma.com/CconmaAdmin/orderList.fmv?cmd=list");
+                    hideOtherViews();
+                    openWebView(rootView, location + "/CconmaAdmin/orderList.fmv?cmd=list");
                     break;
                 case 6:
-                    openWebView(rootView, "http://www.cconma.com/CconmaAdmin/main.fmv");
+                    hideOtherViews();
+                    openWebView(rootView, location + "/CconmaAdmin/main.fmv");
                     break;
             }
         }
@@ -149,21 +161,46 @@ public class MainFragment extends Fragment {
         return rootView;
     }
 
-    public boolean canGoBack() {
-        return webview.canGoBack();
+//////////////////back key control in fragment
+    @Override
+    public void onBack() {
+        if (webview.canGoBack()) {
+            webview.goBack();
+        } else {
+            MainActivity activity = (MainActivity) getActivity();
+            activity.setOnKeyBackPressedListener(null);
+            activity.onBackPressed();
+        }
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        ((MainActivity) activity).setOnKeyBackPressedListener(this);
+    }
+//////////////////
+
     public void openWebView(View view, String url){
-        webview = (WebView) view.findViewById(R.id.webView);
+        webview = (WebView) view.findViewById(R.id.navi_webView);
 
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
         webview.getSettings().setBuiltInZoomControls(true);
-        webview.getSettings().setUserAgentString("User-agent");
-        webview.canGoBackOrForward(5);
+        String userAgent = webview.getSettings().getUserAgentString();
+        webview.getSettings().setUserAgentString(userAgent + ";com.admincconma.app");
+        webview.getSettings().setLoadWithOverviewMode(true);
+        webview.getSettings().setUseWideViewPort(true);
+        webview.canGoBackOrForward(3);
         webview.loadUrl(url);
         webview.setWebViewClient(new WebClient());
     }
 
+    public void hideOtherViews(){
+        tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
+        tabLayout.setVisibility(View.GONE);
+
+        fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
+    }
  /*   @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -193,12 +230,14 @@ public class MainFragment extends Fragment {
 
     class WebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
+            progressBar.progressiveStart();
             view.loadUrl(url);
             return true;
         }
         public void onPageFinished(WebView view, String url){
-            ((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).progressiveStop();
-            Cookies.getInstance(getActivity().getApplicationContext()).updateCookies(url);
+            progressBar.progressiveStop();
+            if( getActivity().getApplicationContext() != null )
+                Cookies.getInstance(getActivity().getApplicationContext()).updateCookies(url);
         }
     }
 }
