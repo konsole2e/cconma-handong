@@ -270,6 +270,7 @@ public class MainActivity extends AppCompatActivity{
             mOnKeyBackPressedListener.onBack();
         } else {
             super.onBackPressed();
+            finish();
         }
     }
 
