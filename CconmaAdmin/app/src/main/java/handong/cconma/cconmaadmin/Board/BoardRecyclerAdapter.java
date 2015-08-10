@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -90,7 +91,15 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         else {
             final BoardData dataItem = dataItemList.get(i);
 
-            viewHolder.text_board_title.setText(dataItem.subject);
+            if(dataItem.boardAll) {
+                viewHolder.text_board_title.setText(Html.fromHtml("<b>"+"[" + dataItem.board_short_name + "]</b> " + dataItem.subject));
+                Log.d("board", dataItem.board_short_name);
+            }
+            else {
+                viewHolder.text_board_title.setText(dataItem.subject);
+                Log.d("board", dataItem.board_short_name + "else");
+            }
+
             viewHolder.text_board_title.setAlpha(1.0f);
             viewHolder.text_board_title.setTextColor(Color.BLACK);
             viewHolder.text_board_writer.setAlpha(1.0f);

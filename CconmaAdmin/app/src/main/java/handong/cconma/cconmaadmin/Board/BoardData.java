@@ -12,6 +12,7 @@ import java.util.Map;
  */
 public class BoardData {
 
+    public boolean boardAll;
     public boolean board_file = false;      //파일 여부 ??
 
     public boolean board_marked = false;    //즐겨찾기 **

@@ -36,8 +36,6 @@ import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardData;
 import handong.cconma.cconmaadmin.board.BoardRecyclerAdapter;
 import handong.cconma.cconmaadmin.board.BoardViewActivity;
-import handong.cconma.cconmaadmin.board.MyLinearLayoutManager;
-import handong.cconma.cconmaadmin.customview.PullToRefreshView;
 import handong.cconma.cconmaadmin.http.HttpConnection;
 
 /**
@@ -57,7 +55,6 @@ public class BoardFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView recyclerView;
     private CircularProgressBar circularProgressBar;
-    private PullToRefreshView mPullToRefreshView;
     private View view;
     private BoardRecyclerAdapter adapter;
 
@@ -83,7 +80,6 @@ public class BoardFragment extends Fragment {
         args.putString(ARG_PAGE_NO, page_no);
         BoardFragment fragment = new BoardFragment();
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -504,6 +500,11 @@ public class BoardFragment extends Fragment {
                 BoardData data = new BoardData();
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
+                if(board_no.equals("all"))
+                    data.boardAll = true;
+                else
+                    data.boardAll = false;
+
                 data.notice_type = jsonObject.getString("notice_type");
                 data.board_no = jsonObject.getString("board_no");
                 data.boardarticle_no = jsonObject.getString("boardarticle_no");
@@ -540,8 +541,6 @@ public class BoardFragment extends Fragment {
                     data.board_marked = true;
                 else
                     data.board_marked = false;
-
-
 
                 boardDataList.add(data);
                 isReload = false;
@@ -587,6 +586,10 @@ public class BoardFragment extends Fragment {
                 BoardData data = new BoardData();
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
+                if(board_no.equals("all"))
+                    data.boardAll = true;
+                else
+                    data.boardAll = false;
                 data.notice_type = jsonObject.getString("notice_type");
                 data.board_no = jsonObject.getString("board_no");
                 data.boardarticle_no = jsonObject.getString("boardarticle_no");
