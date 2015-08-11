@@ -70,18 +70,26 @@ public class StartUp {
             }
 
             jsonArray = responseJson.getJSONArray("admin_webview_menu_list");
-            for(int i = 0; i < jsonArray.length(); i++){
+            for(int i = 0; i < jsonArray.length(); i++) {
                 json = jsonArray.getJSONObject(i);
                 data.setMenuNameList("menu_name" + i, json.getString("webview_menu_name"));
 
                 JSONArray jsonArray_temp = json.getJSONArray("webview_submenu");
                 HashMap<String, String> submenu = new HashMap<>();
-                for(int j = 0; j < jsonArray_temp.length(); j++ ){
+                for (int j = 0; j < jsonArray_temp.length(); j++) {
                     JSONObject json_temp = jsonArray_temp.getJSONObject(j);
                     submenu.put("submenu_name" + i + "-" + j, json_temp.getString("webview_submenu_name"));
                     submenu.put("submenu_url" + i + "-" + j, json_temp.getString("webview_url"));
                 }
                 data.setSubmenuNameList(submenu);
+            }
+
+            jsonArray = responseJson.getJSONArray("admin_stat_menu_list");
+            for(int i = 0; i < jsonArray.length(); i++) {
+                json = jsonArray.getJSONObject(i);
+
+                data.setTextChartList("stat_name" + i, json.getString("stat_menu_name"));
+                data.setTextChartList("stat_path" + i, json.getString("stat_api_path"));
             }
         }catch(Exception e){
             Log.e("debugging", "Exception in StartPage line 127: " + e.getMessage());

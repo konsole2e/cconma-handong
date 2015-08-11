@@ -7,9 +7,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -19,44 +16,38 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.SupportMenuInflater;
-import android.support.v7.internal.view.menu.MenuBuilder;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
-
-import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.LogoutWebView;
 import handong.cconma.cconmaadmin.etc.SettingActivity;
-import handong.cconma.cconmaadmin.push.PushView;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
 
 /**
  * Created by YoungBinKim on 2015-07-06.
  */
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
+    public Menu mMenu;
     private Toolbar toolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -82,14 +73,11 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         getWindow().setBackgroundDrawable(null);
 
         mTitle = getTitle();
-
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
@@ -148,7 +136,7 @@ public class MainActivity extends AppCompatActivity{
                     position = menuItem.getItemId();
                     Log.d(TAG, String.valueOf(position));
 
-                    if( status == 0 ) {
+                    if (status == 0) {
                         switch (position) {
                             case R.id.board:
                                 selectItem(-1);
@@ -156,14 +144,16 @@ public class MainActivity extends AppCompatActivity{
                             case R.id.chart:
                                 selectItem(-2);
                                 break;
+                            case R.id.text_chart:
+                                selectItem(-3);
+                                break;
                             default:
                                 if( position <= menu_count ){
                                     selectItem(position);
                                 }
                         }
-                    }
-                    else{
-                        switch( position ){
+                    } else {
+                        switch (position) {
                             case R.id.user_settings:
                                 startActivity(new Intent(MainActivity.this, SettingActivity.class));
                                 break;
@@ -217,6 +207,7 @@ public class MainActivity extends AppCompatActivity{
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        mMenu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -226,6 +217,7 @@ public class MainActivity extends AppCompatActivity{
     public boolean onPrepareOptionsMenu(Menu menu) {
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -241,10 +233,7 @@ public class MainActivity extends AppCompatActivity{
         } else if (id == R.id.notification) {
             //Intent intent = new Intent(this, StartPage.class);
             //startActivity(intent);
-        } else if (id == R.id.search){
-
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -253,10 +242,9 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void setOnKeyBackPressedListener(onKeyBackPressedListener listener) {
-        if( position == 0 || position == R.id.board || position == R.id.chart ){
+        if (position == 0 || position == R.id.board || position == R.id.chart || position == R.id.text_chart) {
             mOnKeyBackPressedListener = null;
-        }
-        else {
+        } else {
             mOnKeyBackPressedListener = listener;
         }
     }
@@ -266,18 +254,21 @@ public class MainActivity extends AppCompatActivity{
         Configuration config = getResources().getConfiguration();
         int count = getFragmentManager().getBackStackEntryCount();
 
-        if (mOnKeyBackPressedListener != null) {
-            mOnKeyBackPressedListener.onBack();
+        if ( position == R.id.chart && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
+            return;
         } else {
             if (count == 0) {
-                finish();
+                //    finish();
             } else {
                 getFragmentManager().popBackStack();
             }
         }
-
-        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
+        if (mOnKeyBackPressedListener != null) {
+            mOnKeyBackPressedListener.onBack();
+        } else {
+            super.onBackPressed();
+            //    finish();
         }
     }
 
@@ -391,7 +382,8 @@ public class MainActivity extends AppCompatActivity{
 
         Context context;
         String items[];
-        public SpinnerAdapter(final Context context, final int textViewResourceId, final String[] objects){
+
+        public SpinnerAdapter(final Context context, final int textViewResourceId, final String[] objects) {
             super(context, textViewResourceId, objects);
             this.items = objects;
             this.context = context;
@@ -406,7 +398,7 @@ public class MainActivity extends AppCompatActivity{
                         android.R.layout.simple_spinner_dropdown_item, parent, false);
             }
 
-            TextView tv = (TextView)convertView
+            TextView tv = (TextView) convertView
                     .findViewById(android.R.id.text1);
             tv.setText(items[position]);
             tv.setTextColor(Color.BLACK);
@@ -433,6 +425,5 @@ public class MainActivity extends AppCompatActivity{
             return convertView;
         }
     }
-
 }
 

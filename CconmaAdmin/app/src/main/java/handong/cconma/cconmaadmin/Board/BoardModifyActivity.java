@@ -16,19 +16,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
-import handong.cconma.cconmaadmin.mainpage.MainActivity;
 import handong.cconma.cconmaadmin.R;
 
 /**
@@ -71,6 +68,11 @@ public class BoardModifyActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         context = getApplicationContext();
+
+        /*
+        * SELECT notice, title, content, file FROM board_database WHERE number=number
+        * */
+        boolean noticeCheck = true;
 
         board_no = this.getIntent().getStringExtra("board_no");
         boardarticle_no = this.getIntent().getStringExtra("boardarticle_no");
@@ -171,6 +173,7 @@ public class BoardModifyActivity extends AppCompatActivity {
             case R.id.write:
 
                 tag = "";
+                String html_content = edit_content.getText().toString().replace("\n", "<br>");
                 for (int i = 0; i < noticeArr.size() - 1; i++) {
                     if (noticeAdd[i + 1]) {
                         tag = tag + "@" + basicData.getHashTagList().get("hash_tag" + i) + " ";
@@ -180,7 +183,7 @@ public class BoardModifyActivity extends AppCompatActivity {
                 try{
 
                     String requestBody =  "subject=" + edit_title.getText()
-                            + "&content=" + tag + edit_content.getText()
+                            + "&content=" + tag + html_content
                             + "&_METHOD=" + "PUT"
                             + "&filename1=" + ""
                             + "&filename2=" + "";

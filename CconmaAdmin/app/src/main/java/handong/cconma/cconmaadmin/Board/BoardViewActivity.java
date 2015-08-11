@@ -30,9 +30,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,7 +61,6 @@ import handong.cconma.cconmaadmin.http.HttpConnection;
  * 게시판 목록에서 하나 선택하여 글 내용을 보여주는 화면
  * Created by eundi on 15. 7. 6..
  */
-
 
 public class BoardViewActivity extends AppCompatActivity{
     private Toolbar toolbar;
@@ -99,6 +95,8 @@ public class BoardViewActivity extends AppCompatActivity{
     String view_content="";
     HashMap hashtag;
 
+    String from="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +105,7 @@ public class BoardViewActivity extends AppCompatActivity{
         board_no = this.getIntent().getStringExtra("board_no");
         boardarticle_no = this.getIntent().getStringExtra("boardarticle_no");
         marked = this.getIntent().getBooleanExtra("marked", false);
+        from = this.getIntent().getStringExtra("from");
 
 
         Display dis = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -121,8 +120,6 @@ public class BoardViewActivity extends AppCompatActivity{
 
         circularProgressBar = (CircularProgressBar)findViewById(R.id.progressbar_circular);
         new ViewAsyncTask().execute();
-        //jsonParser();
-
     }
 
     View.OnClickListener clickListener = new View.OnClickListener(){
@@ -137,17 +134,17 @@ public class BoardViewActivity extends AppCompatActivity{
                     String strNow = sdfNow.format(date);
                     if(!(edit_board_view_comment.getText().toString()).equals("")) {
                         /*****************************     댓글 수정       ********************************/
-
                         if(edit_board_view_comment.getTag() != null){
                             insert_mode = 1;
                             new InsertAsyncTask().execute();
                             edit_board_view_comment.setText("");
                         }else{
                             /*************************        댓글 입력         ****************************/
+                            String html_comment = edit_board_view_comment.getText().toString().replace("\n", "<br>");
                             insert_mode = 0;
                             HashMap hash = new HashMap();
                             BasicData basicData = BasicData.getInstance();
-                            adapter_comment.addItem("123", basicData.getName(), strNow, edit_board_view_comment.getText().toString(), hash);
+                            adapter_comment.addItem("123", basicData.getName(), strNow, html_comment, hash);
                             adapter_comment.notifyDataSetChanged();
 
                             new InsertAsyncTask().execute();
@@ -260,20 +257,30 @@ public class BoardViewActivity extends AppCompatActivity{
 
     class InsertAsyncTask extends AsyncTask<String, Void, JSONObject>{
         String requestBody;
+        String commentNO;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            String html_comment=edit_board_view_comment.getText().toString().replace("\n", "<br>");
+            if(insert_mode == 0){
+                requestBody = "board_no=" + board_no
+                        + "&boardarticle_no=" + boardarticle_no
+                        +"&content=" + html_comment;
+            }else if(insert_mode == 1){
+                requestBody = "_METHOD=" + "PUT"
+                        + "&board_no=" + board_no
+                        + "&boardarticle_no=" + boardarticle_no
+                        + "&comment_no=" + edit_board_view_comment.getTag()
+                        + "&content=" + html_comment;
 
+                commentNO = edit_board_view_comment.getTag().toString();
+            }
         }
 
         @Override
         protected JSONObject doInBackground(String... params) {
-            /*try{
+            try{
                 if(insert_mode == 0) {
-                    requestBody = "board_no=" + board_no
-                            + "&boardarticle_no=" + boardarticle_no
-                            +"&content=" + edit_board_view_comment.getText().toString();
-
                     HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
                             + board_no + "/articles/" + boardarticle_no + "/comments", "POST", requestBody);
                     String sResult = connection.init();
@@ -328,21 +335,15 @@ public class BoardViewActivity extends AppCompatActivity{
                                 }
                             }
                             adapter_comment.board_comment_list_data.remove(adapter_comment.getCount() - 1);
-                            list_board_view_comment.clearChoices();
+                            //list_board_view_comment.clearChoices();
                             adapter_comment.addItem(boardcomment_no, comment_name, comment_reg_date, comment_content, commentHashMap);
                         }
                     }
                 }else if(insert_mode == 1){
                     //modify
-                    requestBody = "_METHOD=" + "PUT"
-                            + "&board_no=" + board_no
-                            + "&boardarticle_no=" + boardarticle_no
-                            + "&comment_no=" + edit_board_view_comment.getTag()
-                            + "&content=" + edit_board_view_comment.getText().toString();
-
                     HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
                             +board_no+"/articles/" + boardarticle_no + "/comments/"
-                            + edit_board_view_comment.getTag(), "POST", requestBody);
+                            + commentNO, "POST", requestBody);
 
                     String sResult = connection.init();
 
@@ -374,9 +375,6 @@ public class BoardViewActivity extends AppCompatActivity{
                                     commentHashMap.put("hash_tag_type" + j, hashObj.getString("hash_tag_type"));
                                 }
                             }
-
-
-
                             adapter_comment.update(modify_position, comment_content, commentHashMap);
                         }
                     }
@@ -393,7 +391,7 @@ public class BoardViewActivity extends AppCompatActivity{
                 }
             }catch(Exception e){
 
-            }*/
+            }
             return null;
         }
 
@@ -543,13 +541,6 @@ public class BoardViewActivity extends AppCompatActivity{
                 webView_content.getSettings().setBuiltInZoomControls(true);
 
                 webView_content.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
-                /*webView_content.setWebViewClient(new WebViewClient(){
-                    @Override
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                        view.loadUrl(url);
-                        return true;
-                    }
-                });*/
 
                 JSONArray jsonArray = json.getJSONArray("comments");
                 for(int i=0; i<jsonArray.length(); i++){
@@ -868,6 +859,11 @@ public class BoardViewActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                if(from.equals("Mark")){
+                    Intent intent = new Intent(this, BoardMarkedActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
                 finish();
                 return true;
             case R.id.favorite:
@@ -918,10 +914,8 @@ public class BoardViewActivity extends AppCompatActivity{
                 AlertDialog alert = alert_build.create();
                 alert.setCanceledOnTouchOutside(true);
                 alert.show();
-                //item.setIcon(getResources().getDrawable(R.drawable.ic_star_white_24dp));
                 break;
             case R.id.complete:
-                //item.setIcon(getResources().getDrawable(R.drawable.ic_check_box_white_24dp));
                 AlertDialog.Builder alert_builder = new AlertDialog.Builder(this);
                 String alertSt = "";
                 final String complete = text_board_view_title.getText().toString().substring(0, 4);
@@ -929,8 +923,8 @@ public class BoardViewActivity extends AppCompatActivity{
                     alertSt = "이 글을 완료하시겠습니까?";
                 }else{
                     alertSt = "이 글을 완료 해제하시겠습니까?";
-
                 }
+                final String html_content = view_content.replace("\n", "<br>");
                 alert_builder.setMessage(alertSt).setCancelable(false)
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
@@ -952,7 +946,7 @@ public class BoardViewActivity extends AppCompatActivity{
                                 try{
 
                                     String requestBody = "subject=" + text_board_view_title.getText()
-                                            + "&content=" + tag + view_content
+                                            + "&content=" + tag + html_content
                                             + "&_METHOD=" + "PUT"
                                             + "&filename1=" + ""
                                             + "&filename2=" + "";

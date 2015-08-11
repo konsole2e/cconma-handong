@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +19,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,9 +34,8 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardData;
 import handong.cconma.cconmaadmin.board.BoardRecyclerAdapter;
+import handong.cconma.cconmaadmin.board.BoardSearchActivity;
 import handong.cconma.cconmaadmin.board.BoardViewActivity;
-import handong.cconma.cconmaadmin.board.MyLinearLayoutManager;
-import handong.cconma.cconmaadmin.customview.PullToRefreshView;
 import handong.cconma.cconmaadmin.http.HttpConnection;
 
 /**
@@ -47,18 +45,17 @@ public class BoardFragment extends Fragment {
     private static BoardFragment boardFragment;
     private static final float DEFAULT_HDIP_DENSITY_SCALE = 1.5f;
     public static final String ARG_PAGE_NO = "ARG_PAGE_NO";
+    public static final String ARG_TITLE = "ARG_TITLE";
     private List<BoardData> boardDataList;
 
     private static String TAG = "debugging";
-
+    private String board_title;
     private String board_no;
     private int page_no;
     private int overallXScroll = 0;
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView recyclerView;
     private CircularProgressBar circularProgressBar;
-    private PullToRefreshView mPullToRefreshView;
-    private View view;
     private BoardRecyclerAdapter adapter;
 
     private Boolean isLoading = false;
@@ -68,7 +65,9 @@ public class BoardFragment extends Fragment {
     private int lastVisibleItemCount;
     int isSearch;
 
-    FrameLayout layout_board_search;
+    private View actionView;
+
+    //FrameLayout layout_board_search;
     Spinner spinner_board_condition;
     EditText edit_board_search;
     Button btn_board_search;
@@ -78,12 +77,12 @@ public class BoardFragment extends Fragment {
 
     InputMethodManager input_manager;
 
-    public static BoardFragment newInstance(String page_no) {
+    public static BoardFragment newInstance(String page_no, String title) {
         Bundle args = new Bundle();
         args.putString(ARG_PAGE_NO, page_no);
+        args.putString(ARG_TITLE, title);
         BoardFragment fragment = new BoardFragment();
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -95,6 +94,7 @@ public class BoardFragment extends Fragment {
             return boardFragment;
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -105,66 +105,17 @@ public class BoardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         page_no = 1;
+        setHasOptionsMenu(true);
         board_no = getArguments().getString(ARG_PAGE_NO);
+        board_title = getArguments().getString(ARG_TITLE);
         //boardDataList = new ArrayList<>();
-        Log.d("debugging", "board no: " + board_no);
+        Log.d("debugging", "board no: " + board_no + "board title: " + board_title);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.board_layout, container, false);
-
-        //검색창 열기/닫기 버튼
-        /*btn_board_search_view = (ToggleButton)view.findViewById(R.id.btn_board_search_view);
-        btn_board_search_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (btn_board_search_view.isChecked()) {
-                    layout_board_search.setVisibility(View.VISIBLE);
-                } else {
-                    layout_board_search.setVisibility(View.GONE);
-                }
-            }
-        });*/
-        //검색창 Frame Layout
-        layout_board_search = (FrameLayout)view.findViewById(R.id.layout_board_search);
-        //검색 조건 spinner
-        spinner_board_condition = (Spinner)view.findViewById(R.id.spinner_board_condition);
-        String[] cond = getResources().getStringArray(R.array.board_condition);
-        final SpinnerAdapter adapter = new SpinnerAdapter(getActivity().getApplicationContext(),
-                android.R.layout.simple_spinner_item, cond);
-        spinner_board_condition.setAdapter(adapter);
-        spinner_board_condition.setSelection(0);
-        //검색 입력
-        edit_board_search = (EditText)view.findViewById(R.id.edit_board_search);
-        //검색하기 버튼
-        btn_board_search = (Button)view.findViewById(R.id.btn_board_search);
-        btn_board_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(spinner_board_condition.getSelectedItem().equals("작성자"))
-                    search_cond = "/writers/all?search_field=name&keyword=";
-                else if(spinner_board_condition.getSelectedItem().equals("내용"))
-                    search_cond = "/writers/all?search_field=content&keyword=";
-                else if(spinner_board_condition.getSelectedItem().equals("제목"))
-                    search_cond = "/writers/all?search_field=subject&keyword=";
-
-                search_keyword = String.valueOf(edit_board_search.getText());
-                try {
-                    search_keyword = URLEncoder.encode(search_keyword, "UTF-8");
-                }catch(Exception e){
-
-                }
-                isSearch = 1;
-                new BoardAsyncTask(getActivity().getApplicationContext()).execute("http://www.cconma.com/admin/api/board/v1/boards/"
-                        + board_no + "/writers/all?page=" + "1" + "&n=20", "GET", "");
-                Log.d("test", search_cond);
-
-                input_manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
-            }
-        });
+       View view = inflater.inflate(R.layout.board_layout, container, false);
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
         recyclerView.setOnTouchListener(touchListener);
@@ -172,20 +123,24 @@ public class BoardFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         circularProgressBar = (CircularProgressBar)view.findViewById(R.id.progressbar_circular);
 
-        /*mPullToRefreshView = (PullToRefreshView) view.findViewById(R.id.pull_to_refresh);
-        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPullToRefreshView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPullToRefreshView.setRefreshing(false);
-                    }
-                }, 2000);
-            }
-        });*/
-
         return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.search) {
+            Intent intent = new Intent(getActivity(), BoardSearchActivity.class);
+            intent.putExtra("board_no", board_no);
+            intent.putExtra("board_title", board_title);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -237,7 +192,7 @@ public class BoardFragment extends Fragment {
             TextView tv = (TextView) convertView
                     .findViewById(android.R.id.text1);
             tv.setText(items[position]);
-            tv.setTextColor(Color.BLACK);
+            tv.setTextColor(Color.WHITE);
             tv.setTextSize(15);
             return convertView;
         }
@@ -267,7 +222,7 @@ public class BoardFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void Void) {
-            if( page == 0  && getActivity().getApplicationContext() != null) {
+            if( page == 0 ) {
                 adapter = new BoardRecyclerAdapter(boardDataList, context);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setItemAnimator(null);
@@ -289,6 +244,7 @@ public class BoardFragment extends Fragment {
                                 i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
                                 i.putExtra("number", boardDataList.get(position).boardarticle_no);
                                 i.putExtra("marked", boardDataList.get(position).board_marked);
+                                i.putExtra("from", "fragment");
 
                                 startActivity(i);
                             }
@@ -505,6 +461,11 @@ public class BoardFragment extends Fragment {
                 BoardData data = new BoardData();
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
+                if(board_no.equals("all"))
+                    data.boardAll = true;
+                else
+                    data.boardAll = false;
+
                 data.notice_type = jsonObject.getString("notice_type");
                 data.board_no = jsonObject.getString("board_no");
                 data.boardarticle_no = jsonObject.getString("boardarticle_no");
@@ -541,8 +502,6 @@ public class BoardFragment extends Fragment {
                     data.board_marked = true;
                 else
                     data.board_marked = false;
-
-
 
                 boardDataList.add(data);
                 isReload = false;
@@ -588,6 +547,10 @@ public class BoardFragment extends Fragment {
                 BoardData data = new BoardData();
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
+                if(board_no.equals("all"))
+                    data.boardAll = true;
+                else
+                    data.boardAll = false;
                 data.notice_type = jsonObject.getString("notice_type");
                 data.board_no = jsonObject.getString("board_no");
                 data.boardarticle_no = jsonObject.getString("boardarticle_no");

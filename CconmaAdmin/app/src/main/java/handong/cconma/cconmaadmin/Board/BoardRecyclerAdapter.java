@@ -1,12 +1,12 @@
 package handong.cconma.cconmaadmin.board;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.Snackbar;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -19,8 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import org.json.JSONObject;
-
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -28,7 +26,7 @@ import java.util.regex.Pattern;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.BasicData;
-import handong.cconma.cconmaadmin.etc.MainAsyncTask;
+import handong.cconma.cconmaadmin.http.HttpConnection;
 
 /**
  * Created by Young Bin Kim on 2015-07-27.
@@ -38,6 +36,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     private Context context;
     private double width_notice;
     int sum_of_width_notice;
+    int markpos;
     public View Snackbar;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -73,9 +72,6 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        //LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        //View view = inflater.inflate(R.layout.board_item, viewGroup, false);
-
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.board_item, viewGroup, false);
 
@@ -83,14 +79,22 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
         if( dataItemList == null ){
 
         }
         else {
             final BoardData dataItem = dataItemList.get(i);
 
-            viewHolder.text_board_title.setText(dataItem.subject);
+            if(dataItem.boardAll) {
+                viewHolder.text_board_title.setText(Html.fromHtml("<b>"+"[" + dataItem.board_short_name + "]</b> " + dataItem.subject));
+                Log.d("board", dataItem.board_short_name);
+            }
+            else {
+                viewHolder.text_board_title.setText(dataItem.subject);
+                Log.d("board", dataItem.board_short_name + "else");
+            }
+
             viewHolder.text_board_title.setAlpha(1.0f);
             viewHolder.text_board_title.setTextColor(Color.BLACK);
             viewHolder.text_board_writer.setAlpha(1.0f);
@@ -170,16 +174,6 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
                     }
                     addingCount++;
                 }
-
-          /*  Log.d("whywhywhy", dataItem.hashMap.toString());
-            TextView[] notice = new TextView[dataItem.hashMap.size()];
-            for(int j = 0; j < dataItem.hashMap.size(); j++) {
-                notice[j] = new TextView(context);
-                notice[j].setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                notice[j].setText("마을지기" + j);
-                viewHolder.layout_notice.addView(notice[j]);
-            }*/
             }
 
             viewHolder.btn_board_mark.setChecked(dataItem.board_marked);
@@ -188,26 +182,8 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
             viewHolder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BasicData basicData = BasicData.getInstance();
-                    try {
-                        JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
-                                + dataItem.board_no
-                                + "/articles/" + dataItem.boardarticle_no
-                                + "/scraped_members/" + basicData.getMem_no()
-                                , "PUT", "").execute().get();
-                        Log.d("scrap", json.get("status").toString());
-                    } catch (Exception e) {
-
-                    }
-
-                    if (viewHolder.btn_board_mark.isChecked()) {
-                        Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
-                        dataItemList.get((Integer) v.getTag()).board_marked = true;
-                    } else {
-
-                        Toast.makeText(context, "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
-                        dataItemList.get((Integer) v.getTag()).board_marked = false;
-                    }
+                    markpos = i;
+                    new MarkAsync().execute();
                 }
             });
         }
@@ -246,6 +222,40 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
             Drawable d = res.getDrawable(R.drawable.notice_me);
             textView.setBackgroundDrawable(d);
             textView.setTextColor(Color.rgb(255, 255, 255));
+        }
+    }
+
+    class MarkAsync extends AsyncTask<String, Void, String>{
+
+        BasicData basicData = BasicData.getInstance();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            if(dataItemList.get(markpos).board_marked){
+                Toast.makeText(context, "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
+                dataItemList.get(markpos).board_marked = false;
+            }else{
+                Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
+                dataItemList.get(markpos).board_marked = true;
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
+                    + dataItemList.get(markpos).board_no
+                    + "/articles/" + dataItemList.get(markpos).boardarticle_no
+                    + "/scraped_members/" + basicData.getMem_no()
+                    , "PUT", "");
+            connection.init();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
         }
     }
 }

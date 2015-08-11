@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical">
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/tool_bar">
-    </include>
-    <ListView
-        android:id="@+id/list_board_marked"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="2dp"
-        android:layout_marginLeft="2dp"
-        android:divider="#ffffff">
-    </ListView>
-</LinearLayout>
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/tool_bar">
+        </include>
+        <ListView
+            android:id="@+id/list_board_marked"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
+            android:divider="#ffffff">
+        </ListView>
+    </LinearLayout>
+
+
+    <fr.castorflex.android.circularprogressbar.CircularProgressBar
+        android:id="@+id/progressbar_circular"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:indeterminate="true"
+        android:indeterminateOnly="false"
+        android:visibility="gone"
+        app:cpb_colors="@array/colors"
+        android:layout_gravity="center" />
+
+</FrameLayout>

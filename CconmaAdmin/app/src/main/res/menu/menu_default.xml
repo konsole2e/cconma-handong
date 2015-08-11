@@ -15,16 +15,14 @@
                 <group>
                     <item
                         android:title="통계 그래프"
-                        android:checked="false"
                         android:id="@+id/chart"
                         android:icon="@drawable/ic_chart_selector"/>
                     <item
-                        android:title="통계 요약"
-                        android:id="@+id/chart_summary"
+                        android:title="통계-요약"
+                        android:id="@+id/text_chart"
                         android:icon="@drawable/ic_chart_selector"/>
                 </group>
             </menu>
         </item>
-
     </group>
 </menu>

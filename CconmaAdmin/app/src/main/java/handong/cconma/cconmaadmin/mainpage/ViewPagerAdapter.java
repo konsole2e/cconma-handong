@@ -50,7 +50,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        fragment = BoardFragment.newInstance(tabBoardNo.get(position));
+        fragment = BoardFragment.newInstance(tabBoardNo.get(position), tabTitles.get(position));
         mPageReferenceMap.put(position, fragment);
         return fragment;
         //return BoardFragment.newInstance(position + 1, tablTitles_no[position]);

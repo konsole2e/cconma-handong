@@ -26,7 +26,7 @@ import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.statics.StaticsViewPagerAdapter;
-import handong.cconma.cconmaadmin.webpage.WebPageFragment;
+import handong.cconma.cconmaadmin.textStatics.TextStaticsViewPagerAdapter;
 import handong.cconma.cconmaadmin.webpage.WebPagesViewPagerAdapter;
 
 /**
@@ -109,9 +109,10 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
-                    AdminApplication.getInstance().setRefresh(true);
+                    //stack overflow error!!!
+                    /*AdminApplication.getInstance().setRefresh(true);
                     AdminApplication.getInstance().setTabPosition(tab.getPosition());
-                    onResume();
+                    onResume();*/
                 }
             });
 
@@ -143,7 +144,6 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             fab_up.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                 }
             });
 
@@ -152,9 +152,9 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             rootView = inflater.inflate(R.layout.statics_main, container, false);
 
             ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.statics_vp);
-            StaticsViewPagerAdapter svp = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
+            StaticsViewPagerAdapter svpa = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
             viewPager.setOffscreenPageLimit(0);
-            viewPager.setAdapter(svp);
+            viewPager.setAdapter(svpa);
 
             tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
             tabLayout.setVisibility(View.VISIBLE);
@@ -168,7 +168,25 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             FloatingActionButton fab_up = (FloatingActionButton)getActivity().findViewById(R.id.fab_up);
             fab_up.setVisibility(View.GONE);
         }
-        else {
+        else if(position == -3) {
+            rootView = inflater.inflate(R.layout.text_statics_main, container, false);
+
+            ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.text_statics_vp);
+            TextStaticsViewPagerAdapter tsvpa = new TextStaticsViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
+            viewPager.setOffscreenPageLimit(0);
+            viewPager.setAdapter(tsvpa);
+
+            TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
+            tabLayout.setVisibility(View.VISIBLE);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            tabLayout.setupWithViewPager(viewPager);
+
+            FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+            fab.setVisibility(View.GONE);
+            FloatingActionButton fab_up = (FloatingActionButton)getActivity().findViewById(R.id.fab_up);
+            fab_up.setVisibility(View.GONE);
+        }else{
             rootView = inflater.inflate(R.layout.etc_viewpager, container, false);
 
             etc_viewPager = (ViewPager) rootView.findViewById(R.id.etc_viewpager);

@@ -12,14 +12,11 @@ import java.util.Map;
  */
 public class BoardData {
 
-    public boolean board_file = false;      //파일 여부 ??
-
+    public boolean check = false;
+    public boolean boardAll;
     public boolean board_marked = false;    //즐겨찾기 **
-
-
     public int comment_count=0;
 
-    /**************************************************/
     public String notice_type;          //공지사항 여부
     public String board_no;             //게시판 번호
     public String boardarticle_no;      //게시글 번호

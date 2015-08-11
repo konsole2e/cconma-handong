@@ -49,6 +49,8 @@ public class LogoutWebView extends AppCompatActivity {
             if (url.contains("index.pmv")) {
                 new IntegratedSharedPreferences(LogoutWebView.this).
                         remove("AUTO_LOGIN_AUTH_ENABLED");
+                new IntegratedSharedPreferences(LogoutWebView.this).
+                        remove("AUTO_LOGIN_AUTH_TOKEN");
                 Intent intent = new Intent(LogoutWebView.this, StartPage.class);
                 startActivity(intent);
                 finish();

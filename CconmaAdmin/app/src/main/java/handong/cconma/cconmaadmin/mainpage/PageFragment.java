@@ -178,7 +178,7 @@ public class PageFragment extends Fragment {
 
         /*View footer = ((LayoutInflater)this.getActivity().getBaseContext().
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE)).
-                inflate(R.layout.board_list_footer, null);*/
+                inflate(R.text_statics_chart.board_list_footer, null);*/
 
         list_board = (ListView)view.findViewById(R.id.board_list);
         //list_board.addFooterView(footer, null, false);

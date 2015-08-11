@@ -60,13 +60,6 @@ public class StartPage extends AppCompatActivity{
 
     private Intent intent;
 
-    class doJob extends AsyncTask<Void, Void, Void>{
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            return null;
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,16 +93,12 @@ public class StartPage extends AppCompatActivity{
             public void run() {
                 pref = new IntegratedSharedPreferences(getApplicationContext());
                 if( pref.getValue("AUTO_LOGIN_AUTH_ENABLED", "").equals("1") ){
-                   // String requestBody = pref.getValue("AUTO_LOGIN_AUTH_TOKEN", "");
-                   // new StartUp(StartPage.this).post(requestBody);
                     intent = new Intent(StartPage.this, StartupWebView.class);
-                    intent.putExtra("AUTO_LOGIN", 1);
                     startActivity(intent);
                     finish();
                 }
                 else{
                     intent = new Intent(StartPage.this, LoginWebView.class);
-                    intent.putExtra("AUTO_LOGIN", 0);
                     startActivity(intent);
                     finish();
                 }

@@ -49,9 +49,9 @@ public class StaticsFragment extends Fragment {
     private ProgressDialog pd;
 
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
-        refresh();
+        recycle();
     }
 
     @Override
@@ -93,7 +93,6 @@ public class StaticsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        //     setMenuVisibility(true);
         mChartPath = getArguments().getString(ARG_CHART_PATH);
     }
 
@@ -101,7 +100,7 @@ public class StaticsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.statics_fragment, container, false);
         charts = new ArrayList<>();
-        ll = (LinearLayout) view.findViewById(R.id.statics_test_ll);
+        ll = (LinearLayout) view.findViewById(R.id.statics_ll);
         setting = new StaticsCommonSetting();
         thisActivity = getActivity();
         return view;
@@ -113,7 +112,7 @@ public class StaticsFragment extends Fragment {
         new StaticsAsyncTask("http://www.cconma.com" + mChartPath, "GET", "").execute();
     }
 
-    public void parsingcCharts() {
+    public void parsingCharts() {
         try {
             if (result == null) {
                 Toast.makeText(thisActivity.getApplicationContext(), "받아온 데이터가 없습니다.", Toast.LENGTH_SHORT).show();
@@ -135,9 +134,9 @@ public class StaticsFragment extends Fragment {
         charts.clear();
     }
 
-    public void refresh() {
+    public void recycle() {
         for (int i = 0; i < charts.size(); i++) {
-            Chart v = (Chart)charts.get(i);
+            Chart v = (Chart) charts.get(i);
             Bitmap b = v.getChartBitmap();
             b.recycle();
         }
@@ -174,13 +173,13 @@ public class StaticsFragment extends Fragment {
         }
 
         chart.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Integer.valueOf(json.optString(StaticsVariables.height, "200")), getResources().getDisplayMetrics())));
-        generateZoomBtn(json.optString(StaticsVariables.description, "차트"));
+        generateTitle(json.optString(StaticsVariables.description, "차트"));
 
         ll.addView(chart);
         charts.add(chart);
     }
 
-    public void generateZoomBtn(String desc) {
+    public void generateTitle(String desc) {
         int dpInPx = 0;
         if (charts.size() == 0) {
             dpInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()); // 10dp
@@ -247,7 +246,12 @@ public class StaticsFragment extends Fragment {
         protected void onPostExecute(JSONObject jsonObject) {
             super.onPostExecute(jsonObject);
             result = jsonObject;
-            parsingcCharts();
+            try {
+                parsingCharts();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+                pd.dismiss();
+            }
             pd.dismiss();
         }
     }
