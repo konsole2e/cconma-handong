@@ -186,33 +186,6 @@ public class MainFragment extends Fragment {
         webview.setWebViewClient(new WebClient());
     }
 
- /*   @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.order_hourly_btn :
-                startActivity(new Intent(getActivity(), StaticsOrderH.class));
-                break;
-            case R.id.order_recent_btn:
-                startActivity(new Intent(getActivity(), StaticsOrderRecent.class));
-                break;
-            case R.id.trade_btn :
-                startActivity(new Intent(getActivity(), StaticsTrade.class));
-                break;
-            case R.id.like_btn:
-                startActivity(new Intent(getActivity(), StaticsLike.class));
-                break;
-            case R.id.member_btn :
-                startActivity(new Intent(getActivity(), StaticsMember.class));
-                break;
-            case R.id.member_recent_btn:
-                startActivity(new Intent(getActivity(), StaticsMemberRecent.class));
-                break;
-            case R.id.test_btn :
-                startActivity(new Intent(getActivity(), StaticsTest.class));
-                break;
-        }
-    }*/
-
     class WebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
             view.loadUrl(url);

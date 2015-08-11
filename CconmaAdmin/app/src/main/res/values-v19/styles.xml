@@ -21,11 +21,10 @@
     <style name="SmallBlackBold">
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:textStyle">bold</item>
-
     </style>
+
     <style name="list_item_appearance">
         <item name="android:textSize">14sp</item>
     </style>
-
 
 </resources>

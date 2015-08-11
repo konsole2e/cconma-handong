@@ -1,5 +1,7 @@
 package handong.cconma.cconmaadmin.mainpage;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -23,7 +25,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.menu.MenuItemImpl;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -32,14 +36,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.net.URLEncoder;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
+import handong.cconma.cconmaadmin.board.BoardSearchActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
 
@@ -64,7 +75,11 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout mSwipeRefresh;
     private FragmentManager fragmentManager;
     private CircularProgressBar circularProgressBar;
-    private boolean expanded = false;
+    private Spinner spinner_board_condition;
+    private EditText edit_board_search;
+    private Button btn_board_search;
+    private String search_keyword = "";
+    private String search_cond = "";
 
     private String TITLESUSER[] = {"설정", "로그아웃"};
     private int ICONSUSER[] = {R.drawable.ic_setting_selector,
@@ -191,14 +206,6 @@ public class MainActivity extends AppCompatActivity {
         mMenu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem menuItem = menu.getItem(0);
-        View view = menuItem.getActionView();
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPause();
-            }
-        });
         return true;
     }
 
@@ -222,11 +229,6 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.notification) {
             //Intent intent = new Intent(this, StartPage.class);
             //startActivity(intent);
-        } else if (id == R.id.search) {
-            for (int i = 1; i < mMenu.size(); i++) {
-                mMenu.getItem(i).setVisible(false);
-            }
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -411,6 +413,5 @@ public class MainActivity extends AppCompatActivity {
             return convertView;
         }
     }
-
 }
 

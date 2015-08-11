@@ -48,6 +48,7 @@
 
         <activity android:name=".board.BoardModifyActivity" />
 
+        <activity android:name=".board.BoardSearchActivity" />
         <activity
             android:name=".board.BoardViewActivity"
             android:windowSoftInputMode="adjustResize" />
@@ -55,12 +56,6 @@
         <activity android:name=".board.BoardMarkedActivity" />
 
         <activity android:name=".push.PushView" />
-
-        <service android:name="etc.IconService">
-            <intent-filter>
-                <action android:name="iconservice" />
-            </intent-filter>
-        </service>
 
         <!-- GCM -->
         <receiver

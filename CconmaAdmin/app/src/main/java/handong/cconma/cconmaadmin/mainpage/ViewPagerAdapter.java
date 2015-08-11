@@ -42,7 +42,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return BoardFragment.newInstance(tabBoardNo.get(position));
+        return BoardFragment.newInstance(tabBoardNo.get(position), tabTitles.get(position));
         //return BoardFragment.newInstance(position + 1, tablTitles_no[position]);
     }
 

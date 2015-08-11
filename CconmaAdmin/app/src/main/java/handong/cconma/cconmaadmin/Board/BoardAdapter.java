@@ -220,10 +220,10 @@ public class BoardAdapter extends BaseAdapter{
 
 
         /*if(data.board_file)
-            holder.img_board_file.setVisibility(View.VISIBLE);
+        holder.img_board_file.setVisibility(View.VISIBLE);
         else
-            holder.img_board_file.setVisibility(View.GONE);
-*/
+        holder.img_board_file.setVisibility(View.GONE);
+        */
 
         Pattern pattern = Pattern.compile("\\[완료\\]");
         Matcher matcher = pattern.matcher(data.subject);
