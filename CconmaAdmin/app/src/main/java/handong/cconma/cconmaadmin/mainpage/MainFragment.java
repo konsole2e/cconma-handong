@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,19 +27,24 @@ import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.statics.StaticsViewPagerAdapter;
 import handong.cconma.cconmaadmin.textStatics.TextStaticsViewPagerAdapter;
+import handong.cconma.cconmaadmin.webpage.WebPagesViewPagerAdapter;
 
 /**
  * Created by Young Bin Kim on 2015-07-14.
  */
 public class MainFragment extends Fragment implements MainActivity.onKeyBackPressedListener {
     public static final String POSITION = "0";
-    private CharSequence TITLES[] = {"게시판","통계-그래프","통계-요약","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
 
     public static WebView webview;
-    private SmoothProgressBar progressBar;
     private ViewPager viewPager;
+    private ViewPager etc_viewPager;
     private TabLayout tabLayout;
+    private TabLayout etc_tabLayout;
     private FloatingActionButton fab;
+    public WebPagesViewPagerAdapter viewPagerAdapter;
+    public WebView pageWebView;
+    private String url;
+    private int fragment_pos = 0;
 
     public MainFragment(){
     }
@@ -77,19 +83,38 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
         Log.d("fragment", "savedInstanceState: " + String.valueOf(savedInstanceState));
         int position = getArguments().getInt(POSITION);
 
-        if(position == 1){
+        if(position == -1){
             rootView = inflater.inflate(R.layout.board_viewpager, container, false);
 
             viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
-            //viewPager.setOffscreenPageLimit(2);
-            final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
+            final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager()
+                    , getActivity().getApplicationContext());
             viewPager.setAdapter(viewPagerAdapter);
 
             tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
             tabLayout.setVisibility(View.VISIBLE);
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            resetTabSelectListener(tabLayout);
             tabLayout.setupWithViewPager(viewPager);
+            tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    super.onTabSelected(tab);
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    //stack overflow error!!!
+                    /*AdminApplication.getInstance().setRefresh(true);
+                    AdminApplication.getInstance().setTabPosition(tab.getPosition());
+                    onResume();*/
+                }
+            });
 
             fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
             fab.setVisibility(View.VISIBLE);
@@ -123,7 +148,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             });
 
         }
-        else if(position == 2){
+        else if(position == -2){
             rootView = inflater.inflate(R.layout.statics_main, container, false);
 
             ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.statics_vp);
@@ -135,6 +160,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             tabLayout.setVisibility(View.VISIBLE);
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            resetTabSelectListener(tabLayout);
             tabLayout.setupWithViewPager(viewPager);
 
             fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
@@ -142,7 +168,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             FloatingActionButton fab_up = (FloatingActionButton)getActivity().findViewById(R.id.fab_up);
             fab_up.setVisibility(View.GONE);
         }
-        else if(position == 3) {
+        else if(position == -3) {
             rootView = inflater.inflate(R.layout.text_statics_main, container, false);
 
             ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.text_statics_vp);
@@ -161,30 +187,59 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             FloatingActionButton fab_up = (FloatingActionButton)getActivity().findViewById(R.id.fab_up);
             fab_up.setVisibility(View.GONE);
         }else{
-            rootView = inflater.inflate(R.layout.navi_webview, container, false);
-            progressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
-            String location = getResources().getString(R.string.www);
+            rootView = inflater.inflate(R.layout.etc_viewpager, container, false);
 
-            switch(position){
-                case 3:
-                    hideOtherViews();
-                    openWebView(rootView, location + "/admin/help_board/help_board_list.pmv");
-                    break;
-                case 4:
-                    hideOtherViews();
-                    openWebView(rootView, location + "/CconmaAdmin/member.fmv?cmd=list");
-                    break;
-                case 5:
-                    hideOtherViews();
-                    openWebView(rootView, location + "/CconmaAdmin/orderList.fmv?cmd=list");
-                    break;
-                case 6:
-                    hideOtherViews();
-                    openWebView(rootView, location + "/CconmaAdmin/main.fmv");
-                    break;
-            }
+            etc_viewPager = (ViewPager) rootView.findViewById(R.id.etc_viewpager);
+            viewPagerAdapter = new WebPagesViewPagerAdapter(
+                    getChildFragmentManager(), getActivity().getApplicationContext(), position);
+            etc_viewPager.setAdapter(viewPagerAdapter);
+
+            etc_tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
+            etc_tabLayout.setVisibility(View.VISIBLE);
+            etc_tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            etc_tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            etc_tabLayout.setupWithViewPager(etc_viewPager);
+            //tabLayout.setTabsFromPagerAdapter(viewPagerAdapter);
+            //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+            etc_tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(etc_viewPager) {
+                ViewPager vp = etc_viewPager;
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    int pos = tab.getPosition();
+                    vp.setCurrentItem(tab.getPosition());
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    fragment_pos = tab.getPosition();
+                    Fragment fragment = viewPagerAdapter.getFragment(fragment_pos);
+                    //Fragment fragment = viewPagerAdapter.getPrimaryFragment();
+                    if (fragment != null && !viewPagerAdapter.first) {
+                        pageWebView = (WebView) fragment.getView().findViewById(R.id.navi_webView);
+                        CircularProgressBar cpb = (CircularProgressBar) fragment.getView().findViewById(R.id.progressbar_circular);
+
+                        if (pageWebView != null) {
+                            cpb.setVisibility(View.VISIBLE);
+                            Log.d("debugging", "tab position: " + tab.getPosition() + " " + tab.getText());
+                            url = WebPagesViewPagerAdapter.getUrl(tab.getPosition());
+                            String location = getResources().getString(R.string.www);
+                            pageWebView.loadUrl(location + url);
+                        }
+                    }
+                }
+            });
+
+            fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+            fab.setVisibility(View.GONE);
+            FloatingActionButton fab_up = (FloatingActionButton)getActivity().findViewById(R.id.fab_up);
+            fab_up.setVisibility(View.GONE);
         }
-        getActivity().setTitle(TITLES[position - 1]);
+        getActivity().setTitle("마을지기");
 
         return rootView;
     }
@@ -192,13 +247,15 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 //////////////////back key control in fragment
     @Override
     public void onBack() {
-        if (webview.canGoBack()) {
-            webview.goBack();
+        /*WebView webView = (WebView) ((Fragment) viewPagerAdapter.getFragment()).getView().
+                findViewById(R.id.navi_webView);
+        if (webView.canGoBack()) {
+            webView.goBack();
         } else {
             MainActivity activity = (MainActivity) getActivity();
             activity.setOnKeyBackPressedListener(null);
             activity.onBackPressed();
-        }
+        }*/
     }
 
     @Override
@@ -207,38 +264,20 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
         ((MainActivity) activity).setOnKeyBackPressedListener(this);
     }
 //////////////////
+    public void resetTabSelectListener(TabLayout tabLayout){
+        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                super.onTabSelected(tab);
+            }
 
-    public void openWebView(View view, String url){
-        webview = (WebView) view.findViewById(R.id.navi_webView);
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
-        webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
-        webview.getSettings().setBuiltInZoomControls(true);
-        String userAgent = webview.getSettings().getUserAgentString();
-        webview.getSettings().setUserAgentString(userAgent + ";com.admincconma.app");
-        webview.getSettings().setLoadWithOverviewMode(true);
-        webview.getSettings().setUseWideViewPort(true);
-        webview.canGoBackOrForward(3);
-        webview.loadUrl(url);
-        webview.setWebViewClient(new WebClient());
-    }
-
-    public void hideOtherViews(){
-        tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
-        tabLayout.setVisibility(View.GONE);
-
-        fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
-    }
-    class WebClient extends WebViewClient {
-        public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
-            progressBar.progressiveStart();
-            view.loadUrl(url);
-            return true;
-        }
-        public void onPageFinished(WebView view, String url){
-            progressBar.progressiveStop();
-            if( getActivity().getApplicationContext() != null )
-                Cookies.getInstance(getActivity().getApplicationContext()).updateCookies(url);
-        }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
     }
 }

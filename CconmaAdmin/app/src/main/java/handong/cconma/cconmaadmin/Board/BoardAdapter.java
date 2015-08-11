@@ -158,7 +158,7 @@ public class BoardAdapter extends BaseAdapter{
         Pattern pattern = Pattern.compile("\\[완료\\]");
         Matcher matcher = pattern.matcher(data.subject);
         if(matcher.find()){
-            holder.text_board_title.setTextColor(Color.LTGRAY);
+            holder.text_board_title.setTextColor(Color.RED);
         }
 
         return convertView;

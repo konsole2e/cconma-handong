@@ -85,7 +85,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 viewHolder.userArrow.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
             }
             else if(status == 1){
-                viewHolder.userArrow.setImageResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
+                //viewHolder.userArrow.setImageResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
             }
         }
     }

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
+import android.view.ViewGroup;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -15,19 +17,20 @@ import handong.cconma.cconmaadmin.data.BasicData;
 /**
  * Created by Young Bin Kim on 2015-07-08.
  */
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private Context mContext;
     private HashMap board_list;
     private ArrayList<String> tabBoardNo;
-    private HashMap titles;
     private ArrayList<String> tabTitles;
+    private HashMap<Integer, Fragment> mPageReferenceMap;
+    private Fragment fragment;
 
     public ViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         mContext = context;
-        BasicData boardData = BasicData.getInstance();
         board_list = BasicData.getInstance().getBoardList();
 
+        mPageReferenceMap = new HashMap<>();
         tabBoardNo = new ArrayList<>();
         tabTitles = new ArrayList<>();
 
@@ -40,8 +43,16 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        super.destroyItem(container, position, object);
+        mPageReferenceMap.remove(position);
+    }
+
+    @Override
     public Fragment getItem(int position) {
-        return BoardFragment.newInstance(tabBoardNo.get(position), tabTitles.get(position));
+        fragment = BoardFragment.newInstance(tabBoardNo.get(position), tabTitles.get(position));
+        mPageReferenceMap.put(position, fragment);
+        return fragment;
         //return BoardFragment.newInstance(position + 1, tablTitles_no[position]);
     }
 
@@ -53,7 +64,10 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return tabTitles.get(position);
-        //return tabTitles[position];
+    }
+
+    public Fragment getFragment(int key) {
+        return mPageReferenceMap.get(key);
     }
 
 }

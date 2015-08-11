@@ -12,6 +12,8 @@ public class BasicData {
     private HashMap admin_chart_list = new HashMap();
     private HashMap admin_board_list = new HashMap();
     private HashMap admin_board_hash_tag_list = new HashMap();
+    private HashMap menu_name_list = new HashMap();
+    private ArrayList<HashMap> submenu_name_list = new ArrayList<>();
     private static BasicData basicData;
 
     public static BasicData getInstance(){
@@ -36,6 +38,12 @@ public class BasicData {
 
     public void setHashTagList(String key, String value){
         admin_board_hash_tag_list.put(key, value);
+    }
+
+    public void setMenuNameList(String key, String value){ menu_name_list.put(key, value); }
+
+    public void setSubmenuNameList(HashMap list){
+        submenu_name_list.add(list);
     }
 
     public ArrayList<String> getUserInfo(){
@@ -69,6 +77,10 @@ public class BasicData {
     public String getMem_no(){
         return mem_no;
     }
+
+    public HashMap getMenuNameList(){ return menu_name_list; }
+
+    public ArrayList getSubmenuNameList(){ return submenu_name_list; }
 
     public void setTextChartList(String key, String value){
         admin_stat_list.put(key, value);
