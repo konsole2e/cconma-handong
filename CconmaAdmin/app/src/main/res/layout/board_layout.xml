@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background"
-        android:alpha="0.6"/>
+        android:alpha="0.1"/>
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -68,6 +68,7 @@
             <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/recycler_view"
+                android:layout_below="@+id/top"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical"/>
@@ -77,12 +78,12 @@
 
     <fr.castorflex.android.circularprogressbar.CircularProgressBar
         android:id="@+id/progressbar_circular"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:indeterminate="true"
         android:indeterminateOnly="false"
         android:visibility="gone"
         app:cpb_colors="@array/colors"
-        app:cpb_stroke_width="6dp"
+        app:cpb_stroke_width="4dp"
         android:layout_gravity="center" />
 </FrameLayout>

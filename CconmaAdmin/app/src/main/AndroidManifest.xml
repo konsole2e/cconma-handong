@@ -36,8 +36,8 @@
 
         <activity
             android:name=".mainpage.MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+            <!--android:screenOrientation="portrait"-->
 
         <activity android:name=".etc.LoginWebView" />
         <activity android:name=".etc.LogoutWebView" />

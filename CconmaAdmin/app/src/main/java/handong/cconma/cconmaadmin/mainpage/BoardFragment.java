@@ -98,8 +98,9 @@ public class BoardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onRESUME in BoardFragment");
+
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -266,7 +267,7 @@ public class BoardFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void Void) {
-            if( page == 0 ) {
+            if( page == 0  && getActivity().getApplicationContext() != null) {
                 adapter = new BoardRecyclerAdapter(boardDataList, context);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setItemAnimator(null);
