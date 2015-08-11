@@ -70,14 +70,10 @@ public class BoardAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, final ViewGroup parent) {
-        final ViewHolder holder;
-        //Context convertContext = null;
-        //if(convertView == null){
-        holder = new ViewHolder();
+        final ViewHolder holder = new ViewHolder();
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.board_list_item, null);
-        //convertContext = convertView.getContext();
-        //holder.layout_board_list_item_notice = (LinearLayout)convertView.findViewById(R.id.layout_board_list_item_notice);
+
         holder.text_board_title = (TextView)convertView.findViewById(R.id.text_board_title);
         holder.text_board_comment_num = (TextView)convertView.findViewById(R.id.text_board_comment_num);
         holder.text_board_date = (TextView)convertView.findViewById(R.id.text_board_date);
@@ -85,17 +81,9 @@ public class BoardAdapter extends BaseAdapter{
         holder.short_board_name = (TextView)convertView.findViewById(R.id.short_board_name);
         holder.mark_check_delete = (CheckBox)convertView.findViewById(R.id.mark_check_delete);
         holder.mark_check_delete.setFocusable(false);
-        //holder.btn_board_mark = (ToggleButton)convertView.findViewById(R.id.btn_board_mark);
-        //holder.btn_board_mark.setFocusable(false);
-        //holder.img_board_file = (ImageView)convertView.findViewById(R.id.img_board_file);
-
         holder.layout_notice = (LinearLayout)convertView.findViewById(R.id.layout_notice);
-        holder.layout_for_mark = (LinearLayout)convertView.findViewById(R.id.layout_for_mark);
 
         convertView.setTag(holder);
-        //}else{
-        //    holder = (ViewHolder)convertView.getTag();
-        //}
 
         final BoardData data = board_list_data.get(position);
 
@@ -117,7 +105,6 @@ public class BoardAdapter extends BaseAdapter{
             holder.text_board_comment_num.setVisibility(View.VISIBLE);
             holder.text_board_comment_num.setText(data.comment_nicknames);
         }
-        //holder.text_board_comment_num.setText("+" + data.comment_count);
 
         StringTokenizer st = new StringTokenizer(data.reg_date, "-:");
         int count=0;
@@ -182,63 +169,6 @@ public class BoardAdapter extends BaseAdapter{
 
         holder.text_board_writer.setText(data.name);
 
-        //holder.btn_board_mark.setChecked(data.board_marked);
-        //holder.btn_board_mark.setTag(position);
-        //holder.btn_board_mark.setClickable(false);
-        /*holder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                BasicData basicData = BasicData.getInstance();
-                try{
-                    JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
-                            + data.board_no
-                            + "/articles/" + data.boardarticle_no
-                            + "/scraped_members/" + basicData.getMem_no()
-                            , "PUT", "").execute().get();
-                    Log.d("scrap", json.get("status").toString());
-                }catch(Exception e){
-
-                }
-
-                if (holder.btn_board_mark.isChecked()) {
-                    Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
-                    board_list_data.get((Integer) v.getTag()).board_marked = true;
-                } else {
-
-                    Toast.makeText(context, "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
-                    board_list_data.get((Integer) v.getTag()).board_marked = false;
-                }
-            }
-        });
-
-
-        holder.layout_for_mark.setTag(position);
-        holder.layout_for_mark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(holder.btn_board_mark.isChecked()){
-                    Toast.makeText(context, "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
-                    holder.btn_board_mark.setChecked(false);
-                    board_list_data.get((Integer)v.getTag()).board_marked = false;
-                }else{
-                    Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
-                    holder.btn_board_mark.setChecked(true);
-                    board_list_data.get((Integer)v.getTag()).board_marked = true;
-
-                }
-            }
-        });*/
-
-
-
-
-        /*if(data.board_file)
-            holder.img_board_file.setVisibility(View.VISIBLE);
-        else
-            holder.img_board_file.setVisibility(View.GONE);
-*/
-
         Pattern pattern = Pattern.compile("\\[완료\\]");
         Matcher matcher = pattern.matcher(data.subject);
         if(matcher.find()){
@@ -287,13 +217,7 @@ public class BoardAdapter extends BaseAdapter{
         public TextView text_board_comment_num;
         public TextView text_board_date;
         public TextView text_board_writer;
-        //public ToggleButton btn_board_mark;
-        //public ImageView img_board_file;
-
-        public LinearLayout layout_for_mark;
-
         public LinearLayout layout_notice;
-
         public TextView short_board_name;
         public CheckBox mark_check_delete;
 

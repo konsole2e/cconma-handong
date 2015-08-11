@@ -64,8 +64,6 @@ public class BoardMarkedActivity extends AppCompatActivity {
 
         circularProgressBar = (CircularProgressBar)findViewById(R.id.progressbar_circular);
 
-        /* 데이터 넣기 */
-
         new MarkAsyncTask().execute();
 
         list_board_marked.setFocusable(false);

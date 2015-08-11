@@ -8,18 +8,9 @@ import java.util.HashMap;
 public class BoardCommentData {
 
     public String boardcomment_no;
-    public String comment_mem_no;
     public String commnet_writer;
     public String comment;
-    public String comment_ip;
     public String comment_date;
-
-
     public HashMap comment_hashMap;
-
-
-    public void setComment(String comment){
-        this.comment = comment;
-    }
 
 }
