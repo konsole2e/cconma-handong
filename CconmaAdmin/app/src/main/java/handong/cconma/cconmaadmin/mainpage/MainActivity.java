@@ -13,6 +13,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private FloatingActionButton floatingActionButton;
     private FragmentManager fragmentManager;
-
+    private Configuration config;
     private int status = 0;
     private int position;
     private Context context;
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setBackgroundDrawable(null);
-
+        config = getResources().getConfiguration();
         mTitle = getTitle();
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
                 if (menuItem.isChecked()) {
                     menuItem.setChecked(false);
                 } else {
@@ -218,8 +219,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Configuration config = getResources().getConfiguration();
         int count = fragmentManager.getBackStackEntryCount();
+
+        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)){
+            mDrawerLayout.closeDrawers();
+            return;
+        }
 
         if (position == R.id.chart && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
