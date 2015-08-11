@@ -1,6 +1,5 @@
 package handong.cconma.cconmaadmin.board;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -10,21 +9,12 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
-
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,9 +23,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import handong.cconma.cconmaadmin.R;
-import handong.cconma.cconmaadmin.data.BasicData;
-import handong.cconma.cconmaadmin.etc.MainAsyncTask;
-
 
 /**
  * Created by eundi on 15. 7. 6..

@@ -243,6 +243,7 @@ public class BoardFragment extends Fragment {
                                 i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
                                 i.putExtra("number", boardDataList.get(position).boardarticle_no);
                                 i.putExtra("marked", boardDataList.get(position).board_marked);
+                                i.putExtra("from", "fragment");
 
                                 startActivity(i);
                             }
