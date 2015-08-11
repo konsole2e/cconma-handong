@@ -14,11 +14,11 @@
             <menu>
                 <group>
                     <item
-                        android:title="통계 그래프"
+                        android:title="그래프"
                         android:id="@+id/chart"
                         android:icon="@drawable/ic_chart_selector"/>
                     <item
-                        android:title="통계-요약"
+                        android:title="표"
                         android:id="@+id/text_chart"
                         android:icon="@drawable/ic_chart_selector"/>
                 </group>
