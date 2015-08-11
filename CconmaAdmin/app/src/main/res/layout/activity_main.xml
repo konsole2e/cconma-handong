@@ -95,5 +95,4 @@
         app:itemIconTint="#9E9E9E"
         app:itemTextColor="#000000"
         app:menu="@menu/menu_default" />
-
 </android.support.v4.widget.DrawerLayout>

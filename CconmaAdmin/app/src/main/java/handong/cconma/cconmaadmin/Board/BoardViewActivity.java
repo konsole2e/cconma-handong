@@ -56,6 +56,7 @@ import java.util.regex.Pattern;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
+import handong.cconma.cconmaadmin.mainpage.AdminApplication;
 import handong.cconma.cconmaadmin.http.HttpConnection;
 
 
@@ -63,7 +64,6 @@ import handong.cconma.cconmaadmin.http.HttpConnection;
  * 게시판 목록에서 하나 선택하여 글 내용을 보여주는 화면
  * Created by eundi on 15. 7. 6..
  */
-
 
 public class BoardViewActivity extends AppCompatActivity{
     private Toolbar toolbar;
@@ -120,8 +120,6 @@ public class BoardViewActivity extends AppCompatActivity{
 
         circularProgressBar = (CircularProgressBar)findViewById(R.id.progressbar_circular);
         new ViewAsyncTask().execute();
-        //jsonParser();
-
     }
 
     View.OnClickListener clickListener = new View.OnClickListener(){
@@ -136,7 +134,6 @@ public class BoardViewActivity extends AppCompatActivity{
                     String strNow = sdfNow.format(date);
                     if(!(edit_board_view_comment.getText().toString()).equals("")) {
                         /*****************************     댓글 수정       ********************************/
-
                         if(edit_board_view_comment.getTag() != null){
                             insert_mode = 1;
                             new InsertAsyncTask().execute();
@@ -210,7 +207,6 @@ public class BoardViewActivity extends AppCompatActivity{
                             startActivity(intent);
                         } else if(index == 1){
                             //게시글 삭제하는 코드.
-
                             try{
                                 new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
                                         +board_no+"/articles/" + boardarticle_no, "DELETE", "").execute().get();
@@ -218,8 +214,26 @@ public class BoardViewActivity extends AppCompatActivity{
 
                             }
 
-                            //뒤로 돌아갔을때 변한 사항이 바로바로 반영되도록 해야한다.
+                            ////////////
+                            HashMap board_list = BasicData.getInstance().getBoardList();
+                            ArrayList<String> tabTitles = new ArrayList<>();
+                            int index;
+                            String board_no;
 
+                            for( int i = 0; i < board_list.size() / 2; i++ ){
+                                tabTitles.add(board_list.get("board_title" + i).toString());
+                            }
+
+                            index = tabTitles.indexOf(getIntent().getStringExtra("board_no"));
+                            if( index != -1 ){
+                                board_no = tabTitles.get(index).split("e")[1];
+                                AdminApplication.getInstance().
+                                        setTabPosition(Integer.parseInt(board_no));
+                            }
+                            AdminApplication.getInstance().setRefresh(true);
+                            ////////////
+
+                            finish();
                         } else{
                             adapter_comment.dialogComment(1, position);
                         }
@@ -242,20 +256,29 @@ public class BoardViewActivity extends AppCompatActivity{
 
     class InsertAsyncTask extends AsyncTask<String, Void, JSONObject>{
         String requestBody;
+        String commentNO;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            if(insert_mode == 0){
+                requestBody = "board_no=" + board_no
+                        + "&boardarticle_no=" + boardarticle_no
+                        +"&content=" + edit_board_view_comment.getText().toString();
+            }else if(insert_mode == 1){
+                requestBody = "_METHOD=" + "PUT"
+                        + "&board_no=" + board_no
+                        + "&boardarticle_no=" + boardarticle_no
+                        + "&comment_no=" + edit_board_view_comment.getTag()
+                        + "&content=" + edit_board_view_comment.getText().toString();
 
+                commentNO = edit_board_view_comment.getTag().toString();
+            }
         }
 
         @Override
         protected JSONObject doInBackground(String... params) {
             try{
                 if(insert_mode == 0) {
-                    requestBody = "board_no=" + board_no
-                            + "&boardarticle_no=" + boardarticle_no
-                            +"&content=" + edit_board_view_comment.getText().toString();
-
                     HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
                             + board_no + "/articles/" + boardarticle_no + "/comments", "POST", requestBody);
                     String sResult = connection.init();
@@ -310,21 +333,15 @@ public class BoardViewActivity extends AppCompatActivity{
                                 }
                             }
                             adapter_comment.board_comment_list_data.remove(adapter_comment.getCount() - 1);
-                            list_board_view_comment.clearChoices();
+                            //list_board_view_comment.clearChoices();
                             adapter_comment.addItem(boardcomment_no, comment_name, comment_reg_date, comment_content, commentHashMap);
                         }
                     }
                 }else if(insert_mode == 1){
                     //modify
-                    requestBody = "_METHOD=" + "PUT"
-                            + "&board_no=" + board_no
-                            + "&boardarticle_no=" + boardarticle_no
-                            + "&comment_no=" + edit_board_view_comment.getTag()
-                            + "&content=" + edit_board_view_comment.getText().toString();
-
                     HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
                             +board_no+"/articles/" + boardarticle_no + "/comments/"
-                            + edit_board_view_comment.getTag(), "POST", requestBody);
+                            + commentNO, "POST", requestBody);
 
                     String sResult = connection.init();
 
@@ -356,9 +373,6 @@ public class BoardViewActivity extends AppCompatActivity{
                                     commentHashMap.put("hash_tag_type" + j, hashObj.getString("hash_tag_type"));
                                 }
                             }
-
-
-
                             adapter_comment.update(modify_position, comment_content, commentHashMap);
                         }
                     }
@@ -900,10 +914,8 @@ public class BoardViewActivity extends AppCompatActivity{
                 AlertDialog alert = alert_build.create();
                 alert.setCanceledOnTouchOutside(true);
                 alert.show();
-                //item.setIcon(getResources().getDrawable(R.drawable.ic_star_white_24dp));
                 break;
             case R.id.complete:
-                //item.setIcon(getResources().getDrawable(R.drawable.ic_check_box_white_24dp));
                 AlertDialog.Builder alert_builder = new AlertDialog.Builder(this);
                 String alertSt = "";
                 final String complete = text_board_view_title.getText().toString().substring(0, 4);

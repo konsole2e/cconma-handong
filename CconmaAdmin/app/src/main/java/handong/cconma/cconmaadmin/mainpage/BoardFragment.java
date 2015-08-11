@@ -2,8 +2,6 @@ package handong.cconma.cconmaadmin.mainpage;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,10 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,34 +19,23 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
-import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardData;
-import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.board.BoardRecyclerAdapter;
 import handong.cconma.cconmaadmin.board.BoardSearchActivity;
 import handong.cconma.cconmaadmin.board.BoardViewActivity;
-import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 import handong.cconma.cconmaadmin.http.HttpConnection;
 
 /**
@@ -68,6 +52,7 @@ public class BoardFragment extends Fragment {
     private String board_title;
     private String board_no;
     private int page_no;
+    private int overallXScroll = 0;
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView recyclerView;
     private CircularProgressBar circularProgressBar;
@@ -75,7 +60,9 @@ public class BoardFragment extends Fragment {
 
     private Boolean isLoading = false;
     private Boolean isReload = false;
-    private int total;
+    private int total = 0;
+    private int firstVisibleItemCount;
+    private int lastVisibleItemCount;
     int isSearch;
 
     private View actionView;
@@ -96,7 +83,6 @@ public class BoardFragment extends Fragment {
         args.putString(ARG_TITLE, title);
         BoardFragment fragment = new BoardFragment();
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -109,6 +95,11 @@ public class BoardFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onRESUME in BoardFragment");
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,64 +126,6 @@ public class BoardFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        //검색창 Frame Layout
-        //layout_board_search = (FrameLayout)view.findViewById(R.id.layout_board_search);
-        //검색 조건 spinner
-     /*   actionView = menu.getItem(0).getActionView();
-        spinner_board_condition = (Spinner)actionView.findViewById(R.id.spinner_board_condition);
-        String[] cond = getResources().getStringArray(R.array.board_condition);
-        final SpinnerAdapter adapter = new SpinnerAdapter(getActivity().getApplicationContext(),
-                android.R.layout.simple_spinner_item, cond);
-        spinner_board_condition.setAdapter(adapter);
-        spinner_board_condition.setSelection(0);
-        //검색 입력
-        edit_board_search = (EditText)actionView.findViewById(R.id.edit_board_search);
-        btn_board_search = (Button)actionView.findViewById(R.id.btn_board_search);
-
-        EditText edittext = edit_board_search;
-        edittext.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // If the event is a key-down event on the "enter" button
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    // Perform action on key press
-                    btn_board_search.performClick();
-                    return true;
-                }
-                return false;
-            }
-        });
-        //검색하기 버튼
-        btn_board_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(spinner_board_condition.getSelectedItem().equals("작성자"))
-                    search_cond = "/writers/all?search_field=name&keyword=";
-                else if(spinner_board_condition.getSelectedItem().equals("내용"))
-                    search_cond = "/writers/all?search_field=content&keyword=";
-                else if(spinner_board_condition.getSelectedItem().equals("제목"))
-                    search_cond = "/writers/all?search_field=subject&keyword=";
-
-                search_keyword = String.valueOf(edit_board_search.getText());
-                try {
-                    search_keyword = URLEncoder.encode(search_keyword, "UTF-8");
-                }catch(Exception e){
-
-                }
-                isSearch = 1;
-                new BoardAsyncTask(getActivity().getApplicationContext()).execute("http://www.cconma.com/admin/api/board/v1/boards/"
-                        + board_no + "/writers/all?page=" + "1" + "&n=20", "GET", "");
-                Log.d("test", search_cond);
-
-                input_manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
-            }
-        });*/
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -214,8 +147,7 @@ public class BoardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         if(savedInstanceState == null)
             Log.d("STATE", "onViewCreated");
-            new BoardAsyncTask(getActivity().getApplicationContext()).execute("http://www.cconma.com/admin/api/board/v1/boards/"
-                    + board_no + "/writers/all?page=" + "1" + "&n=20", "GET", "");
+            new BoardAsyncTask_test(getActivity().getApplicationContext(), 0, 0).execute();
     }
 
     public class SpinnerAdapter extends ArrayAdapter<String> {
@@ -265,8 +197,16 @@ public class BoardFragment extends Fragment {
         }
     }
 
-    class LoadSearch extends AsyncTask<String, Void, Integer>{
-        private String sResult;
+    class BoardAsyncTask_test extends AsyncTask<Integer, Void, Void>{
+        private Context context;
+        private int flags;
+        private int page;
+
+        public BoardAsyncTask_test(Context context, int flags, int page){
+            this.context = context;
+            this.flags = flags;
+            this.page = page;
+        }
 
         @Override
         protected void onPreExecute(){
@@ -274,15 +214,115 @@ public class BoardFragment extends Fragment {
         }
 
         @Override
-        protected Integer doInBackground(String... params) {
-            loadData();
-            return 1;
+        protected Void doInBackground(Integer... params) {
+            FetchData(flags, page);
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Integer integer) {
+        protected void onPostExecute(Void Void) {
+            if( page == 0 ) {
+                adapter = new BoardRecyclerAdapter(boardDataList, context);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setItemAnimator(null);
+
+                final GestureDetector mGestureDetector = new GestureDetector(getActivity().getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onSingleTapConfirmed(MotionEvent e) {
+                        if (e.getX() > 100) {
+                            View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                            int position = recyclerView.getChildAdapterPosition(view);
+                            Log.d("debugging", "POSITION: " + String.valueOf(position));
+                            // handle single tap
+                            if (view != null && position != -1) {
+                                Intent i = new Intent(getActivity(), BoardViewActivity.class);
+
+                                Log.d(TAG, boardDataList.get(position).board_no.toString() + " " + boardDataList.get(position).boardarticle_no.toString() + " " +
+                                        boardDataList.get(position).boardarticle_no);
+                                i.putExtra("board_no", boardDataList.get(position).board_no);
+                                i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
+                                i.putExtra("number", boardDataList.get(position).boardarticle_no);
+                                i.putExtra("marked", boardDataList.get(position).board_marked);
+
+                                startActivity(i);
+                            }
+                        }
+                        return super.onSingleTapConfirmed(e);
+                    }
+
+                    public void onLongPress(MotionEvent e) {
+                        View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                        int position = recyclerView.getChildAdapterPosition(view);
+                        // handle long press
+
+                        super.onLongPress(e);
+                    }
+                });
+
+                recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+
+                        Log.d("debugging", "DX:  " + dy);
+                        overallXScroll = overallXScroll + dy;
+                        Log.d("debugging", "OVERALL DX:  " + overallXScroll);
+
+                        total = linearLayoutManager.getItemCount();
+                        //firstVisibleItemCount = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+                        firstVisibleItemCount = linearLayoutManager.findFirstVisibleItemPosition();
+                        lastVisibleItemCount = linearLayoutManager.findLastVisibleItemPosition();
+                        Log.d("number", String.valueOf(total) + " " + String.valueOf(firstVisibleItemCount) + " "
+                                + String.valueOf(lastVisibleItemCount));
+                        Log.d("number", String.valueOf(isLoading));
+
+                        View view = recyclerView.getChildAt(firstVisibleItemCount);
+                        int itemHeight = 148;
+                        if( view != null ) {
+                            itemHeight = recyclerView.getChildAt(firstVisibleItemCount).getHeight();
+                        }
+                        Log.d("number", String.valueOf(itemHeight));
+                        if (!isLoading) {
+                            if (total > 0)
+                                if ((total - 1) == lastVisibleItemCount) {
+                                    //isLoading = true;
+                                    //new BoardAsyncTask_test(context, 0, -1).execute();
+                                    Log.d("number", "LAST!!!!!");
+                                } else {
+                                    Log.d("number", "NO NO NO NO NO");
+                                }
+                        } else {
+                            Log.d("number", "is LOADING");
+                        }
+                    }
+
+                    @Override
+                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+
+                    }
+                });
+
+                recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+                    @Override
+                    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                        mGestureDetector.onTouchEvent(e);
+                        return false;
+                    }
+
+                    @Override
+                    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+                    }
+
+                });
+            }
+
             circularProgressBar.setVisibility(View.GONE);
-            isLoading = false;
+            adapter.notifyItemInserted(boardDataList.size() - 1);
+
+           // recyclerView.smoothScrollBy(0, overallXScroll);
+           // overallXScroll = 0;
+
         }
     }
 
@@ -300,7 +340,6 @@ public class BoardFragment extends Fragment {
 
         @Override
         protected Integer doInBackground(String... params) {
-            Log.d("number", "load data");
             loadData();
             return null;
         }
@@ -344,7 +383,7 @@ public class BoardFragment extends Fragment {
                 }
             });
 
-            /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
@@ -357,12 +396,11 @@ public class BoardFragment extends Fragment {
                     Log.d("number", String.valueOf(isLoading));
                     //to avoid multiple calls to loadMore() method
                     //maintain a boolean value (isLoading). if loadMore() task started set to true and completes set to false
-                    if (isLoading == false) {
+                    if (!isLoading) {
                         if (total > 0)
                             if ((total - 1) == lastVisibleItemCount){
                                 isLoading = true;
                                 Log.d("number", "LAST!!!!!");
-                                new LoadMoreData().execute();
                             }else{
                                 Log.d("number", "NO NO NO NO NO");
                             }
@@ -376,7 +414,7 @@ public class BoardFragment extends Fragment {
                     super.onScrollStateChanged(recyclerView, newState);
 
                 }
-            });*/
+            });
 
             recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
                 @Override
@@ -421,6 +459,11 @@ public class BoardFragment extends Fragment {
                 BoardData data = new BoardData();
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
+                if(board_no.equals("all"))
+                    data.boardAll = true;
+                else
+                    data.boardAll = false;
+
                 data.notice_type = jsonObject.getString("notice_type");
                 data.board_no = jsonObject.getString("board_no");
                 data.boardarticle_no = jsonObject.getString("boardarticle_no");
@@ -457,8 +500,6 @@ public class BoardFragment extends Fragment {
                     data.board_marked = true;
                 else
                     data.board_marked = false;
-
-
 
                 boardDataList.add(data);
                 isReload = false;
@@ -469,23 +510,45 @@ public class BoardFragment extends Fragment {
         }
     }
 
-    public void loadMoreData(){
+    protected void FetchData(int flags, int pages){
+        /*
+        * "flags" is to determine whether it needs data for search or not (default is 0)
+        * "pages" is to initialize the data, 0 to initialize and -1 to continue
+        * */
+
         String sResult;
+        String url;
+
+        if( pages == 0 ){
+            page_no = pages;
+            boardDataList = new ArrayList<>();
+        }
+
+        if( flags == 0 ){
+
+        }
+        else if( flags == 1 ){
+
+        }
+
         try{
             page_no += 1;
             HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
-                    + board_no + "/writers/all?page=" + String.valueOf(page_no) + "&n=20", "GET", "");
+                    + board_no + "/writers/all?page=" + page_no + "&n=20", "GET", "");
             sResult = connection.init();
-            Log.d(TAG, sResult);
+            Log.d(TAG, "sResult is " + sResult);
 
             JSONObject jason = new JSONObject(sResult);
             JSONArray jsonArray = jason.getJSONArray("articles");
-            //boardDataList = new ArrayList<>();
 
             for(int i=0; i<jsonArray.length(); i++){
                 BoardData data = new BoardData();
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
+                if(board_no.equals("all"))
+                    data.boardAll = true;
+                else
+                    data.boardAll = false;
                 data.notice_type = jsonObject.getString("notice_type");
                 data.board_no = jsonObject.getString("board_no");
                 data.boardarticle_no = jsonObject.getString("boardarticle_no");
@@ -523,11 +586,8 @@ public class BoardFragment extends Fragment {
                 else
                     data.board_marked = false;
 
-
-
                 boardDataList.add(data);
-                isReload = true;
-                adapter.notifyDataSetChanged();
+                isLoading = false;
             }
         }catch(Exception e){
             Log.d(TAG, "Exception in BoardFragement Line 125: " + e.getMessage());

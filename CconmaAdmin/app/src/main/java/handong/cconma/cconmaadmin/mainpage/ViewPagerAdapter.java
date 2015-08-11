@@ -17,7 +17,6 @@ import handong.cconma.cconmaadmin.data.BasicData;
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private Context mContext;
-    final int pageCount = 13;
     private HashMap board_list;
     private ArrayList<String> tabBoardNo;
     private HashMap titles;
@@ -48,7 +47,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return pageCount;
+        return tabTitles.size();
     }
 
     @Override

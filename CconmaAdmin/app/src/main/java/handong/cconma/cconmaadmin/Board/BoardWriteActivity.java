@@ -32,6 +32,7 @@ import java.util.HashMap;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.mainpage.AdminApplication;
 import handong.cconma.cconmaadmin.mainpage.PageFragment;
 
 
@@ -181,6 +182,9 @@ public class BoardWriteActivity extends AppCompatActivity {
                 }else{
                     Toast.makeText(context, "제목과 내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
+                Toast.makeText(context, "글이 등록되었습니다", Toast.LENGTH_SHORT).show();
+                AdminApplication.getInstance().setRefresh(true);
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
