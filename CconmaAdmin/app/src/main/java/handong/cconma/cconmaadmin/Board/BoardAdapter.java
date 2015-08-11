@@ -14,6 +14,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -83,6 +84,7 @@ public class BoardAdapter extends BaseAdapter{
         holder.text_board_writer = (TextView)convertView.findViewById(R.id.text_board_writer);
         holder.short_board_name = (TextView)convertView.findViewById(R.id.short_board_name);
         holder.mark_check_delete = (CheckBox)convertView.findViewById(R.id.mark_check_delete);
+        holder.mark_check_delete.setFocusable(false);
         //holder.btn_board_mark = (ToggleButton)convertView.findViewById(R.id.btn_board_mark);
         //holder.btn_board_mark.setFocusable(false);
         //holder.img_board_file = (ImageView)convertView.findViewById(R.id.img_board_file);
@@ -96,6 +98,18 @@ public class BoardAdapter extends BaseAdapter{
         //}
 
         final BoardData data = board_list_data.get(position);
+
+        holder.mark_check_delete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    data.check = true;
+                }else{
+                    data.check = false;
+                }
+                Log.d("mark", "data.check = " + data.check);
+            }
+        });
 
         holder.text_board_title.setText(data.subject);
         String date = "";
@@ -312,6 +326,15 @@ public class BoardAdapter extends BaseAdapter{
             textView.setBackgroundDrawable(d);
             textView.setTextColor(Color.rgb(255, 255, 255));
         }
+    }
+
+    public int getCheckCount(){
+        int count = 0;
+        for(int i=0; i<board_list_data.size(); i++){
+            if(board_list_data.get(i).check)
+                count++;
+        }
+        return count;
     }
 
 }

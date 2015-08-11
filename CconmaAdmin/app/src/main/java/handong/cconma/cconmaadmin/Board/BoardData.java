@@ -12,6 +12,7 @@ import java.util.Map;
  */
 public class BoardData {
 
+    public boolean check = false;
     public boolean boardAll;
     public boolean board_file = false;      //파일 여부 ??
 

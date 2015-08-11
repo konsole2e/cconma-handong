@@ -135,20 +135,6 @@ public class MainActivity extends AppCompatActivity{
                             case R.id.chart:
                                 selectItem(2);
                                 break;
-                            case R.id.qna:
-                                selectItem(3);
-                                break;
-                            case R.id.searchuser:
-                                selectItem(4);
-                                break;
-                            case R.id.searchorder:
-                                selectItem(5);
-                                break;
-                            case R.id.homepage:
-                                selectItem(6);
-                                break;
-                            case 6:
-                                break;
                         }
                     }
                     else{
