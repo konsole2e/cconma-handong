@@ -23,9 +23,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,17 +49,12 @@ public class BoardSearchActivity extends AppCompatActivity {
     private List<BoardData> boardDataList;
     private String board_title;
     private String board_no;
-    private int page_no;
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView recyclerView;
     private CircularProgressBar circularProgressBar;
     private BoardRecyclerAdapter adapter;
     private TextView searchTv;
-    private Boolean isLoading = false;
-    private Boolean isReload = false;
-    private int total;
-    int isSearch;
-
+    private GestureDetector mGestureDetector;
     private View actionView;
 
     //FrameLayout layout_board_search;
@@ -86,8 +81,6 @@ public class BoardSearchActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
-        //검색창 Frame Layout
-        //layout_board_search = (FrameLayout)view.findViewById(R.id.layout_board_search);
         //검색 조건 spinner
         actionView = menu.getItem(0).getActionView();
         spinner_board_condition = (Spinner) actionView.findViewById(R.id.spinner_board_condition);
@@ -116,6 +109,13 @@ public class BoardSearchActivity extends AppCompatActivity {
         btn_board_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                recyclerView.removeAllViewsInLayout();
+                recyclerView.invalidate();
+                if(edit_board_search.getText().length() == 0){
+                    Toast.makeText(getApplicationContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (spinner_board_condition.getSelectedItem().equals("작성자"))
                     search_cond = "/writers/all?search_field=name&keyword=";
                 else if (spinner_board_condition.getSelectedItem().equals("내용"))
@@ -129,8 +129,7 @@ public class BoardSearchActivity extends AppCompatActivity {
                 } catch (Exception e) {
 
                 }
-                isSearch = 1;
-                new BoardAsyncTask(getApplicationContext()).execute("http://www.cconma.com/admin/api/board/v1/boards/"
+                new BoardAsyncTask().execute("http://www.cconma.com/admin/api/board/v1/boards/"
                         + board_no + "/writers/all?page=" + "1" + "&n=20", "GET", "");
                 Log.d("test", search_cond);
 
@@ -161,6 +160,39 @@ public class BoardSearchActivity extends AppCompatActivity {
         circularProgressBar = (CircularProgressBar) findViewById(R.id.progressbar_circular);
         searchTv = (TextView) findViewById(R.id.board_search_tv);
         searchTv.setText("\"" + board_title + "\" 게시판");
+
+        recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                mGestureDetector.onTouchEvent(e);
+                return false;
+            }
+        });
+
+        mGestureDetector = new GestureDetector(getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                if (e.getX() > 100) {
+                    View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                    int position = recyclerView.getChildAdapterPosition(view);
+                    Log.d("debugging", "POSITION: " + String.valueOf(position));
+                    // handle single tap
+                    if (view != null && position != -1) {
+                        Intent i = new Intent(BoardSearchActivity.this, BoardViewActivity.class);
+
+                        Log.d("보드서치", boardDataList.get(position).board_no.toString() + " " + boardDataList.get(position).boardarticle_no.toString() + " " +
+                                boardDataList.get(position).boardarticle_no);
+                        i.putExtra("board_no", boardDataList.get(position).board_no);
+                        i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
+                        i.putExtra("number", boardDataList.get(position).boardarticle_no);
+                        i.putExtra("marked", boardDataList.get(position).board_marked);
+
+                        startActivity(i);
+                    }
+                }
+                return super.onSingleTapConfirmed(e);
+            }
+        });
     }
 
     public class SpinnerAdapter extends ArrayAdapter<String> {
@@ -212,11 +244,6 @@ public class BoardSearchActivity extends AppCompatActivity {
     }
 
     class BoardAsyncTask extends AsyncTask<String, Void, Boolean> {
-        private Context context;
-
-        public BoardAsyncTask(Context context) {
-            this.context = context;
-        }
 
         @Override
         protected void onPreExecute() {
@@ -233,67 +260,20 @@ public class BoardSearchActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean empty) {
-            adapter = new BoardRecyclerAdapter(boardDataList, context);
+            adapter = new BoardRecyclerAdapter(boardDataList, getApplicationContext());
             recyclerView.setAdapter(adapter);
             searchTv.setText("\"" + board_title + "\" 게시판에서 \"" + edit_board_search.getText() + "\" 검색 완료");
             searchTv.setSelected(true);
 
-            if(empty){
+            if (empty) {
                 findViewById(R.id.search_none_tv).setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 findViewById(R.id.search_none_tv).setVisibility(View.GONE);
             }
 
-            final GestureDetector mGestureDetector = new GestureDetector(getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onSingleTapConfirmed(MotionEvent e) {
-                    if (e.getX() > 100) {
-
-                        View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                        int position = recyclerView.getChildAdapterPosition(view);
-                        Log.d("debugging", "POSITION: " + String.valueOf(position));
-                        // handle single tap
-                        if (view != null && position != -1) {
-                            Intent i = new Intent(BoardSearchActivity.this, BoardViewActivity.class);
-
-                            Log.d("보드서치", boardDataList.get(position).board_no.toString() + " " + boardDataList.get(position).boardarticle_no.toString() + " " +
-                                    boardDataList.get(position).boardarticle_no);
-                            i.putExtra("board_no", boardDataList.get(position).board_no);
-                            i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
-                            i.putExtra("number", boardDataList.get(position).boardarticle_no);
-                            i.putExtra("marked", boardDataList.get(position).board_marked);
-
-                            startActivity(i);
-                        }
-                    }
-                    return super.onSingleTapConfirmed(e);
-                }
-
-                public void onLongPress(MotionEvent e) {
-                    View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                    int position = recyclerView.getChildAdapterPosition(view);
-                    // handle long press
-
-                    super.onLongPress(e);
-                }
-            });
-
-            recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
-                @Override
-                public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                    mGestureDetector.onTouchEvent(e);
-                    return false;
-                }
-
-                @Override
-                public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-                }
-
-            });
             circularProgressBar.setVisibility(View.GONE);
 
             adapter.notifyDataSetChanged();
-            //((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).progressiveStop();
         }
     }
 
@@ -301,14 +281,8 @@ public class BoardSearchActivity extends AppCompatActivity {
         String sResult;
         boolean empty = true;
         try {
-            String url = "";
-            if (isSearch == 0) {
-                url = "http://www.cconma.com/admin/api/board/v1/boards/"
-                        + board_no + "/writers/all?page=" + String.valueOf(page_no) + "&n=50";
-            } else {
-                url = "http://www.cconma.com/admin/api/board/v1/boards/"
-                        + board_no + search_cond + search_keyword;
-            }
+            String url = "http://www.cconma.com/admin/api/board/v1/boards/"
+                    + board_no + search_cond + search_keyword;
 
             HttpConnection connection = new HttpConnection(url, "GET", "");
             sResult = connection.init();
@@ -360,10 +334,7 @@ public class BoardSearchActivity extends AppCompatActivity {
                 else
                     data.board_marked = false;
 
-
                 boardDataList.add(data);
-                isReload = false;
-
             }
         } catch (Exception e) {
             Log.d("보드서치 로드데이타", "Exception in BoardFragement Line 125: " + e.getMessage());
