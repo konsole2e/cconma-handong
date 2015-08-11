@@ -49,7 +49,7 @@ public class StaticsFragment extends Fragment {
     private ProgressDialog pd;
 
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
         recycle();
     }
@@ -136,7 +136,7 @@ public class StaticsFragment extends Fragment {
 
     public void recycle() {
         for (int i = 0; i < charts.size(); i++) {
-            Chart v = (Chart)charts.get(i);
+            Chart v = (Chart) charts.get(i);
             Bitmap b = v.getChartBitmap();
             b.recycle();
         }
@@ -246,7 +246,12 @@ public class StaticsFragment extends Fragment {
         protected void onPostExecute(JSONObject jsonObject) {
             super.onPostExecute(jsonObject);
             result = jsonObject;
-            parsingCharts();
+            try {
+                parsingCharts();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+                pd.dismiss();
+            }
             pd.dismiss();
         }
     }

@@ -191,7 +191,12 @@ public class TextStaticsFragment extends Fragment {
         protected void onPostExecute(JSONObject jsonObject) {
             super.onPostExecute(jsonObject);
             result = jsonObject;
-            parsingTextCharts();
+            try {
+                parsingTextCharts();
+            }catch (IllegalStateException e){
+                e.printStackTrace();
+                pd.dismiss();
+            }
             pd.dismiss();
         }
     }

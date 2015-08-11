@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setOnKeyBackPressedListener(onKeyBackPressedListener listener) {
-        if (position == 0 || position == R.id.board || position == R.id.chart) {
+        if (position == 0 || position == R.id.board || position == R.id.chart || position == R.id.text_chart) {
             mOnKeyBackPressedListener = null;
         } else {
             mOnKeyBackPressedListener = listener;
@@ -221,11 +221,12 @@ public class MainActivity extends AppCompatActivity {
         Configuration config = getResources().getConfiguration();
         int count = getFragmentManager().getBackStackEntryCount();
 
-        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
+        if ( position == R.id.chart && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
+            return;
         } else {
             if (count == 0) {
-                finish();
+                //    finish();
             } else {
                 getFragmentManager().popBackStack();
             }
@@ -235,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
             mOnKeyBackPressedListener.onBack();
         } else {
             super.onBackPressed();
-            finish();
+            //    finish();
         }
     }
 

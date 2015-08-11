@@ -32,7 +32,7 @@ import handong.cconma.cconmaadmin.textStatics.TextStaticsViewPagerAdapter;
  */
 public class MainFragment extends Fragment implements MainActivity.onKeyBackPressedListener {
     public static final String POSITION = "0";
-    private CharSequence TITLES[] = {"게시판","통계","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
+    private CharSequence TITLES[] = {"게시판","통계-그래프","통계-요약","1:1문의","회원정보 조회", "주문조회", "마을지기 홈페이지"};
 
     public static WebView webview;
     private SmoothProgressBar progressBar;
@@ -119,8 +119,6 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             fab_up.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
                 }
             });
 
