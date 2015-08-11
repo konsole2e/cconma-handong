@@ -1,12 +1,10 @@
 package handong.cconma.cconmaadmin.board;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
@@ -21,8 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import org.json.JSONObject;
-
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -30,7 +26,6 @@ import java.util.regex.Pattern;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.BasicData;
-import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 import handong.cconma.cconmaadmin.http.HttpConnection;
 
 /**

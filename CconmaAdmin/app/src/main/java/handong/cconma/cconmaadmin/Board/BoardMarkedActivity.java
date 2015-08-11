@@ -23,8 +23,6 @@ import java.util.HashMap;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.BasicData;
-import handong.cconma.cconmaadmin.etc.MainAsyncTask;
-import handong.cconma.cconmaadmin.mainpage.AdminApplication;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import handong.cconma.cconmaadmin.http.HttpConnection;
@@ -78,6 +76,7 @@ public class BoardMarkedActivity extends AppCompatActivity {
                 BoardData data = (BoardData)adapter_marked.getItem(position);
                 i.putExtra("number", data.boardarticle_no);
 
+                i.putExtra("from", "Mark");
                 startActivity(i);
             }
         });
