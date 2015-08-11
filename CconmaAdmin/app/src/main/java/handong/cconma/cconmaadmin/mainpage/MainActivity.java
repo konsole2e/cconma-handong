@@ -219,24 +219,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Configuration config = getResources().getConfiguration();
-        int count = getFragmentManager().getBackStackEntryCount();
+        int count = fragmentManager.getBackStackEntryCount();
 
-        if ( position == R.id.chart && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
+        if (position == R.id.chart && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
             return;
-        } else {
-            if (count == 0) {
-                //    finish();
-            } else {
-                getFragmentManager().popBackStack();
-            }
         }
 
         if (mOnKeyBackPressedListener != null) {
             mOnKeyBackPressedListener.onBack();
         } else {
-            super.onBackPressed();
-            //    finish();
+            if (count == 1) {
+                finish();
+            } else {
+                navigationView.getMenu().findItem(position).setChecked(false);
+                fragmentManager.popBackStack();
+                navigationView.getMenu().getItem(Integer.valueOf(fragmentManager.getFragments().get(count-2).getTag()) - 1).setChecked(true);
+            }
         }
     }
 
@@ -331,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.main_content_frame, fragment, "fragment" + String.valueOf(position));
+        ft.replace(R.id.main_content_frame, fragment, String.valueOf(position));
         ft.addToBackStack(null);
         Log.d(TAG, "fragment stack: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
         ft.commit();
@@ -405,4 +404,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-
