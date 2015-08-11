@@ -227,7 +227,7 @@ public class BoardFragment extends Fragment {
                 recyclerView.setAdapter(adapter);
                 recyclerView.setItemAnimator(null);
 
-                final GestureDetector mGestureDetector = new GestureDetector(getActivity().getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+                final GestureDetector mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
                         if (e.getX() > 100) {
