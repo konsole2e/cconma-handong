@@ -151,7 +151,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
         else if(position == -2){
             rootView = inflater.inflate(R.layout.statics_main, container, false);
 
-            ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.statics_vp);
+            viewPager = (ViewPager) rootView.findViewById(R.id.statics_vp);
             StaticsViewPagerAdapter svpa = new StaticsViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext());
             viewPager.setOffscreenPageLimit(0);
             viewPager.setAdapter(svpa);
