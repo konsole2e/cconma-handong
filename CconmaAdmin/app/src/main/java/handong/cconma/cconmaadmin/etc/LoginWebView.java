@@ -55,7 +55,7 @@ public class LoginWebView extends AppCompatActivity {
 
     class WebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
-            if(url.contains("index.pmv")) {
+            if(url.contains("index.pmv") && !url.contains("join.pmv")) {
                 webview.setVisibility(View.GONE);
                 ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).start();
 
@@ -65,6 +65,8 @@ public class LoginWebView extends AppCompatActivity {
                 startActivity(intent);
                 finish();
 
+                return true;
+            }else if(url.contains("join.pmv")){
                 return true;
             }else {
                 return super.shouldOverrideUrlLoading(view, url);
