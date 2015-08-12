@@ -225,11 +225,13 @@ public class MainActivity extends AppCompatActivity {
         String board_no = AdminApplication.getInstance().getBoardNo();
         String boardArticle_no = AdminApplication.getInstance().getArticleNo();
         if (board_no != null && boardArticle_no != null) {
-            Intent i = new Intent(this, BoardViewActivity.class);
-            i.putExtra("board_no", board_no);
-            i.putExtra("boardarticle_no", boardArticle_no);
-            i.putExtra("from", "push");
-            startActivity(i);
+            Intent intent = new Intent(this, BoardViewActivity.class);
+            intent.putExtra("board_no", board_no);
+            intent.putExtra("boardarticle_no", boardArticle_no);
+            intent.putExtra("from", "push");
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
             AdminApplication.getInstance().setBoardNo(null);
             AdminApplication.getInstance().setArticleNo(null);
         }
