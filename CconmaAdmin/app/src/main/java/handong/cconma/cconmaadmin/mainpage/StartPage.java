@@ -24,6 +24,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import android.os.Handler;
 
 import java.util.concurrent.ExecutionException;
@@ -43,7 +44,7 @@ import handong.cconma.cconmaadmin.http.HttpConnection;
 /**
  * Created by Young Bin Kim on 2015-07-15.
  */
-public class StartPage extends AppCompatActivity{
+public class StartPage extends AppCompatActivity {
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "debugging";
     private CircularProgressBar circularProgressBar;
@@ -69,6 +70,13 @@ public class StartPage extends AppCompatActivity{
         circularProgressBar.setVisibility(View.VISIBLE);
 
         getInstanceIdToken();
+
+        String board_no = getIntent().getStringExtra("board_no");
+        String boardArticle_no = getIntent().getStringExtra("boardarticle_no");
+        if (board_no != null && boardArticle_no != null) {
+            AdminApplication.getInstance().setBoardNo(board_no);
+            AdminApplication.getInstance().setArticleNo(boardArticle_no);
+        }
 
         String device_id = Settings.Secure.getString(getApplicationContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
@@ -134,13 +142,13 @@ public class StartPage extends AppCompatActivity{
             IntegratedSharedPreferences pref = new IntegratedSharedPreferences(getApplicationContext());
             String token = pref.getValue("PUSH_ID", "");
             //if(token.equals("")) {
-                // Start IntentService to register this application with GCM.
-                Intent intent = new Intent(this, RegistrationIntentService.class);
-                startService(intent);
-           // }
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+            // }
             //else{
-                Log.d(TAG, "TOKEN already exists!!! Your token is " + token);
-           // }
+            Log.d(TAG, "TOKEN already exists!!! Your token is " + token);
+            // }
         }
     }
 

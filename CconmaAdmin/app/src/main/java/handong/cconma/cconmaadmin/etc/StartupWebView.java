@@ -34,7 +34,7 @@ public class StartupWebView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview);
 
-        circularProgressBar= (CircularProgressBar) findViewById(R.id.progressbar_circular);
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.progressbar_circular);
         webview = (WebView) findViewById(R.id.webView);
 
         isPageLoaded = false;
@@ -72,12 +72,13 @@ public class StartupWebView extends AppCompatActivity {
             new StartUp(StartupWebView.this).post(requestBody);
         }
 
-        public void onPageFinished(WebView view, String url){
-                ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).progressiveStop();
-                Cookies.getInstance(StartupWebView.this).updateCookies(url);
-                isPageLoaded = true;
-                startActivity(new Intent(StartupWebView.this, MainActivity.class));
-                finish();
+        public void onPageFinished(WebView view, String url) {
+            ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).progressiveStop();
+            Cookies.getInstance(StartupWebView.this).updateCookies(url);
+            isPageLoaded = true;
+            Intent intent = new Intent(StartupWebView.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 }

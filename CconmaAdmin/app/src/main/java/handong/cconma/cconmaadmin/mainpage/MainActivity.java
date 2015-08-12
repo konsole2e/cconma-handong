@@ -30,12 +30,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Random;
 import java.util.HashMap;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
+import handong.cconma.cconmaadmin.board.BoardViewActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.LogoutWebView;
 import handong.cconma.cconmaadmin.etc.SettingActivity;
@@ -68,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
     private onKeyBackPressedListener mOnKeyBackPressedListener = null;
 
     private MenuItem mPreviousMenuItem;
+
+    private final long FINSH_INTERVAL_TIME = 2000;
+    private long backPressedTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,39 +184,38 @@ public class MainActivity extends AppCompatActivity {
 
 
         Random rand = new Random();
-        int randnum = (int)rand.nextInt(8);
-        FrameLayout frameLayout = (FrameLayout)findViewById(R.id.main_content_frame);
-        switch(randnum){
-            case 0 :
+        int randnum = (int) rand.nextInt(8);
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.main_content_frame);
+        switch (randnum) {
+            case 0:
                 frameLayout.setBackgroundResource(R.drawable.background03);
                 break;
 
-            case 1 :
+            case 1:
                 frameLayout.setBackgroundResource(R.drawable.background04);
                 break;
 
-            case 2 :
+            case 2:
                 frameLayout.setBackgroundResource(R.drawable.background07);
                 break;
 
-            case 3 :
+            case 3:
                 frameLayout.setBackgroundResource(R.drawable.background09);
                 break;
 
-            case 4 :
+            case 4:
                 frameLayout.setBackgroundResource(R.drawable.background11);
                 break;
-            case 5 :
+            case 5:
                 frameLayout.setBackgroundResource(R.drawable.background3);
                 break;
-            case 6 :
+            case 6:
                 frameLayout.setBackgroundResource(R.drawable.background12);
                 break;
-            case 7 :
+            case 7:
                 frameLayout.setBackgroundResource(R.drawable.background14);
                 break;
         }
-
 
 
         if (savedInstanceState == null) {
@@ -220,6 +224,20 @@ public class MainActivity extends AppCompatActivity {
             mPreviousMenuItem.setCheckable(true);
             mPreviousMenuItem.setChecked(true);
             selectItem(-1);
+        }
+
+        String board_no = AdminApplication.getInstance().getBoardNo();
+        String boardArticle_no = AdminApplication.getInstance().getArticleNo();
+        if (board_no != null && boardArticle_no != null) {
+            Intent intent = new Intent(this, BoardViewActivity.class);
+            intent.putExtra("board_no", board_no);
+            intent.putExtra("boardarticle_no", boardArticle_no);
+            intent.putExtra("from", "push");
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            AdminApplication.getInstance().setBoardNo(null);
+            AdminApplication.getInstance().setArticleNo(null);
         }
     }
 
@@ -294,7 +312,15 @@ public class MainActivity extends AppCompatActivity {
             mOnKeyBackPressedListener.onBack();
         } else {
             if (count == 1) {
-                finish();
+                long tempTime = System.currentTimeMillis();
+                long intervalTime = tempTime - backPressedTime;
+
+                if ( 0 <= intervalTime && FINSH_INTERVAL_TIME >= intervalTime ){
+                    finish();
+                }else{
+                    backPressedTime = tempTime;
+                    Toast.makeText(getApplicationContext(), "'뒤로'버튼을 한번 더 누르면 종료", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 fragmentManager.popBackStack();
                 Menu menu = navigationView.getMenu();
@@ -308,11 +334,10 @@ public class MainActivity extends AppCompatActivity {
                     m.setChecked(false);
                 }
 
-                int fPosition = Integer.valueOf(fragmentManager.getFragments().get(count - 2).getTag());
+                int fPosition = Integer.valueOf(fragmentManager.getFragments().get(count-2).getTag());
                 MenuItem prevMenuItem = navigationView.getMenu().findItem(fPosition);
                 prevMenuItem.setChecked(true);
                 mPreviousMenuItem = prevMenuItem;
-                position = fPosition;
             }
         }
     }
@@ -345,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
+
         ft.replace(R.id.main_content_frame, fragment, String.valueOf(position));
         ft.addToBackStack(null);
         Log.d(TAG, "fragment stack: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
