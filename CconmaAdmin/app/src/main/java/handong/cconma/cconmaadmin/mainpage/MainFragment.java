@@ -7,24 +7,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import java.util.HashMap;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
-import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardWriteActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
-import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.statics.StaticsViewPagerAdapter;
 import handong.cconma.cconmaadmin.textStatics.TextStaticsViewPagerAdapter;
 import handong.cconma.cconmaadmin.webpage.WebPagesViewPagerAdapter;
