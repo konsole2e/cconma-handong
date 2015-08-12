@@ -243,8 +243,21 @@ public class BoardViewActivity extends AppCompatActivity{
                 }).setNegativeButton(neg_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (index == 2)
-                    adapter_comment.dialogComment(0, position);
+                if (index == 2){
+
+                    String tag="";
+                    for(int i=0; i<adapter_comment.board_comment_list_data.get(position).comment_hashMap.size()/2; i++){
+                        tag = tag + "@" + adapter_comment.board_comment_list_data.get(position).comment_hashMap.get("hash_tag"+i) + " ";
+                    }
+                    edit_board_view_comment.setText(tag + Html.fromHtml(adapter_comment.board_comment_list_data.get(position).comment).toString());
+                    edit_board_view_comment.setTag(adapter_comment.board_comment_list_data.get(position).boardcomment_no);
+                    modify_position = position;
+                    //커서 위치 문자열 뒤쪽에 위치하도록.
+                    Editable edt = edit_board_view_comment.getText();
+                    Selection.setSelection(edt, edt.length());
+
+                    list_board_view_comment.setSelectionFromTop(position, 0);
+                }
                 else
                     dialog.cancel();
             }
@@ -756,42 +769,16 @@ public class BoardViewActivity extends AppCompatActivity{
         public void dialogComment(final int index, final int position){
             String alert_message = "";
             AlertDialog.Builder alert_build = new AlertDialog.Builder(context);
-            switch(index){
-                case 0:
-                    alert_message = "댓글을 수정하시겠습니까?";
-                    break;
-                case 1:
-                    alert_message = "댓글을 삭제하시겠습니까?";
-                    break;
-            }
-
-            alert_build.setMessage(alert_message).setCancelable(false)
+            alert_build.setMessage("댓글을 삭제하시겠습니까?").setCancelable(false)
                     .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //수정하거나 삭제하는 코드.
-                            if(index == 0){
-                                String tag="";
-                                for(int i=0; i<board_comment_list_data.get(position).comment_hashMap.size()/2; i++){
-                                    tag = tag + "@" + board_comment_list_data.get(position).comment_hashMap.get("hash_tag"+i) + " ";
-                                }
-                                edit_board_view_comment.setText(tag + Html.fromHtml(board_comment_list_data.get(position).comment).toString());
-                                edit_board_view_comment.setTag(board_comment_list_data.get(position).boardcomment_no);
+                            ////댓글 삭제하는 코드
+                            try{
+                                insert_mode = 2;
                                 modify_position = position;
-                                //커서 위치 문자열 뒤쪽에 위치하도록.
-                                Editable edt = edit_board_view_comment.getText();
-                                Selection.setSelection(edt, edt.length());
-
-                                list_board_view_comment.setSelectionFromTop(position, 0);
-                            }
-                            else {
-                                try{
-                                    insert_mode = 2;
-                                    modify_position = position;
-                                    new InsertAsyncTask().execute();
-                                }catch(Exception e){
-
-                                }
+                                new InsertAsyncTask().execute();
+                            }catch(Exception e){
 
                             }
                         }

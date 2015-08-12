@@ -103,7 +103,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
             Pattern pattern = Pattern.compile("\\[완료\\]");
             Matcher matcher = pattern.matcher(dataItem.subject);
             if (matcher.find()) {
-                viewHolder.text_board_title.setTextColor(Color.LTGRAY);
+                viewHolder.text_board_title.setTextColor(Color.rgb(140, 140, 140));
             }
             viewHolder.text_board_writer.setText(dataItem.name);
 
