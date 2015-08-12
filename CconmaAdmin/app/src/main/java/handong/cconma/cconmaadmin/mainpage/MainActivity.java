@@ -101,14 +101,14 @@ public class MainActivity extends AppCompatActivity {
                     menu.removeGroup(R.id.menu_user);
                     navigationView.inflateMenu(R.menu.menu_default);
                     getDynamicMenu();
-                    arrow.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+                    arrow.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
                     status = 0;
                 } else {
                     Menu menu = navigationView.getMenu();
                     menu.removeGroup(R.id.menu_default);
                     menu.removeGroup(1);
                     navigationView.inflateMenu(R.menu.menu_user);
-                    arrow.setImageResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
+                    arrow.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
                     status = 1;
                 }
             }
@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                         mPreviousMenuItem.setChecked(false);
                     }
                     mPreviousMenuItem = menuItem;
-                    mDrawerLayout.closeDrawers();
 
                     position = menuItem.getItemId();
                     Log.d(TAG, String.valueOf(position));
@@ -162,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                                 finish();
                         }
                     }
+                    mDrawerLayout.closeDrawers();
                 }
                 return true;
             }
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         menu_count = temp.size();
 
         for (int i = 0; i < menu_count; i++) {
-            menu.add(1, i, 0, temp.get("menu_name" + i).toString()).setIcon(R.drawable.ic_web_white_36dp);
+            menu.add(1, i + 1, 0, temp.get("menu_name" + i).toString()).setIcon(R.drawable.ic_web_white_36dp);
         }
     }
     @Override
@@ -252,23 +252,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Configuration config = getResources().getConfiguration();
-        int count = getFragmentManager().getBackStackEntryCount();
+        int count = getSupportFragmentManager().getBackStackEntryCount();
 
-        if ( position == R.id.chart && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
+        if ( mDrawerLayout.isDrawerOpen(navigationView) ){
+            mDrawerLayout.closeDrawers();
+        }
+        else if ( position == R.id.chart && config.orientation == Configuration.ORIENTATION_LANDSCAPE) {// 가로
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
             return;
-        } else {
+        }
+        else if(mOnKeyBackPressedListener != null) {
+            mOnKeyBackPressedListener.onBack();
+        }
+        else{
             if (count == 0) {
-                //    finish();
+                finish();
             } else {
                 getFragmentManager().popBackStack();
             }
-        }
-        if (mOnKeyBackPressedListener != null) {
-            mOnKeyBackPressedListener.onBack();
-        } else {
-            super.onBackPressed();
-            //    finish();
         }
     }
 

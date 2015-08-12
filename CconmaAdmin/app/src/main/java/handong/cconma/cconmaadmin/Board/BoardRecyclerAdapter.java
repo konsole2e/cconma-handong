@@ -80,10 +80,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-        if( dataItemList == null ){
-
-        }
-        else {
+        if( dataItemList != null ){
             final BoardData dataItem = dataItemList.get(i);
 
             if(dataItem.boardAll) {
@@ -103,7 +100,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
             Pattern pattern = Pattern.compile("\\[완료\\]");
             Matcher matcher = pattern.matcher(dataItem.subject);
             if (matcher.find()) {
-                viewHolder.text_board_title.setTextColor(Color.LTGRAY);
+                viewHolder.text_board_title.setTextColor(context.getResources().getColor(R.color.statics_gray));
             }
             viewHolder.text_board_writer.setText(dataItem.name);
 
