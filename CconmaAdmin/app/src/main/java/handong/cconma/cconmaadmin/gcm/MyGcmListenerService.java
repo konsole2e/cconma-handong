@@ -12,6 +12,8 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import handong.cconma.cconmaadmin.board.BoardViewActivity;
+import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 import handong.cconma.cconmaadmin.mainpage.MainActivity;
 import handong.cconma.cconmaadmin.R;
 
@@ -26,23 +28,41 @@ public class MyGcmListenerService extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
         String title = data.getString("title");
+        boolean pushSetting;
 
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
 
-        sendNotification(message, title);
+        IntegratedSharedPreferences pref = new IntegratedSharedPreferences(getApplicationContext());
+        pushSetting = pref.getValue("PUSH", true);
+        if (pushSetting) {
+            sendNotification(message, title);
+        }
     }
 
     private void sendNotification(String message, String title) {
+
+        String[] messageSplit = message.split("\n\n");
+
+        int point = messageSplit[2].indexOf('&');
+        String board_info  = messageSplit[2].substring(point + 1);
+        String[] boardSplit = board_info.split("&");
+
+        String board_no = boardSplit[0].split("=")[1];
+        String boardarticle_no = boardSplit[1].split("=")[1];
+
         Log.d(TAG, "SEND NOTIFICATION");
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, BoardViewActivity.class);
+        intent.putExtra("board_no", board_no);
+        intent.putExtra("boardarticle_no", boardarticle_no);
+        intent.putExtra("from", "push");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_logo)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)

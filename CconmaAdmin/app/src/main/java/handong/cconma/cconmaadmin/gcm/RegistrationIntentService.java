@@ -43,7 +43,7 @@ public class RegistrationIntentService extends IntentService {
 
         String default_senderId = getString(R.string.gcm_defaultSenderId);
 
-        try{
+        try {
             token = instanceID.getToken(default_senderId,
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             pref.put("PUSH_ID", token);
@@ -53,59 +53,59 @@ public class RegistrationIntentService extends IntentService {
             //gcmAsyncTask task = new gcmAsyncTask(device_id);
             //task.execute(json);
 
-        }catch(IOException e){
+        } catch (IOException e) {
             Log.d(TAG, e.getMessage());
         }
 
         Log.d(TAG, "GCM Registration Token: " + token);
 
     }
-}
 
-class gcmAsyncTask extends AsyncTask<JSONObject, String, String> {
+    class gcmAsyncTask extends AsyncTask<JSONObject, String, String> {
 
-    private final static String TAG = "debugging";
-    private String device_name;
+        private final static String TAG = "debugging";
+        private String device_name;
 
-    public gcmAsyncTask(String device_name) {
-        this.device_name = device_name;
-    }
-
-    @Override
-    protected String doInBackground(JSONObject... params) {
-        String sResult = "Error";
-
-        try {
-            Log.d(TAG, "START!!!");
-            URL url = new URL("http://wonderwallserverfromyb.hol.es/register.php");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(5000);
-            conn.setRequestMethod("POST");
-            String body = params[0].toString();
-
-            OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
-            osw.write(body);
-            osw.flush();
-
-            InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "UTF-8");
-            BufferedReader reader = new BufferedReader(tmp);
-            StringBuilder builder = new StringBuilder();
-            String str;
-
-            while ((str = reader.readLine()) != null) {
-                builder.append(str);
-            }
-            sResult = builder.toString();
-        } catch (MalformedURLException e) {
-            Log.d(TAG, "exception " + e.getMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.d(TAG, "IOException " + e.getMessage());
-            e.printStackTrace();
+        public gcmAsyncTask(String device_name) {
+            this.device_name = device_name;
         }
 
-        Log.d(TAG, "message " + sResult);
-        return sResult;
+        @Override
+        protected String doInBackground(JSONObject... params) {
+            String sResult = "Error";
+
+            try {
+                Log.d(TAG, "START!!!");
+                URL url = new URL("http://wonderwallserverfromyb.hol.es/register.php");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setRequestMethod("POST");
+                String body = params[0].toString();
+
+                OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
+                osw.write(body);
+                osw.flush();
+
+                InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "UTF-8");
+                BufferedReader reader = new BufferedReader(tmp);
+                StringBuilder builder = new StringBuilder();
+                String str;
+
+                while ((str = reader.readLine()) != null) {
+                    builder.append(str);
+                }
+                sResult = builder.toString();
+            } catch (MalformedURLException e) {
+                Log.d(TAG, "exception " + e.getMessage());
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.d(TAG, "IOException " + e.getMessage());
+                e.printStackTrace();
+            }
+
+            Log.d(TAG, "message " + sResult);
+            return sResult;
+        }
     }
 }
 
