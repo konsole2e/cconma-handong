@@ -316,34 +316,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*@Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            switch (event.getKeyCode()) {
-                case KeyEvent.KEYCODE_MENU:
-                    Toast.makeText(getApplicationContext(), "menu button clicked", Toast.LENGTH_SHORT).show();
-                    return true;
-                case KeyEvent.KEYCODE_BACK:
-                    Fragment webView = getSupportFragmentManager().findFragmentById(R.id.webView);
-
-                    if (webView instanceof MainFragment) {
-                        boolean goback = ((MainFragment)webView).canGoBack();
-                        if (!goback)
-                            super.onBackPressed();
-                    }
-                    else if(position == 1){
-                        finish();
-                    }
-                    else {
-                        position = 1;
-                        selectItem(1);
-                    }
-                    return true;
-            }
-        }
-        return super.dispatchKeyEvent(event);
-    }*/
-
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
@@ -365,41 +337,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectItem(final int mPosition) {
-            /*if (position == 1) {
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
-                if (fragment != null) {
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.remove(fragment).commit();
-                }
-
-                // View Page Adapter
-                viewPager = (ViewPager) findViewById(R.id.viewPager);
-                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
-                        MainActivity.this);
-                viewPager.setAdapter(viewPagerAdapter);
-
-                // ViewPager setting
-                tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-                tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-                tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-                tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
-                tabLayout.setupWithViewPager(viewPager);
-                tabLayout.setVisibility(View.VISIBLE);
-
-                floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-                floatingActionButton.setVisibility(View.VISIBLE);
-                floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, BoardWriteActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-                getSupportActionBar().setTitle(TITLES[position - 1]);
-            } else {*/
-        // tabLayout.setVisibility(View.GONE);
-        // floatingActionButton.setVisibility(View.GONE);
         Fragment fragment = new MainFragment();
         Bundle args = new Bundle();
         args.putInt(MainFragment.POSITION, mPosition);
@@ -411,63 +348,6 @@ public class MainActivity extends AppCompatActivity {
         ft.addToBackStack(null);
         Log.d(TAG, "fragment stack: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
         ft.commit();
-        //}
-    }
-
-    private void setSwipeToRefresh() {
-        //set SwipeToRefresh on the activity
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        SwipeToRefresh swipe = new SwipeToRefresh();
-        transaction.add(R.id.board_container, swipe);
-        transaction.commit();
-    }
-
-    public class SpinnerAdapter extends ArrayAdapter<String> {
-
-        Context context;
-        String items[];
-
-        public SpinnerAdapter(final Context context, final int textViewResourceId, final String[] objects) {
-            super(context, textViewResourceId, objects);
-            this.items = objects;
-            this.context = context;
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-
-            if (convertView == null) {
-                LayoutInflater inflater = LayoutInflater.from(context);
-                convertView = inflater.inflate(
-                        android.R.layout.simple_spinner_dropdown_item, parent, false);
-            }
-
-            TextView tv = (TextView) convertView
-                    .findViewById(android.R.id.text1);
-            tv.setText(items[position]);
-            tv.setTextColor(Color.BLACK);
-            tv.setTextSize(15);
-            return convertView;
-        }
-
-        /**
-         * 기본 스피너 View 정의
-         */
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                LayoutInflater inflater = LayoutInflater.from(context);
-                convertView = inflater.inflate(
-                        android.R.layout.simple_spinner_item, parent, false);
-            }
-
-            TextView tv = (TextView) convertView
-                    .findViewById(android.R.id.text1);
-            tv.setText(items[position]);
-            tv.setTextColor(Color.BLACK);
-            tv.setTextSize(15);
-            return convertView;
-        }
     }
 
     private void drawerDefault() {
