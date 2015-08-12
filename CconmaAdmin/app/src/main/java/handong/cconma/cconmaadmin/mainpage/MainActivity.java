@@ -30,6 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Random;
 import java.util.HashMap;
@@ -69,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
     private onKeyBackPressedListener mOnKeyBackPressedListener = null;
 
     private MenuItem mPreviousMenuItem;
+
+    private final long FINSH_INTERVAL_TIME = 2000;
+    private long backPressedTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -308,7 +312,15 @@ public class MainActivity extends AppCompatActivity {
             mOnKeyBackPressedListener.onBack();
         } else {
             if (count == 1) {
-                finish();
+                long tempTime = System.currentTimeMillis();
+                long intervalTime = tempTime - backPressedTime;
+
+                if ( 0 <= intervalTime && FINSH_INTERVAL_TIME >= intervalTime ){
+                    finish();
+                }else{
+                    backPressedTime = tempTime;
+                    Toast.makeText(getApplicationContext(), "'뒤로'버튼을 한번 더 누르면 종료", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 fragmentManager.popBackStack();
                 Menu menu = navigationView.getMenu();
@@ -322,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
                     m.setChecked(false);
                 }
 
-                int fPosition = Integer.valueOf(fragmentManager.getFragments().get(count - 2).getTag());
+                int fPosition = Integer.valueOf(fragmentManager.getFragments().get(count-2).getTag());
                 MenuItem prevMenuItem = navigationView.getMenu().findItem(fPosition);
                 prevMenuItem.setChecked(true);
                 mPreviousMenuItem = prevMenuItem;
