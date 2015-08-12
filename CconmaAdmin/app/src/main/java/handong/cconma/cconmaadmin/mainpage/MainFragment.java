@@ -45,7 +45,9 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
     public WebView pageWebView;
     private String url;
     private int fragment_pos = 0;
+    private int position = 0;
 
+    int pos;
     public MainFragment(){
     }
 
@@ -59,29 +61,24 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             viewPager.setCurrentItem(AdminApplication.getInstance().getTabPosition());
             AdminApplication.getInstance().setRefresh(false);
         }
-        Log.d("fragment", "RESUME");
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        Log.d("fragment", "onStart");
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        Log.d("fragment", "onStop");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("fragment", "onCreateView");
         View rootView;
 
-        Log.d("fragment", "savedInstanceState: " + String.valueOf(savedInstanceState));
-        int position = getArguments().getInt(POSITION);
+        position = getArguments().getInt(POSITION);
 
         if(position == -1){
             rootView = inflater.inflate(R.layout.board_viewpager, container, false);
@@ -101,6 +98,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     super.onTabSelected(tab);
+
                 }
 
                 @Override
@@ -109,10 +107,9 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
-                    //stack overflow error!!!
-                    /*AdminApplication.getInstance().setRefresh(true);
-                    AdminApplication.getInstance().setTabPosition(tab.getPosition());
-                    onResume();*/
+                    Fragment fragment = viewPagerAdapter.getFragment(tab.getPosition());
+                    BoardFragment bf = (BoardFragment)fragment;
+                    bf.refresh(getActivity().getApplicationContext());
                 }
             });
 
@@ -205,7 +202,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
                 ViewPager vp = etc_viewPager;
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    int pos = tab.getPosition();
+                    pos = tab.getPosition();
                     vp.setCurrentItem(tab.getPosition());
                 }
 
@@ -247,7 +244,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 //////////////////back key control in fragment
     @Override
     public void onBack() {
-        /*WebView webView = (WebView) ((Fragment) viewPagerAdapter.getFragment()).getView().
+        WebView webView = (WebView) viewPagerAdapter.getFragment(pos).getView().
                 findViewById(R.id.navi_webView);
         if (webView.canGoBack()) {
             webView.goBack();
@@ -255,7 +252,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             MainActivity activity = (MainActivity) getActivity();
             activity.setOnKeyBackPressedListener(null);
             activity.onBackPressed();
-        }*/
+        }
     }
 
     @Override

@@ -488,7 +488,7 @@ public class MainActivity extends AppCompatActivity {
         Menu menu = navigationView.getMenu();
         menu.removeGroup(R.id.menu_user);
         getDynamicMenu();
-        arrow.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+        arrow.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
         status = 0;
     }
 
@@ -497,7 +497,7 @@ public class MainActivity extends AppCompatActivity {
         Menu menu = navigationView.getMenu();
         menu.removeGroup(R.id.menu_default);
         menu.removeGroup(1);
-        arrow.setImageResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
+        arrow.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
         status = 1;
     }
 }
