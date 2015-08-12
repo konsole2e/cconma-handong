@@ -44,6 +44,7 @@ import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.LogoutWebView;
 import handong.cconma.cconmaadmin.etc.SettingActivity;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
+import handong.cconma.cconmaadmin.push.PushView;
 
 /**
  * Created by YoungBinKim on 2015-07-06.
@@ -274,8 +275,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, BoardMarkedActivity.class);
             startActivity(intent);
         } else if (id == R.id.notification) {
-            //Intent intent = new Intent(this, StartPage.class);
-            //startActivity(intent);
+            Intent intent = new Intent(this, PushView.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
