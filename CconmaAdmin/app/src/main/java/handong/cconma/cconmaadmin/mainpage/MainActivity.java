@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private int position = R.id.board;
     private int menu_count;
     private Context context;
-
+    private ImageView arrow;
     private static final String TAG = "debugging";
 
     private CharSequence mTitle;
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         View view = inflater.inflate(R.layout.drawer_header, navigationView, false);
         TextView textview = (TextView) view.findViewById(R.id.name);
         RelativeLayout header = (RelativeLayout) view.findViewById(R.id.drawer_header);
-        final ImageView arrow = (ImageView) view.findViewById(R.id.user_arrow);
+        arrow = (ImageView) view.findViewById(R.id.user_arrow);
         textview.setText(BasicData.getInstance().getName());
 
         header.setOnClickListener(new View.OnClickListener() {
@@ -100,19 +100,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (status == 1) {
-                    Menu menu = navigationView.getMenu();
-                    menu.removeGroup(R.id.menu_user);
-                    navigationView.inflateMenu(R.menu.menu_default);
-                    getDynamicMenu();
-                    arrow.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
-                    status = 0;
+                    drawerDefault();
                 } else {
-                    Menu menu = navigationView.getMenu();
-                    menu.removeGroup(R.id.menu_default);
-                    menu.removeGroup(1);
-                    navigationView.inflateMenu(R.menu.menu_user);
-                    arrow.setImageResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
-                    status = 1;
+                    drawerUser();
                 }
             }
         });
@@ -132,13 +122,13 @@ public class MainActivity extends AppCompatActivity {
                     if (mPreviousMenuItem != null) {
                         mPreviousMenuItem.setChecked(false);
                     }
-                    mPreviousMenuItem = menuItem;
                     mDrawerLayout.closeDrawers();
 
                     position = menuItem.getItemId();
                     Log.d(TAG, String.valueOf(position));
 
                     if (status == 0) {
+                        mPreviousMenuItem = menuItem;
                         switch (position) {
                             case R.id.board:
                                 selectItem(-1);
@@ -158,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (position) {
                             case R.id.user_settings:
                                 startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                                drawerDefault();
                                 break;
                             case R.id.logout:
                                 startActivity(new Intent(MainActivity.this, LogoutWebView.class));
@@ -176,13 +167,11 @@ public class MainActivity extends AppCompatActivity {
             //Called when a drawer has settled in a completely closed state.
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                invalidateOptionsMenu();
             }
 
             // Called when a drawer has settled in a completely open state.
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
             }
         };
 
@@ -444,5 +433,23 @@ public class MainActivity extends AppCompatActivity {
             tv.setTextSize(15);
             return convertView;
         }
+    }
+
+    private void drawerDefault() {
+        navigationView.inflateMenu(R.menu.menu_default);
+        Menu menu = navigationView.getMenu();
+        menu.removeGroup(R.id.menu_user);
+        getDynamicMenu();
+        arrow.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+        status = 0;
+    }
+
+    private void drawerUser() {
+        navigationView.inflateMenu(R.menu.menu_user);
+        Menu menu = navigationView.getMenu();
+        menu.removeGroup(R.id.menu_default);
+        menu.removeGroup(1);
+        arrow.setImageResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
+        status = 1;
     }
 }
