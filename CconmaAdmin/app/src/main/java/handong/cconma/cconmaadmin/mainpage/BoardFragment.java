@@ -98,8 +98,9 @@ public class BoardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onRESUME in BoardFragment");
+
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -226,7 +227,7 @@ public class BoardFragment extends Fragment {
                 recyclerView.setAdapter(adapter);
                 recyclerView.setItemAnimator(null);
 
-                final GestureDetector mGestureDetector = new GestureDetector(getActivity().getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+                final GestureDetector mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
                         if (e.getX() > 100) {

@@ -31,10 +31,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.Spinner;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.Random;
+import java.util.HashMap;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
@@ -60,12 +62,15 @@ public class MainActivity extends AppCompatActivity {
 
     private int status = 0;
     private int position;
+    private int menu_count;
     private Context context;
 
     private static final String TAG = "debugging";
 
     private CharSequence mTitle;
     private onKeyBackPressedListener mOnKeyBackPressedListener = null;
+
+    private MenuItem mPreviousMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,15 +86,17 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        LayoutInflater inflater = (LayoutInflater) MainActivity.this.
+                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.drawer_header, navigationView, false);
-        TextView textview = (TextView) view.findViewById(R.id.name);
-        ImageButton userButton = (ImageButton) view.findViewById(R.id.user_arrow);
-
+        TextView textview = (TextView)view.findViewById(R.id.name);
+        RelativeLayout header = (RelativeLayout)view.findViewById(R.id.drawer_header);
+        final ImageView arrow = (ImageView)view.findViewById(R.id.user_arrow);
         textview.setText(BasicData.getInstance().getName());
 
-        userButton.setOnClickListener(new View.OnClickListener() {
+        header.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -97,26 +104,37 @@ public class MainActivity extends AppCompatActivity {
                     Menu menu = navigationView.getMenu();
                     menu.removeGroup(R.id.menu_user);
                     navigationView.inflateMenu(R.menu.menu_default);
+                    getDynamicMenu();
+                    arrow.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
                     status = 0;
                 } else {
                     Menu menu = navigationView.getMenu();
                     menu.removeGroup(R.id.menu_default);
+                    menu.removeGroup(1);
                     navigationView.inflateMenu(R.menu.menu_user);
+                    arrow.setImageResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
                     status = 1;
                 }
             }
         });
 
+        getDynamicMenu();
         navigationView.addHeaderView(view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
+                menuItem.setCheckable(true);
 
-                if (menuItem.isChecked()) {
-                    menuItem.setChecked(false);
-                } else {
+                if( mPreviousMenuItem == menuItem ){
+                    return true;
+                }
+                else{
                     menuItem.setChecked(true);
+                    if (mPreviousMenuItem != null) {
+                        mPreviousMenuItem.setChecked(false);
+                    }
+                    mPreviousMenuItem = menuItem;
                     mDrawerLayout.closeDrawers();
 
                     position = menuItem.getItemId();
@@ -125,14 +143,18 @@ public class MainActivity extends AppCompatActivity {
                     if (status == 0) {
                         switch (position) {
                             case R.id.board:
-                                selectItem(1);
+                                selectItem(-1);
                                 break;
                             case R.id.chart:
-                                selectItem(2);
+                                selectItem(-2);
                                 break;
                             case R.id.text_chart:
-                                selectItem(3);
+                                selectItem(-3);
                                 break;
+                            default:
+                                if( position <= menu_count ){
+                                    selectItem(position);
+                                }
                         }
                     } else {
                         switch (position) {
@@ -156,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
             //Called when a drawer has settled in a completely closed state.
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mTitle);
                 invalidateOptionsMenu();
             }
 
@@ -210,11 +231,23 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (savedInstanceState == null) {
-            //new init(1).execute();
-            selectItem(1);
+            MenuItem menuItem_board = navigationView.getMenu().findItem(R.id.board);
+            mPreviousMenuItem = menuItem_board;
+            mPreviousMenuItem.setCheckable(true);
+            mPreviousMenuItem.setChecked(true);
+            selectItem(-1);
         }
     }
 
+    public void getDynamicMenu(){
+        Menu menu = navigationView.getMenu();
+        HashMap temp = BasicData.getInstance().getMenuNameList();
+        menu_count = temp.size();
+
+        for (int i = 0; i < menu_count; i++) {
+            menu.add(1, i, 0, temp.get("menu_name" + i).toString()).setIcon(R.drawable.ic_web_white_36dp);
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         mMenu = menu;
@@ -274,7 +307,6 @@ public class MainActivity extends AppCompatActivity {
                 getFragmentManager().popBackStack();
             }
         }
-
         if (mOnKeyBackPressedListener != null) {
             mOnKeyBackPressedListener.onBack();
         } else {
@@ -387,17 +419,6 @@ public class MainActivity extends AppCompatActivity {
         SwipeToRefresh swipe = new SwipeToRefresh();
         transaction.add(R.id.board_container, swipe);
         transaction.commit();
-    }
-
-    private static int getAppVersion(Context context) {
-        try {
-            PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0);
-            return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            // should never happen
-            throw new RuntimeException("Could not get package name: " + e);
-        }
     }
 
     public class SpinnerAdapter extends ArrayAdapter<String> {

@@ -9,6 +9,17 @@
     android:weightSum="1"
     android:background="@drawable/header">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_arrow"
+        android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
+        android:background="@android:color/transparent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -40,15 +51,6 @@
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
-
-    <ImageButton
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:id="@+id/user_arrow"
-        android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
-        android:background="@android:color/transparent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" />
 
     <ImageView
         android:layout_width="70dp"

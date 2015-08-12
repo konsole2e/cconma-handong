@@ -38,9 +38,10 @@ public class Cookies extends Application {
         cookieManager = CookieManager.getInstance();
         String cookies = cookieManager.getCookie(url);
         Log.d(TAG, "Cookie is " + cookies);
-        if(url.contains("startup"))
-            saveAutoLoginToken(cookies);
-        currentCookies = cookies;
+        saveAutoLoginToken(cookies);
+        if(cookies != null) {
+            currentCookies = cookies;
+        }
     }
 
     public void removeAllCookies(){
@@ -54,19 +55,21 @@ public class Cookies extends Application {
     }
 
     protected void saveAutoLoginToken(String cookies){
-        String[] temp = cookies.split(";");
+        if(cookies != null) {
+            String[] temp = cookies.split(";");
 
-        for(int i = 0; i < temp.length; i++){
-            String data;
-            if(temp[i].contains("autoLoginAuthEnabled")){
-                 data = temp[i].split("=")[1];
-                new IntegratedSharedPreferences(context).
-                        put("AUTO_LOGIN_AUTH_ENABLED", data);
-            }
-            if(temp[i].contains("autoLoginAuthToken")){
-                data = temp[i].split("=")[1];
-                new IntegratedSharedPreferences(context).
-                        put("AUTO_LOGIN_AUTH_TOKEN", data);
+            for (int i = 0; i < temp.length; i++) {
+                String data;
+                if (temp[i].contains("autoLoginAuthEnabled")) {
+                    data = temp[i].split("=")[1];
+                    new IntegratedSharedPreferences(context).
+                            put("AUTO_LOGIN_AUTH_ENABLED", data);
+                }
+                if (temp[i].contains("autoLoginAuthToken")) {
+                    data = temp[i].split("=")[1];
+                    new IntegratedSharedPreferences(context).
+                            put("AUTO_LOGIN_AUTH_TOKEN", data);
+                }
             }
         }
     }

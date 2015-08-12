@@ -1,12 +1,8 @@
 package handong.cconma.cconmaadmin.mainpage;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.hardware.Camera;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +24,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.os.Handler;
 
 import java.util.concurrent.ExecutionException;
 
@@ -60,13 +57,6 @@ public class StartPage extends AppCompatActivity{
 
     private Intent intent;
 
-    class doJob extends AsyncTask<Void, Void, Void>{
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            return null;
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +66,7 @@ public class StartPage extends AppCompatActivity{
 
         logoImage = (ImageView) findViewById(R.id.startup_image);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.progressbar_circular);
+        circularProgressBar.setVisibility(View.VISIBLE);
 
         getInstanceIdToken();
 
@@ -95,26 +86,19 @@ public class StartPage extends AppCompatActivity{
             e.printStackTrace();
         }
 
-        new Thread(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 pref = new IntegratedSharedPreferences(getApplicationContext());
-                if( pref.getValue("AUTO_LOGIN_AUTH_ENABLED", "").equals("1") ){
-                   // String requestBody = pref.getValue("AUTO_LOGIN_AUTH_TOKEN", "");
-                   // new StartUp(StartPage.this).post(requestBody);
+                if (pref.getValue("AUTO_LOGIN_AUTH_ENABLED", "").equals("1")) {
                     intent = new Intent(StartPage.this, StartupWebView.class);
-                    intent.putExtra("AUTO_LOGIN", 1);
-                    startActivity(intent);
-                    finish();
-                }
-                else{
+                } else {
                     intent = new Intent(StartPage.this, LoginWebView.class);
-                    intent.putExtra("AUTO_LOGIN", 0);
-                    startActivity(intent);
-                    finish();
                 }
+                startActivity(intent);
+                finish();
             }
-        }).start();
+        }, 2000);
 
         /*
         this.runOnUiThread(

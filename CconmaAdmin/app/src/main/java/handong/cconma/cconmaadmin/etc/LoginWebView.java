@@ -43,14 +43,9 @@ public class LoginWebView extends AppCompatActivity {
 
         webview = (WebView) findViewById(R.id.webView);
 
-        //Intent data = getIntent();
-        //url = data.getStringExtra("URL");
         url = "http://www.cconma.com/mobile/auth/index.pmv?path=http://www.cconma.com%2Fmobile%2Findex.pmv";
-        Intent data = getIntent();
-        autoLogin = data.getIntExtra("AUTO_LOGIN", 0);
 
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
-        webview.getSettings().setBuiltInZoomControls(true);
         String userAgent = webview.getSettings().getUserAgentString();
         Cookies.getInstance(null).removeAllCookies();
         webview.getSettings().setUserAgentString(userAgent + ";com.cconma.app");
@@ -60,15 +55,18 @@ public class LoginWebView extends AppCompatActivity {
 
     class WebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
-            if(url.contains("index.pmv")) {
+            if(url.contains("index.pmv") && !url.contains("join.pmv")) {
                 webview.setVisibility(View.GONE);
                 ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).start();
 
                 Log.d("debugging", "loginwebview thread start");
+                Cookies.getInstance(LoginWebView.this).updateCookies(url);
                 Intent intent = new Intent(LoginWebView.this, StartupWebView.class);
                 startActivity(intent);
                 finish();
 
+                return true;
+            }else if(url.contains("join.pmv")){
                 return true;
             }else {
                 return super.shouldOverrideUrlLoading(view, url);
@@ -78,7 +76,6 @@ public class LoginWebView extends AppCompatActivity {
         public void onPageFinished(WebView view, String url){
             Log.d("debugging", "LoginWebView onPageFinished");
             ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).progressiveStop();
-            Cookies.getInstance(LoginWebView.this).updateCookies(url);
         }
     }
 }

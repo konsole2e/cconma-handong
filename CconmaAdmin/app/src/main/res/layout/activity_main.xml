@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+            android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
             android:layout_gravity="bottom|left"
             app:fabSize="mini"
             app:backgroundTint="#dd2c00" />
