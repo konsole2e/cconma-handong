@@ -39,9 +39,7 @@ public class Cookies extends Application {
         String cookies = cookieManager.getCookie(url);
         Log.d(TAG, "Cookie is " + cookies);
         saveAutoLoginToken(cookies);
-        if(cookies != null) {
-            currentCookies = cookies;
-        }
+        currentCookies = cookies;
     }
 
     public void removeAllCookies(){

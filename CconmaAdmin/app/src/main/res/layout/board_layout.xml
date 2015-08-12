@@ -6,21 +6,10 @@
     android:orientation="vertical"
     android:background="@android:color/transparent">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <FrameLayout
-            android:id="@+id/board_container"
+        <handong.cconma.cconmaadmin.customview.SwipeRefreshLayoutBottom
+            android:id="@+id/refresh_bottom"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </RelativeLayout>
-
-        <!--<handong.cconma.cconmaadmin.customview.PullToRefreshView
-            android:id="@+id/pull_to_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">-->
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -29,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical"/>
-        <!--</handong.cconma.cconmaadmin.customview.PullToRefreshView>-->
+        </handong.cconma.cconmaadmin.customview.SwipeRefreshLayoutBottom>
 
     <fr.castorflex.android.circularprogressbar.CircularProgressBar
         android:id="@+id/progressbar_circular"

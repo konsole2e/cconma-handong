@@ -1,27 +1,21 @@
 package handong.cconma.cconmaadmin.webpage;
 
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import handong.cconma.cconmaadmin.data.BasicData;
-import handong.cconma.cconmaadmin.mainpage.ViewPagerAdapter;
 
 /**
  * Created by Young Bin Kim on 2015-08-10.
  */
 public class WebPagesViewPagerAdapter extends FragmentStatePagerAdapter {
     private Context mContext;
-    private int position;
     private static  ArrayList<String> submenu_urls;
     private ArrayList<String> tabTitles;
     private WebPageFragment fragment;

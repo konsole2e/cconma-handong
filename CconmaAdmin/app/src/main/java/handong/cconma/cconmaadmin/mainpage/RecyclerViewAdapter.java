@@ -43,7 +43,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             if(ViewType == VIEW_TYPE_USER){
                 textViewName = (TextView)itemView.findViewById(R.id.name);
-                userArrow = (ImageButton) itemView.findViewById(R.id.user_arrow);
+                //userArrow = (ImageButton) itemView.findViewById(R.id.user_arrow);
                 holderId = 0;
             }
             else {
@@ -82,10 +82,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         else{
             viewHolder.textViewName.setText(name);
             if(status == 0){
-                viewHolder.userArrow.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+                viewHolder.userArrow.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
             }
             else if(status == 1){
-                //viewHolder.userArrow.setImageResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
+                viewHolder.userArrow.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
             }
         }
     }
