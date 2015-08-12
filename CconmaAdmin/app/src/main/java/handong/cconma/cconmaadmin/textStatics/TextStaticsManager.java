@@ -39,6 +39,7 @@ public class TextStaticsManager {
                 paramsLeft.setMargins(dpInPx, dpInPx, dpInPx, 0);
                 nameTv.setLayoutParams(paramsLeft);
                 left.addView(nameTv);
+                left.setPadding(15, 5, 15, 5);
 
                 TextView valueTv = new TextView(con);
                 LinearLayout.LayoutParams paramsRight = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -48,6 +49,7 @@ public class TextStaticsManager {
                 valueTv.setSingleLine();
                 valueTv.setLayoutParams(paramsRight);
                 right.addView(valueTv);
+                right.setPadding(15, 5, 15, 5);
             }
         } catch (JSONException e) {
             e.printStackTrace();
