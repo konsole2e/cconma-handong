@@ -36,6 +36,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
+import java.util.List;
+
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private Configuration config;
     private int status = 0;
-    private int position;
+    private int position = R.id.board;
     private int menu_count;
     private Context context;
 
@@ -88,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.drawer_header, navigationView, false);
-        TextView textview = (TextView)view.findViewById(R.id.name);
-        RelativeLayout header = (RelativeLayout)view.findViewById(R.id.drawer_header);
-        final ImageView arrow = (ImageView)view.findViewById(R.id.user_arrow);
+        TextView textview = (TextView) view.findViewById(R.id.name);
+        RelativeLayout header = (RelativeLayout) view.findViewById(R.id.drawer_header);
+        final ImageView arrow = (ImageView) view.findViewById(R.id.user_arrow);
         textview.setText(BasicData.getInstance().getName());
 
         header.setOnClickListener(new View.OnClickListener() {
@@ -121,11 +123,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
+                menuItem.setCheckable(true);
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
-                if( mPreviousMenuItem == menuItem ){
+                if (mPreviousMenuItem == menuItem) {
                     return true;
-                }
-                else{
+                } else {
                     menuItem.setChecked(true);
                     if (mPreviousMenuItem != null) {
                         mPreviousMenuItem.setChecked(false);
@@ -148,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                                 selectItem(-3);
                                 break;
                             default:
-                                if( position <= menu_count ){
+                                if (position <= menu_count) {
                                     selectItem(position);
                                 }
                         }
@@ -196,18 +198,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void getDynamicMenu(){
+    public void getDynamicMenu() {
         Menu menu = navigationView.getMenu();
         HashMap temp = BasicData.getInstance().getMenuNameList();
         menu_count = temp.size();
 
         for (int i = 0; i < menu_count; i++) {
-            menu.add(1, i, 0, temp.get("menu_name" + i).toString()).setIcon(R.drawable.ic_web_white_36dp);
+            menu.add(1, i + 1, 0, temp.get("menu_name" + i).toString()).setIcon(R.drawable.ic_web_white_36dp);
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        mMenu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -253,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         int count = fragmentManager.getBackStackEntryCount();
 
-        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
             return;
         }
@@ -262,15 +264,30 @@ public class MainActivity extends AppCompatActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
             return;
         }
+
         if (mOnKeyBackPressedListener != null) {
             mOnKeyBackPressedListener.onBack();
         } else {
             if (count == 1) {
                 finish();
             } else {
-                navigationView.getMenu().findItem(position).setChecked(false);
                 fragmentManager.popBackStack();
-                navigationView.getMenu().getItem(Integer.valueOf(fragmentManager.getFragments().get(count-2).getTag()) - 1).setChecked(true);
+                Menu menu = navigationView.getMenu();
+                for (int i = 0; i < menu.size(); i++) {
+                    MenuItem m = menu.getItem(i);
+                    if (m.hasSubMenu()) {
+                        for (int j = 0; j < m.getSubMenu().size(); j++) {
+                            m.getSubMenu().getItem(j).setChecked(false);
+                        }
+                    }
+                    m.setChecked(false);
+                }
+
+                int fPosition = Integer.valueOf(fragmentManager.getFragments().get(count - 2).getTag());
+                MenuItem prevMenuItem = navigationView.getMenu().findItem(fPosition);
+                prevMenuItem.setChecked(true);
+                mPreviousMenuItem = prevMenuItem;
+                position = fPosition;
             }
         }
     }
@@ -323,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void selectItem(final int position) {
+    private void selectItem(final int mPosition) {
             /*if (position == 1) {
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
                 if (fragment != null) {
@@ -361,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
         // floatingActionButton.setVisibility(View.GONE);
         Fragment fragment = new MainFragment();
         Bundle args = new Bundle();
-        args.putInt(MainFragment.POSITION, position);
+        args.putInt(MainFragment.POSITION, mPosition);
         fragment.setArguments(args);
 
         fragmentManager = getSupportFragmentManager();

@@ -191,7 +191,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 
             etc_viewPager = (ViewPager) rootView.findViewById(R.id.etc_viewpager);
             viewPagerAdapter = new WebPagesViewPagerAdapter(
-                    getChildFragmentManager(), getActivity().getApplicationContext(), position);
+                    getChildFragmentManager(), getActivity().getApplicationContext(), position - 1);
             etc_viewPager.setAdapter(viewPagerAdapter);
 
             etc_tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
