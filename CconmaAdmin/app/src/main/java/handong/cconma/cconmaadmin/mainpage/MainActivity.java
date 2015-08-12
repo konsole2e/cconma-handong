@@ -36,6 +36,7 @@ import java.util.HashMap;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
+import handong.cconma.cconmaadmin.board.BoardViewActivity;
 import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.LogoutWebView;
 import handong.cconma.cconmaadmin.etc.SettingActivity;
@@ -179,39 +180,38 @@ public class MainActivity extends AppCompatActivity {
 
 
         Random rand = new Random();
-        int randnum = (int)rand.nextInt(8);
-        FrameLayout frameLayout = (FrameLayout)findViewById(R.id.main_content_frame);
-        switch(randnum){
-            case 0 :
+        int randnum = (int) rand.nextInt(8);
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.main_content_frame);
+        switch (randnum) {
+            case 0:
                 frameLayout.setBackgroundResource(R.drawable.background03);
                 break;
 
-            case 1 :
+            case 1:
                 frameLayout.setBackgroundResource(R.drawable.background04);
                 break;
 
-            case 2 :
+            case 2:
                 frameLayout.setBackgroundResource(R.drawable.background07);
                 break;
 
-            case 3 :
+            case 3:
                 frameLayout.setBackgroundResource(R.drawable.background09);
                 break;
 
-            case 4 :
+            case 4:
                 frameLayout.setBackgroundResource(R.drawable.background11);
                 break;
-            case 5 :
+            case 5:
                 frameLayout.setBackgroundResource(R.drawable.background3);
                 break;
-            case 6 :
+            case 6:
                 frameLayout.setBackgroundResource(R.drawable.background12);
                 break;
-            case 7 :
+            case 7:
                 frameLayout.setBackgroundResource(R.drawable.background14);
                 break;
         }
-
 
 
         if (savedInstanceState == null) {
@@ -220,6 +220,18 @@ public class MainActivity extends AppCompatActivity {
             mPreviousMenuItem.setCheckable(true);
             mPreviousMenuItem.setChecked(true);
             selectItem(-1);
+        }
+
+        String board_no = AdminApplication.getInstance().getBoardNo();
+        String boardArticle_no = AdminApplication.getInstance().getArticleNo();
+        if (board_no != null && boardArticle_no != null) {
+            Intent i = new Intent(this, BoardViewActivity.class);
+            i.putExtra("board_no", board_no);
+            i.putExtra("boardarticle_no", boardArticle_no);
+            i.putExtra("from", "push");
+            startActivity(i);
+            AdminApplication.getInstance().setBoardNo(null);
+            AdminApplication.getInstance().setArticleNo(null);
         }
     }
 

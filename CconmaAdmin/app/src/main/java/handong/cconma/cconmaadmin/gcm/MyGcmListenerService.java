@@ -16,6 +16,7 @@ import handong.cconma.cconmaadmin.board.BoardViewActivity;
 import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 import handong.cconma.cconmaadmin.mainpage.MainActivity;
 import handong.cconma.cconmaadmin.R;
+import handong.cconma.cconmaadmin.mainpage.StartPage;
 
 /**
  * Created by Young Bin Kim on 2015-07-09.
@@ -52,10 +53,9 @@ public class MyGcmListenerService extends GcmListenerService {
         String boardarticle_no = boardSplit[1].split("=")[1];
 
         Log.d(TAG, "SEND NOTIFICATION");
-        Intent intent = new Intent(this, BoardViewActivity.class);
+        Intent intent = new Intent(this, StartPage.class);
         intent.putExtra("board_no", board_no);
         intent.putExtra("boardarticle_no", boardarticle_no);
-        intent.putExtra("from", "push");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
