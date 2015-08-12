@@ -172,13 +172,11 @@ public class BoardWriteActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     Toast.makeText(context, "글이 등록되었습니다", Toast.LENGTH_SHORT).show();
+                    AdminApplication.getInstance().setRefresh(true);
                     finish();
                 }else{
                     Toast.makeText(context, "제목과 내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(context, "글이 등록되었습니다", Toast.LENGTH_SHORT).show();
-                AdminApplication.getInstance().setRefresh(true);
-                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
