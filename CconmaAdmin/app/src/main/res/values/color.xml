@@ -19,7 +19,7 @@
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="reload_test">#44ff0000</color>
-
+    <color name="completed">#8C8C8C</color>
     <integer-array name="colors">
         <item>@android:color/holo_red_light</item>
         <item>@android:color/holo_blue_bright</item>
