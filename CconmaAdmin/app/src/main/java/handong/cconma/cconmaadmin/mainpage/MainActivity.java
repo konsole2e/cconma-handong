@@ -296,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
             if (count == 1) {
                 finish();
             } else {
-                fragmentManager.popBackStack();
+                fragmentManager.findFragmentByTag("-1");
                 Menu menu = navigationView.getMenu();
                 for (int i = 0; i < menu.size(); i++) {
                     MenuItem m = menu.getItem(i);
@@ -308,11 +308,10 @@ public class MainActivity extends AppCompatActivity {
                     m.setChecked(false);
                 }
 
-                int fPosition = Integer.valueOf(fragmentManager.getFragments().get(count - 2).getTag());
-                MenuItem prevMenuItem = navigationView.getMenu().findItem(fPosition);
+                //int fPosition = Integer.valueOf(fragmentManager.getFragments().get(count - 2).getTag());
+                MenuItem prevMenuItem = navigationView.getMenu().findItem(-1);
                 prevMenuItem.setChecked(true);
                 mPreviousMenuItem = prevMenuItem;
-                position = fPosition;
             }
         }
     }
