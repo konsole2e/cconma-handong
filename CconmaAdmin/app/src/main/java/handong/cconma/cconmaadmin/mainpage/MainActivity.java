@@ -3,8 +3,6 @@ package handong.cconma.cconmaadmin.mainpage;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
@@ -203,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
             case 4 :
                 frameLayout.setBackgroundResource(R.drawable.background11);
                 break;
-
             case 5 :
                 frameLayout.setBackgroundResource(R.drawable.background3);
                 break;

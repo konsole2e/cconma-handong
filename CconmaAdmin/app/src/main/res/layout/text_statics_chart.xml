@@ -8,13 +8,13 @@
 
     <FrameLayout
         android:id="@+id/stat_left_fl"
-        android:background="#000000"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
-        android:paddingLeft="1dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/stat_right_fl">
+        android:layout_toLeftOf="@+id/stat_right_fl"
+        android:background="#000000"
+        android:paddingBottom="1dp"
+        android:paddingLeft="1dp"
+        android:paddingTop="1dp">
 
         <LinearLayout
             android:id="@+id/stat_left_ll"
@@ -31,11 +31,11 @@
         android:id="@+id/stat_right_fl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:background="#000000"
-        android:paddingRight="1dp"
-        android:paddingTop="1dp"
         android:paddingBottom="1dp"
-        android:layout_alignParentRight="true">
+        android:paddingRight="1dp"
+        android:paddingTop="1dp">
 
         <LinearLayout
             android:id="@+id/stat_right_ll"

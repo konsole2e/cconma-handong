@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
 import handong.cconma.cconmaadmin.mainpage.MainActivity;
 import handong.cconma.cconmaadmin.R;
 
@@ -26,11 +27,16 @@ public class MyGcmListenerService extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
         String title = data.getString("title");
+        boolean pushSetting;
 
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
 
-        sendNotification(message, title);
+        IntegratedSharedPreferences pref = new IntegratedSharedPreferences(getApplicationContext());
+        pushSetting = pref.getValue("PUSH", true);
+        if (pushSetting) {
+            sendNotification(message, title);
+        }
     }
 
     private void sendNotification(String message, String title) {
@@ -40,7 +46,7 @@ public class MyGcmListenerService extends GcmListenerService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_logo)
                 .setContentTitle(title)
