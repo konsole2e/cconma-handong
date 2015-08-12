@@ -38,6 +38,7 @@ public class LogoutWebView extends AppCompatActivity {
         url = "http://www.cconma.com/Cconma/logout.fmv?path=http://www.cconma.com%2Fmobile%2Findex.pmv";
 
         webview.getSettings().setJavaScriptEnabled(true); //Enable when javascript is needed
+        Cookies.getInstance(null).removeAllCookies();
         String userAgent = webview.getSettings().getUserAgentString();
         webview.getSettings().setUserAgentString(userAgent + ";com.cconma.app");
         webview.loadUrl(url);

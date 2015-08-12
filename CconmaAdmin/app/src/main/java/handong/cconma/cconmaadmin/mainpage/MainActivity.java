@@ -28,15 +28,13 @@ import android.view.View;
 
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Random;
 import java.util.HashMap;
-import java.util.List;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.board.BoardMarkedActivity;
@@ -44,6 +42,7 @@ import handong.cconma.cconmaadmin.data.BasicData;
 import handong.cconma.cconmaadmin.etc.LogoutWebView;
 import handong.cconma.cconmaadmin.etc.SettingActivity;
 import handong.cconma.cconmaadmin.etc.SwipeToRefresh;
+import handong.cconma.cconmaadmin.push.PushView;
 
 /**
  * Created by YoungBinKim on 2015-07-06.
@@ -82,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
+
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -175,8 +175,47 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+
+        Random rand = new Random();
+        int randnum = (int)rand.nextInt(8);
+        FrameLayout frameLayout = (FrameLayout)findViewById(R.id.main_content_frame);
+        switch(randnum){
+            case 0 :
+                frameLayout.setBackgroundResource(R.drawable.background03);
+                break;
+
+            case 1 :
+                frameLayout.setBackgroundResource(R.drawable.background04);
+                break;
+
+            case 2 :
+                frameLayout.setBackgroundResource(R.drawable.background07);
+                break;
+
+            case 3 :
+                frameLayout.setBackgroundResource(R.drawable.background09);
+                break;
+
+            case 4 :
+                frameLayout.setBackgroundResource(R.drawable.background11);
+                break;
+
+            case 5 :
+                frameLayout.setBackgroundResource(R.drawable.background3);
+                break;
+            case 6 :
+                frameLayout.setBackgroundResource(R.drawable.background12);
+                break;
+            case 7 :
+                frameLayout.setBackgroundResource(R.drawable.background14);
+                break;
+        }
+
+
 
         if (savedInstanceState == null) {
             MenuItem menuItem_board = navigationView.getMenu().findItem(R.id.board);
@@ -222,8 +261,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, BoardMarkedActivity.class);
             startActivity(intent);
         } else if (id == R.id.notification) {
-            //Intent intent = new Intent(this, StartPage.class);
-            //startActivity(intent);
+            Intent intent = new Intent(this, PushView.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="5dp">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="5dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardBackgroundColor="@android:color/transparent">
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-        <ImageView
-            android:id="@+id/img_push_category"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_marginRight="10dp"/>
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
         <TextView
-            android:id="@+id/text_push_board"
-            android:layout_width="wrap_content"
+            android:id="@+id/text_push_message"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="알림 내용"
             android:textColor="#000000"/>
+        <TextView
+            android:id="@+id/text_push_date"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#444444"
+            android:gravity="right"
+            android:textSize="11dp"
+            android:layout_marginTop="3dp"
+            android:hint="2015/07/05 10:44:23"/>
     </LinearLayout>
-    <TextView
-        android:id="@+id/text_push_board_date"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:hint="2015/07/05 10:44:23"/>
-</LinearLayout>
+</android.support.v7.widget.CardView>
