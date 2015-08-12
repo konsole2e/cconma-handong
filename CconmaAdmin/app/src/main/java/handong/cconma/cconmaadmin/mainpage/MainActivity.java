@@ -352,10 +352,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void drawerDefault() {
-        navigationView.inflateMenu(R.menu.menu_default);
         Menu menu = navigationView.getMenu();
         menu.removeGroup(R.id.menu_user);
+        navigationView.inflateMenu(R.menu.menu_default);
         getDynamicMenu();
+        mPreviousMenuItem.setChecked(false);
+        mPreviousMenuItem.setChecked(true);
         arrow.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
         status = 0;
     }

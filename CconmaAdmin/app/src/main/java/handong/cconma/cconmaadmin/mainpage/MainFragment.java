@@ -108,8 +108,10 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
                     Fragment fragment = viewPagerAdapter.getFragment(tab.getPosition());
-                    BoardFragment bf = (BoardFragment)fragment;
-                    bf.refresh(getActivity().getApplicationContext());
+                    if( fragment != null ) {
+                        BoardFragment bf = (BoardFragment) fragment;
+                        bf.refresh(getActivity().getApplicationContext());
+                    }
                 }
             });
 
