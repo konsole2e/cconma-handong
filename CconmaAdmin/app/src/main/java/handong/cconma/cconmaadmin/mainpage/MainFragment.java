@@ -46,6 +46,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
     private String url;
     private int fragment_pos = 0;
 
+    int pos;
     public MainFragment(){
     }
 
@@ -205,7 +206,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
                 ViewPager vp = etc_viewPager;
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    int pos = tab.getPosition();
+                    pos = tab.getPosition();
                     vp.setCurrentItem(tab.getPosition());
                 }
 
@@ -247,7 +248,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 //////////////////back key control in fragment
     @Override
     public void onBack() {
-        /*WebView webView = (WebView) ((Fragment) viewPagerAdapter.getFragment()).getView().
+        WebView webView = (WebView) ((Fragment) viewPagerAdapter.getFragment(pos)).getView().
                 findViewById(R.id.navi_webView);
         if (webView.canGoBack()) {
             webView.goBack();
@@ -255,7 +256,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             MainActivity activity = (MainActivity) getActivity();
             activity.setOnKeyBackPressedListener(null);
             activity.onBackPressed();
-        }*/
+        }
     }
 
     @Override
