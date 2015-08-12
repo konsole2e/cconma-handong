@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
             if (count == 1) {
                 finish();
             } else {
-                fragmentManager.findFragmentByTag("-1");
+                fragmentManager.popBackStack();
                 Menu menu = navigationView.getMenu();
                 for (int i = 0; i < menu.size(); i++) {
                     MenuItem m = menu.getItem(i);
@@ -322,8 +322,8 @@ public class MainActivity extends AppCompatActivity {
                     m.setChecked(false);
                 }
 
-                //int fPosition = Integer.valueOf(fragmentManager.getFragments().get(count - 2).getTag());
-                MenuItem prevMenuItem = navigationView.getMenu().findItem(-1);
+                int fPosition = Integer.valueOf(fragmentManager.getFragments().get(count - 2).getTag());
+                MenuItem prevMenuItem = navigationView.getMenu().findItem(fPosition);
                 prevMenuItem.setChecked(true);
                 mPreviousMenuItem = prevMenuItem;
             }
@@ -358,6 +358,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
+
         ft.replace(R.id.main_content_frame, fragment, String.valueOf(position));
         ft.addToBackStack(null);
         Log.d(TAG, "fragment stack: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
