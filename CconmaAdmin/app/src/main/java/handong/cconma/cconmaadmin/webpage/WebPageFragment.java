@@ -106,8 +106,7 @@ public class WebPageFragment extends Fragment{
         pageWebView.getSettings().setUserAgentString(userAgent + ";com.admincconma.app");
         pageWebView.getSettings().setBuiltInZoomControls(true);
         pageWebView.getSettings().setSupportZoom(true);
-        pageWebView.getSettings().setBuiltInZoomControls(false);
-        pageWebView.getSettings().setLoadWithOverviewMode(true);
+        //pageWebView.getSettings().setLoadWithOverviewMode(true);
         pageWebView.getSettings().setUseWideViewPort(true);
         pageWebView.setWebViewClient(new WebClient());
         pageWebView.setWebChromeClient(new WebChromeClient() {
