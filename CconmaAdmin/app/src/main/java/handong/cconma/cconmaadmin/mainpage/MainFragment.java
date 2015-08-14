@@ -213,11 +213,12 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             //tabLayout.setTabsFromPagerAdapter(viewPagerAdapter);
             //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             etc_tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(etc_viewPager) {
-                ViewPager vp = etc_viewPager;
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    pos = tab.getPosition();
-                    vp.setCurrentItem(tab.getPosition());
+                    if(etc_viewPager.getCurrentItem() != tab.getPosition()){
+                        reSelect = false;
+                    }
+                    super.onTabSelected(tab);
                 }
 
                 @Override
@@ -227,6 +228,10 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
+                    if(!reSelect){
+                        reSelect = true;
+                        return;
+                    }
                     fragment_pos = tab.getPosition();
                     Fragment fragment = viewPagerAdapter.getFragment(fragment_pos);
                     //Fragment fragment = viewPagerAdapter.getPrimaryFragment();
