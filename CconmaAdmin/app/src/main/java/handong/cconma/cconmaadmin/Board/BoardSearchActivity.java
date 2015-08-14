@@ -23,6 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -129,9 +130,6 @@ public class BoardSearchActivity extends AppCompatActivity {
                 } catch (Exception e) {
 
                 }
-                new BoardAsyncTask().execute("http://www.cconma.com/admin/api/board/v1/boards/"
-                        + board_no + "/writers/all?page=" + "1" + "&n=20", "GET", "");
-                Log.d("test", search_cond);
 
                 input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
@@ -151,7 +149,7 @@ public class BoardSearchActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("검색");
 
-        board_no = getIntent().getStringExtra("board_no");
+            board_no = getIntent().getStringExtra("board_no");
         board_title = getIntent().getStringExtra("board_title");
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -194,6 +192,8 @@ public class BoardSearchActivity extends AppCompatActivity {
                 return super.onSingleTapConfirmed(e);
             }
         });
+        RelativeLayout rl = (RelativeLayout)findViewById(R.id.footer);
+        recyclerView.removeView(rl);
     }
 
     public class SpinnerAdapter extends ArrayAdapter<String> {
