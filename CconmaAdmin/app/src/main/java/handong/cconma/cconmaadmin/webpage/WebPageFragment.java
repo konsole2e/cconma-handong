@@ -122,7 +122,6 @@ public class WebPageFragment extends Fragment{
             public boolean shouldOverrideUrlLoading(WebView view, String url){
             progressBar.setVisibility(View.VISIBLE);
             view.loadUrl(url);
-            Cookies.getInstance(getActivity().getApplicationContext()).updateCookies(url);
             return true;
         }
 

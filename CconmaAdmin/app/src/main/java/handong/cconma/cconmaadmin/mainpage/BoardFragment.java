@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -113,7 +114,7 @@ public class BoardFragment extends Fragment {
        View view = inflater.inflate(R.layout.board_layout, container, false);
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
-        linearLayoutManager = new MyLinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.VERTICAL, false, 500);
+        linearLayoutManager = new MyLinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.VERTICAL, false, 2000);
 
         recyclerView.setLayoutManager(linearLayoutManager);
         circularProgressBar = (CircularProgressBar)view.findViewById(R.id.progressbar_circular);
@@ -144,7 +145,7 @@ public class BoardFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         //if(savedInstanceState == null)
-            new BoardAsyncTask_test(getActivity().getApplicationContext(), 0).execute();
+        new BoardAsyncTask_test(getActivity().getApplicationContext(), 0).execute();
         mGestureDetector = new GestureDetector(
                 getActivity().getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override
@@ -204,7 +205,7 @@ public class BoardFragment extends Fragment {
                     public void run() {
                         new BoardAsyncTask_test(getActivity().getApplicationContext(), -1).execute();
                     }
-                }, 300);
+                }, 200);
             }
         });
     }
@@ -270,6 +271,9 @@ public class BoardFragment extends Fragment {
 
                     }
                 });
+            }else{
+                RelativeLayout rl = (RelativeLayout)getView().findViewById(R.id.footer);
+                recyclerView.removeView(rl);
             }
             refresh_bottom.setRefreshing(false);
             circularProgressBar.setVisibility(View.GONE);
