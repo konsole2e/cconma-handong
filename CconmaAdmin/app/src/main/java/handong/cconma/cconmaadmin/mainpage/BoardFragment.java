@@ -212,6 +212,9 @@ public class BoardFragment extends Fragment {
                             // handle single tap
                             if (view != null && position != -1) {
                                 Intent i = new Intent(getActivity(), BoardViewActivity.class);
+            /*                    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
 
                                 Log.d(TAG, boardDataList.get(position).board_no.toString() + " " + boardDataList.get(position).boardarticle_no.toString() + " " +
                                         boardDataList.get(position).boardarticle_no);
