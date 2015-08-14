@@ -46,7 +46,7 @@ public class WebPagesViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        fragment = WebPageFragment.newInstance(submenu_urls.get(position));
+        fragment = WebPageFragment.newInstance(submenu_urls.get(position), mContext);
         mPageReferenceMap.put(position, fragment);
         first = false;
         return fragment;
