@@ -107,34 +107,6 @@ public class StartPage extends AppCompatActivity {
                 finish();
             }
         }, 2000);
-
-        /*
-        this.runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.logo);
-                        logoImage.startAnimation(animation);
-                        animation.setFillAfter(true);
-                        animation.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                circularProgressBar.setVisibility(View.VISIBLE);
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                    }
-                });
-        */
     }
 
     public void getInstanceIdToken() {
