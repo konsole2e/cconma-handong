@@ -42,9 +42,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
     private String url;
     private int fragment_pos = 0;
     private int position = 0;
-    private int mPreviousPosition;
-    private boolean reSelect = false;
-    private int curPage = 0;
+    private boolean reSelect = true;
 
     int pos;
     public MainFragment(){
