@@ -52,7 +52,6 @@ public class MyGcmListenerService extends GcmListenerService {
         String board_no = boardSplit[0].split("=")[1];
         String boardarticle_no = boardSplit[1].split("=")[1];
 
-        Log.d(TAG, "SEND NOTIFICATION");
         Intent intent = new Intent(this, StartPage.class);
         intent.putExtra("board_no", board_no);
         intent.putExtra("boardarticle_no", boardarticle_no);

@@ -23,7 +23,6 @@ public class StartUp {
 
     public void post(String requestBody){
         try {
-            Log.d("USERINFO", requestBody);
             responseJson = new MainAsyncTask(
                     "http://www.cconma.com/mobile/admin-app/startup.pmv",
                     "POST", requestBody).execute().get();
@@ -42,7 +41,6 @@ public class StartUp {
             data.setUserInfo(json.getString("user_id"), json.getString("email"),
                     json.getString("mem_no"), json.getString("name"));
 
-            Log.d("USERINFO", "JSON USER INFO: " + data.getUserInfo() );
             jsonArray = responseJson.getJSONArray("admin_board_list");
             for(int i = 0; i < jsonArray.length(); i++){
                 json = jsonArray.getJSONObject(i);

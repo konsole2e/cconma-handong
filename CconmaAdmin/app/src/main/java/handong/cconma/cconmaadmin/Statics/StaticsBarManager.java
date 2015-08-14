@@ -2,7 +2,6 @@ package handong.cconma.cconmaadmin.statics;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -64,7 +63,6 @@ public class StaticsBarManager {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Parsing", "chartSetting");
         }
     }
 
@@ -107,7 +105,6 @@ public class StaticsBarManager {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Parsing", "xAxisSetting");
         }
     }
 
@@ -161,7 +158,6 @@ public class StaticsBarManager {
             chart.getAxisLeft().setValueFormatter(new StaticsValueFormatter(format, unit));
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Parsing", "leftYAxisSetting");
         }
     }
 
@@ -215,7 +211,6 @@ public class StaticsBarManager {
             chart.getAxisRight().setValueFormatter(new StaticsValueFormatter(format, unit));
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Parsing", "rightYAxisSetting");
         }
     }
 
@@ -241,7 +236,6 @@ public class StaticsBarManager {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Parsing", "legendSetting");
         }
     }
 
@@ -266,7 +260,6 @@ public class StaticsBarManager {
             chart.setMarkerView(mv);
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Parsing", "toolTipSetting");
         }
     }
 
@@ -316,7 +309,6 @@ public class StaticsBarManager {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Parsing", "dataSetting");
         }
         return barData;
     }
@@ -329,7 +321,6 @@ public class StaticsBarManager {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Parsing", "parsingXValues");
         }
         return xValues;
     }
@@ -342,7 +333,6 @@ public class StaticsBarManager {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Parsing", "parsingYValues");
         }
         return entries;
     }

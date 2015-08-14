@@ -137,7 +137,6 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 
                     Intent intent = new Intent(getActivity(), BoardWriteActivity.class);
                     intent.putExtra("board", board);
-                    Log.d("debugging", String.valueOf(board));
                     startActivity(intent);
                 }
             });
@@ -239,7 +238,6 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 
                         if (pageWebView != null) {
                             cpb.setVisibility(View.VISIBLE);
-                            Log.d("debugging", "tab position: " + tab.getPosition() + " " + tab.getText());
                             url = WebPagesViewPagerAdapter.getUrl(tab.getPosition());
                             String location = getResources().getString(R.string.www);
                             pageWebView.loadUrl(location + url);

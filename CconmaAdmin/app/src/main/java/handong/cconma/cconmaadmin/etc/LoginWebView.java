@@ -19,7 +19,6 @@ import handong.cconma.cconmaadmin.data.Cookies;
 public class LoginWebView extends AppCompatActivity {
     private android.webkit.WebView webview;
     private CircularProgressBar circularProgressBar;
-    private int autoLogin;
     private String url;
 
     @Override
@@ -48,7 +47,6 @@ public class LoginWebView extends AppCompatActivity {
                 webview.setVisibility(View.GONE);
                 ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).start();
 
-                Log.d("debugging", "loginwebview thread start");
                 Cookies.getInstance(LoginWebView.this).updateCookies(url);
                 Intent intent = new Intent(LoginWebView.this, StartupWebView.class);
                 startActivity(intent);
@@ -63,7 +61,6 @@ public class LoginWebView extends AppCompatActivity {
         }
 
         public void onPageFinished(WebView view, String url){
-            Log.d("debugging", "LoginWebView onPageFinished");
             ((CircularProgressDrawable) circularProgressBar.getIndeterminateDrawable()).progressiveStop();
         }
     }

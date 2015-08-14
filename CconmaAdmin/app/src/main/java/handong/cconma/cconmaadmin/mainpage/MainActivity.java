@@ -128,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                     mDrawerLayout.closeDrawers();
 
                     position = menuItem.getItemId();
-                    Log.d(TAG, String.valueOf(position));
 
                     if (status == 0) {
                         mPreviousMenuItem = menuItem;
@@ -374,7 +373,6 @@ public class MainActivity extends AppCompatActivity {
 
         ft.replace(R.id.main_content_frame, fragment, String.valueOf(position));
         ft.addToBackStack(null);
-        Log.d(TAG, "fragment stack: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
         ft.commit();
     }
 

@@ -49,7 +49,6 @@ public class HttpConnection  {
 
         try {
             conn = (HttpURLConnection) url.openConnection();
-            Log.d(TAG, "Connection start");
             conn.setConnectTimeout(2000);
             conn.setRequestProperty("Content-Language", "en-US");
             conn.setRequestProperty("Cookie", Cookies.getInstance(null).getCurrentCookies());
@@ -94,8 +93,6 @@ public class HttpConnection  {
             e.printStackTrace();
             Log.d(TAG, "IO EXCEPTION!!! " + e.getMessage());
         }
-
-        Log.d(TAG, "Return string is " +  responseBody);
 
         conn.disconnect();
         return responseBody;
