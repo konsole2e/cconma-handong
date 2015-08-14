@@ -85,11 +85,9 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
             if(dataItem.boardAll) {
                 viewHolder.text_board_title.setText(Html.fromHtml("<b>"+"[" + dataItem.board_short_name + "]</b> " + dataItem.subject));
-                Log.d("board", dataItem.board_short_name);
             }
             else {
                 viewHolder.text_board_title.setText(dataItem.subject);
-                Log.d("board", dataItem.board_short_name + "else");
             }
 
             viewHolder.text_board_title.setAlpha(1.0f);
