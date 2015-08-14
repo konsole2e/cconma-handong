@@ -39,7 +39,6 @@ public class BoardWriteActivity extends AppCompatActivity {
     Context context = this;
 
     Spinner spinner_notice;
-    CheckBox checkbox_notice;
     LinearLayout layout_write_notice;
     EditText edit_title;
     EditText edit_content;
@@ -65,7 +64,6 @@ public class BoardWriteActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         spinner_notice = (Spinner)findViewById(R.id.spinner_notice);
-        checkbox_notice = (CheckBox)findViewById(R.id.checkbox_notice);
         layout_write_notice = (LinearLayout)findViewById(R.id.layout_write_notice);
         edit_title = (EditText)findViewById(R.id.edit_board_title);
         edit_content = (EditText)findViewById(R.id.edit_board_content);
