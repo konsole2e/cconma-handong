@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 
@@ -43,6 +44,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
     private int position = 0;
     private int mPreviousPosition;
     private boolean reSelect = false;
+    private int curPage = 0;
 
     int pos;
     public MainFragment(){
@@ -91,10 +93,13 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
             resetTabSelectListener(tabLayout);
             tabLayout.setupWithViewPager(viewPager);
+
             tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    reSelect = false;
+                    if(viewPager.getCurrentItem() != tab.getPosition()){
+                        reSelect = false;
+                    }
                     super.onTabSelected(tab);
                 }
 
