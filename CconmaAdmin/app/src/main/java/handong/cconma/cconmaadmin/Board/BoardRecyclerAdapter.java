@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -50,6 +51,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
         public LinearLayout layout_notice;
         public int holderId;
+        public RelativeLayout rl;
 
         public ViewHolder(View itemView, int i) {
             super(itemView);
@@ -198,6 +200,9 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
                     }
                 });
             }
+        }
+        else{
+            //footer
         }
     }
 
