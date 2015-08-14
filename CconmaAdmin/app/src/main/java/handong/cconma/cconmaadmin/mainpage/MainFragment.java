@@ -115,7 +115,9 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
                     Fragment fragment = viewPagerAdapter.getFragment(fragment_pos);
                     if( fragment != null ) {
                         BoardFragment bf = (BoardFragment) fragment;
-                        bf.refresh(getActivity().getApplicationContext());
+                        if( !bf.isLoading ) {
+                            bf.refresh(getActivity().getApplicationContext());
+                        }
                     }
                 }
             });

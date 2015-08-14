@@ -42,7 +42,6 @@
         <activity android:name=".etc.LoginWebView" />
         <activity android:name=".etc.LogoutWebView" />
         <activity android:name=".etc.StartupWebView" />
-        <activity android:name=".etc.MyWebView" />
 
         <activity android:name=".etc.SettingActivity" />
 

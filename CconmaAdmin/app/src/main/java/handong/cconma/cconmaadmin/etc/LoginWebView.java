@@ -20,10 +20,6 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.Cookies;
-import handong.cconma.cconmaadmin.data.IntegratedSharedPreferences;
-import handong.cconma.cconmaadmin.data.StartUp;
-import handong.cconma.cconmaadmin.mainpage.BaseActivity;
-import handong.cconma.cconmaadmin.mainpage.MainActivity;
 
 /**
  * Created by Young Bin Kim on 2015-07-20.

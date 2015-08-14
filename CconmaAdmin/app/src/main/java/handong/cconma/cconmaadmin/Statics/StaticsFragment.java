@@ -49,12 +49,6 @@ public class StaticsFragment extends Fragment {
     private ProgressDialog pd;
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        recycle();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -132,14 +126,6 @@ public class StaticsFragment extends Fragment {
     private void gone() {
         ll.removeAllViews();
         charts.clear();
-    }
-
-    public void recycle() {
-        for (int i = 0; i < charts.size(); i++) {
-            Chart v = (Chart) charts.get(i);
-            Bitmap b = v.getChartBitmap();
-            b.recycle();
-        }
     }
 
     public void generateChart(JSONObject json, String category) {

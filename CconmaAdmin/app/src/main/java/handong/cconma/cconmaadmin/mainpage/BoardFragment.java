@@ -61,12 +61,13 @@ public class BoardFragment extends Fragment {
     private SwipeRefreshLayoutBottom refresh_bottom;
     private FloatingActionButton fab_up;
 
-    private Boolean isLoading = false;
     private Boolean isReload = false;
     private int total = 0;
     private int firstVisibleItemCount;
     private int lastVisibleItemCount;
     private GestureDetector mGestureDetector;
+
+    public boolean isLoading = false;
 
     public static BoardFragment newInstance(String page_no, String title) {
         Bundle args = new Bundle();
@@ -217,6 +218,7 @@ public class BoardFragment extends Fragment {
         protected void onPreExecute(){
             if( page == 0 )
                 circularProgressBar.setVisibility(View.VISIBLE);
+            isLoading = true;
         }
 
         @Override
@@ -276,6 +278,7 @@ public class BoardFragment extends Fragment {
             //linearLayoutManager.scrollToPositionWithOffset(0, overallXScroll);
             // recyclerView.smoothScrollBy(0, overallXScroll);
             //overallYScroll = 0;
+            isLoading = false;
         }
     }
 
