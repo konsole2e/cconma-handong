@@ -94,9 +94,6 @@ public class StartupWebView extends AppCompatActivity {
             isPageLoaded = true;
             Intent intent = new Intent(StartupWebView.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            /*
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
             startActivity(intent);
             finish();
         }

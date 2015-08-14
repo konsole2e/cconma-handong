@@ -47,8 +47,10 @@ public class WebPageFragment extends Fragment{
     private SwipeRefreshLayout sr;
     private String location;
     private String current_page;
+    private static Context mContext;
 
-    public static WebPageFragment newInstance(String url) {
+    public static WebPageFragment newInstance(String url, Context context) {
+        mContext = context;
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
         fragment = new WebPageFragment();
@@ -122,7 +124,7 @@ public class WebPageFragment extends Fragment{
             public boolean shouldOverrideUrlLoading(WebView view, String url){
             progressBar.setVisibility(View.VISIBLE);
             view.loadUrl(url);
-            Cookies.getInstance(getActivity().getApplicationContext()).updateCookies(url);
+            Cookies.getInstance(mContext).updateCookies(url);
             return true;
         }
 
@@ -130,7 +132,7 @@ public class WebPageFragment extends Fragment{
             Log.d("debugging", "URL: " + url);
             current_page = url;
             progressBar.setVisibility(View.GONE);
-            Cookies.getInstance(getActivity().getApplicationContext()).updateCookies(url);
+            Cookies.getInstance(mContext).updateCookies(url);
             if( sr.isRefreshing() ){
                 sr.setRefreshing(false);
             }

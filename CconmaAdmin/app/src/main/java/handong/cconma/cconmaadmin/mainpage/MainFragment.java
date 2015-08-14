@@ -42,6 +42,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
     private int fragment_pos = 0;
     private int position = 0;
     private int mPreviousPosition;
+    private boolean reSelect = false;
 
     int pos;
     public MainFragment(){
@@ -93,7 +94,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    Log.d("TAB", "onTabSelected");
+                    reSelect = false;
                     super.onTabSelected(tab);
                 }
 
@@ -103,7 +104,10 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
-                    Log.d("TAB", "onTabReRERERERERESelected");
+                    if(!reSelect){
+                        reSelect = true;
+                        return;
+                    }
                     fragment_pos = tab.getPosition();
                     Fragment fragment = viewPagerAdapter.getFragment(fragment_pos);
                     if( fragment != null ) {
