@@ -204,13 +204,13 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     @Override
     public int getItemCount() {
 //        Log.d("debugging", "dataItemList size: " + String.valueOf(dataItemList.size()));
-        return dataItemList.size();
+        return dataItemList.size() + 1;
         //return (null != dataItemList ? dataItemList.size() : 0);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if ( position == dataItemList.size() - 1 )
+        if ( position == dataItemList.size() )
             return VIEW_FOOTER;
 
         return VIEW_MAIN;

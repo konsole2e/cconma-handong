@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -130,6 +131,7 @@ public class BoardSearchActivity extends AppCompatActivity {
                 }
                 new BoardAsyncTask().execute("http://www.cconma.com/admin/api/board/v1/boards/"
                         + board_no + "/writers/all?page=" + "1" + "&n=20", "GET", "");
+                Log.d("test", search_cond);
 
                 input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
@@ -173,10 +175,13 @@ public class BoardSearchActivity extends AppCompatActivity {
                 if (e.getX() > 100) {
                     View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
                     int position = recyclerView.getChildAdapterPosition(view);
+                    Log.d("debugging", "POSITION: " + String.valueOf(position));
                     // handle single tap
                     if (view != null && position != -1) {
                         Intent i = new Intent(BoardSearchActivity.this, BoardViewActivity.class);
 
+                        Log.d("보드서치", boardDataList.get(position).board_no.toString() + " " + boardDataList.get(position).boardarticle_no.toString() + " " +
+                                boardDataList.get(position).boardarticle_no);
                         i.putExtra("board_no", boardDataList.get(position).board_no);
                         i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
                         i.putExtra("number", boardDataList.get(position).boardarticle_no);
@@ -250,6 +255,7 @@ public class BoardSearchActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... params) {
+            Log.d("number", "load data");
             return loadData();
         }
 
@@ -281,6 +287,7 @@ public class BoardSearchActivity extends AppCompatActivity {
 
             HttpConnection connection = new HttpConnection(url, "GET", "");
             sResult = connection.init();
+            Log.d("보드서치 로드데이타", sResult);
 
             JSONObject jason = new JSONObject(sResult);
             JSONArray jsonArray = jason.getJSONArray("articles");
@@ -331,6 +338,7 @@ public class BoardSearchActivity extends AppCompatActivity {
                 boardDataList.add(data);
             }
         } catch (Exception e) {
+            Log.d("보드서치 로드데이타", "Exception in BoardFragement Line 125: " + e.getMessage());
         }
         return empty;
     }

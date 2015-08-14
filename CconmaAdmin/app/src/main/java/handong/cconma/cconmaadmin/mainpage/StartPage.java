@@ -107,6 +107,31 @@ public class StartPage extends AppCompatActivity {
                 finish();
             }
         }, 2000);
+
+        TranslateAnimation animation = new TranslateAnimation(0, 50, 0, 100);
+        animation.setDuration(1000);
+        animation.setFillAfter(false);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                logoImage.clearAnimation();
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(logoImage.getWidth(), logoImage.getHeight());
+                lp.setMargins(50, 100, 0, 0);
+                logoImage.setLayoutParams(lp);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        logoImage.startAnimation(animation);
     }
 
     public void getInstanceIdToken() {
