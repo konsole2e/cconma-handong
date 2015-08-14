@@ -2,8 +2,11 @@ package handong.cconma.cconmaadmin.webpage;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -27,10 +30,17 @@ public class WebViewForOthers extends AppCompatActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.navi_webview);
+        setContentView(R.layout.other_webview);
 
-        String url = getIntent().getDataString();
-        pageWebView = (WebView)findViewById(R.id.webView);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        toolbar.setVisibility(View.VISIBLE);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        String url = getIntent().getStringExtra("url");
+        pageWebView = (WebView)findViewById(R.id.other_webView);
         progressBar = (CircularProgressBar)findViewById(R.id.progressbar_circular);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -88,5 +98,15 @@ public class WebViewForOthers extends AppCompatActivity{
                 sr.setRefreshing(false);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
