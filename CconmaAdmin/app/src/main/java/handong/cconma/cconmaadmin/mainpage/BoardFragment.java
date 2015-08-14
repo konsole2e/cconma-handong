@@ -271,12 +271,9 @@ public class BoardFragment extends Fragment {
             }
             refresh_bottom.setRefreshing(false);
             circularProgressBar.setVisibility(View.GONE);
-            adapter.notifyItemInserted(boardDataList.size() - 1);
-
-            //recyclerView.scrollBy(overallXScroll, overallYScroll);
-            //linearLayoutManager.scrollToPositionWithOffset(0, overallXScroll);
-            // recyclerView.smoothScrollBy(0, overallXScroll);
-            //overallYScroll = 0;
+            if( page != 0 ) {
+                adapter.notifyItemInserted(boardDataList.size() - 1);
+            }
             isLoading = false;
         }
     }
