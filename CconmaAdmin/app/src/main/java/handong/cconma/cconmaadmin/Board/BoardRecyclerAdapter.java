@@ -32,12 +32,14 @@ import handong.cconma.cconmaadmin.http.HttpConnection;
  * Created by Young Bin Kim on 2015-07-27.
  */
 public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdapter.ViewHolder> {
+    private static final int VIEW_MAIN  = 0;
+    private static final int VIEW_FOOTER = 1;
+
     private List<BoardData> dataItemList;
     private Context context;
     private double width_notice;
     int sum_of_width_notice;
     int markpos;
-    public View Snackbar;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView text_board_title;
@@ -45,20 +47,25 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         public TextView text_board_date;
         public TextView text_board_writer;
         public ToggleButton btn_board_mark;
-        public ImageView img_board_file;
 
         public LinearLayout layout_notice;
+        public int holderId;
 
-
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, int i) {
             super(itemView);
-            text_board_title = (TextView)itemView.findViewById(R.id.text_board_title);
-            text_board_comment_num = (TextView)itemView.findViewById(R.id.text_board_comment_num);
-            text_board_date = (TextView)itemView.findViewById(R.id.text_board_date);
-            text_board_writer = (TextView)itemView.findViewById(R.id.text_board_writer);
-            btn_board_mark = (ToggleButton)itemView.findViewById(R.id.btn_board_mark);
-            btn_board_mark.setFocusable(false);
-            layout_notice = (LinearLayout)itemView.findViewById(R.id.layout_notice);
+            if( i == VIEW_MAIN ) {
+                text_board_title = (TextView) itemView.findViewById(R.id.text_board_title);
+                text_board_comment_num = (TextView) itemView.findViewById(R.id.text_board_comment_num);
+                text_board_date = (TextView) itemView.findViewById(R.id.text_board_date);
+                text_board_writer = (TextView) itemView.findViewById(R.id.text_board_writer);
+                btn_board_mark = (ToggleButton) itemView.findViewById(R.id.btn_board_mark);
+                btn_board_mark.setFocusable(false);
+                layout_notice = (LinearLayout) itemView.findViewById(R.id.layout_notice);
+                holderId = 0;
+            }
+            else{
+                holderId = 1;
+            }
         }
     }
 
@@ -72,14 +79,23 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.board_item, viewGroup, false);
+        if( i == VIEW_MAIN ) {
+            View view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.board_item, viewGroup, false);
 
-        return new ViewHolder(view);
+            return new ViewHolder(view, i);
+        }
+        else{
+            View view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.board_footer, viewGroup, false);
+
+            return new ViewHolder(view, i);
+        }
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
+<<<<<<< HEAD
         if( dataItemList != null ){
             final BoardData dataItem = dataItemList.get(i);
 
@@ -89,98 +105,112 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
             else {
                 viewHolder.text_board_title.setText(dataItem.subject);
             }
+=======
+        if( viewHolder.holderId == 0 ) {
+            if (dataItemList != null) {
+                final BoardData dataItem = dataItemList.get(i);
 
-            viewHolder.text_board_title.setAlpha(1.0f);
-            viewHolder.text_board_title.setTextColor(Color.BLACK);
-            viewHolder.text_board_writer.setAlpha(1.0f);
-
-            viewHolder.text_board_title.setTextColor(Color.BLACK);
-            Pattern pattern = Pattern.compile("\\[완료\\]");
-            Matcher matcher = pattern.matcher(dataItem.subject);
-            if (matcher.find()) {
-                viewHolder.text_board_title.setTextColor(context.getResources().getColor(R.color.completed));
-            }
-            viewHolder.text_board_writer.setText(dataItem.name);
-
-            viewHolder.text_board_comment_num.setVisibility(View.GONE);
-
-            if (dataItem.comment_count != 0) {
-                viewHolder.text_board_comment_num.setVisibility(View.VISIBLE);
-                viewHolder.text_board_comment_num.setText(dataItem.comment_nicknames);
-            }
-
-            StringTokenizer st = new StringTokenizer(dataItem.reg_date, "-:");
-            int count = 0;
-            String date = "";
-            while (st.hasMoreTokens()) {
-                String stDate = st.nextToken();
-                if (count == 1) {
-                    date = date + stDate;
-                } else if (count == 2) {
-                    date = date + "/" + stDate;
-                } else if (count == 3) {
-                    date = date + ":" + stDate;
-                    break;
+                if (dataItem.boardAll) {
+                    viewHolder.text_board_title.setText(Html.fromHtml("<b>" + "[" + dataItem.board_short_name + "]</b> " + dataItem.subject));
+                    Log.d("board", dataItem.board_short_name);
+                } else {
+                    viewHolder.text_board_title.setText(dataItem.subject);
+                    Log.d("board", dataItem.board_short_name + "else");
                 }
-                count++;
-            }
-            viewHolder.text_board_date.setText(date);
-            viewHolder.text_board_date.setAlpha(1.0f);
+>>>>>>> ae326c7cefb44263212f99e285bfdeae74033261
 
-            viewHolder.layout_notice.removeAllViews();
-            if (dataItem.hashMap.size() != 0) {
-                sum_of_width_notice = 0;
-                int addingCount = 0;
-                int layout_num = 0;
-                LinearLayout l1 = new LinearLayout(context);
-                LinearLayout l2 = new LinearLayout(context);
-                LinearLayout l3 = new LinearLayout(context);
-                for (int j = 0; j < dataItem.hashMap.size() / 2; j++) {
-                    TextView textView = new TextView(context);
-                    color(textView, dataItem, j);
+                viewHolder.text_board_title.setAlpha(1.0f);
+                viewHolder.text_board_title.setTextColor(Color.BLACK);
+                viewHolder.text_board_writer.setAlpha(1.0f);
 
-                    textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                    sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth();
-
-                    if (sum_of_width_notice > width_notice) {
-                        addingCount = 0;
-                        layout_num++;
-                        sum_of_width_notice = textView.getMeasuredWidth() + 5;
-                    }
-
-                    if (layout_num == 0 && addingCount == 0) {
-                        viewHolder.layout_notice.addView(l1);
-                    } else if (layout_num == 1 && addingCount == 0) {
-                        viewHolder.layout_notice.addView(l2);
-                    } else if (layout_num == 2 && addingCount == 0) {
-                        viewHolder.layout_notice.addView(l3);
-                    }
-
-                    switch (layout_num) {
-                        case 0:
-                            l1.addView(textView);
-                            break;
-                        case 1:
-                            l2.addView(textView);
-                            break;
-                        case 2:
-                            l3.addView(textView);
-                            break;
-                    }
-                    addingCount++;
+                viewHolder.text_board_title.setTextColor(Color.BLACK);
+                Pattern pattern = Pattern.compile("\\[완료\\]");
+                Matcher matcher = pattern.matcher(dataItem.subject);
+                if (matcher.find()) {
+                    viewHolder.text_board_title.setTextColor(context.getResources().getColor(R.color.completed));
                 }
-            }
+                viewHolder.text_board_writer.setText(dataItem.name);
 
-            viewHolder.btn_board_mark.setChecked(dataItem.board_marked);
-            viewHolder.btn_board_mark.setTag(i);
-            viewHolder.btn_board_mark.setClickable(false);
-            viewHolder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    markpos = i;
-                    new MarkAsync().execute();
+                viewHolder.text_board_comment_num.setVisibility(View.GONE);
+
+                if (dataItem.comment_count != 0) {
+                    viewHolder.text_board_comment_num.setVisibility(View.VISIBLE);
+                    viewHolder.text_board_comment_num.setText(dataItem.comment_nicknames);
                 }
-            });
+
+                StringTokenizer st = new StringTokenizer(dataItem.reg_date, "-:");
+                int count = 0;
+                String date = "";
+                while (st.hasMoreTokens()) {
+                    String stDate = st.nextToken();
+                    if (count == 1) {
+                        date = date + stDate;
+                    } else if (count == 2) {
+                        date = date + "/" + stDate;
+                    } else if (count == 3) {
+                        date = date + ":" + stDate;
+                        break;
+                    }
+                    count++;
+                }
+                viewHolder.text_board_date.setText(date);
+                viewHolder.text_board_date.setAlpha(1.0f);
+
+                viewHolder.layout_notice.removeAllViews();
+                if (dataItem.hashMap.size() != 0) {
+                    sum_of_width_notice = 0;
+                    int addingCount = 0;
+                    int layout_num = 0;
+                    LinearLayout l1 = new LinearLayout(context);
+                    LinearLayout l2 = new LinearLayout(context);
+                    LinearLayout l3 = new LinearLayout(context);
+                    for (int j = 0; j < dataItem.hashMap.size() / 2; j++) {
+                        TextView textView = new TextView(context);
+                        color(textView, dataItem, j);
+
+                        textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                        sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth();
+
+                        if (sum_of_width_notice > width_notice) {
+                            addingCount = 0;
+                            layout_num++;
+                            sum_of_width_notice = textView.getMeasuredWidth() + 5;
+                        }
+
+                        if (layout_num == 0 && addingCount == 0) {
+                            viewHolder.layout_notice.addView(l1);
+                        } else if (layout_num == 1 && addingCount == 0) {
+                            viewHolder.layout_notice.addView(l2);
+                        } else if (layout_num == 2 && addingCount == 0) {
+                            viewHolder.layout_notice.addView(l3);
+                        }
+
+                        switch (layout_num) {
+                            case 0:
+                                l1.addView(textView);
+                                break;
+                            case 1:
+                                l2.addView(textView);
+                                break;
+                            case 2:
+                                l3.addView(textView);
+                                break;
+                        }
+                        addingCount++;
+                    }
+                }
+
+                viewHolder.btn_board_mark.setChecked(dataItem.board_marked);
+                viewHolder.btn_board_mark.setTag(i);
+                viewHolder.btn_board_mark.setClickable(false);
+                viewHolder.btn_board_mark.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        markpos = i;
+                        new MarkAsync().execute();
+                    }
+                });
+            }
         }
     }
 
@@ -189,6 +219,14 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 //        Log.d("debugging", "dataItemList size: " + String.valueOf(dataItemList.size()));
         return dataItemList.size();
         //return (null != dataItemList ? dataItemList.size() : 0);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if ( position == dataItemList.size() - 1 )
+            return VIEW_FOOTER;
+
+        return VIEW_MAIN;
     }
 
     public void color(TextView textView, BoardData boardData, int n){
