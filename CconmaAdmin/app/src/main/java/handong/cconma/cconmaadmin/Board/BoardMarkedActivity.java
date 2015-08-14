@@ -45,8 +45,6 @@ public class BoardMarkedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_marked);
 
-        Log.d("scrap", "scrap_page");
-
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

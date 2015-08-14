@@ -100,7 +100,6 @@ public class BoardFragment extends Fragment {
         setHasOptionsMenu(true);
         board_no = getArguments().getString(ARG_PAGE_NO);
         board_title = getArguments().getString(ARG_TITLE);
-        Log.d("debugging", "board no: " + board_no + "board title: " + board_title);
     }
 
     @Override
@@ -300,7 +299,6 @@ public class BoardFragment extends Fragment {
             HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
                     + board_no + "/writers/all?page=" + page_no + "&n=20", "GET", "");
             sResult = connection.init();
-            Log.d(TAG, "sResult is " + sResult);
 
             JSONObject jason = new JSONObject(sResult);
             JSONArray jsonArray = jason.getJSONArray("articles");

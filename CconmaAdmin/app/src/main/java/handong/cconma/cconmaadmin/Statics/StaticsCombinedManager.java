@@ -68,7 +68,6 @@ public class StaticsCombinedManager {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Parsing", "chartSetting");
         }
     }
 
@@ -111,7 +110,6 @@ public class StaticsCombinedManager {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Parsing", "xAxisSetting");
         }
     }
 

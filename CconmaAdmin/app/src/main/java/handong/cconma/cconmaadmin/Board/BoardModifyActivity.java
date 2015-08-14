@@ -183,7 +183,6 @@ public class BoardModifyActivity extends AppCompatActivity {
                             + "&filename1=" + ""
                             + "&filename2=" + "";
 
-                    Log.d("test", requestBody);
                     new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/" + board_no
                             + "/articles/" + boardarticle_no, "POST", requestBody).execute().get();
                 }catch(Exception e){

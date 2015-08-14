@@ -26,9 +26,7 @@ public class TextStaticsViewPagerAdapter extends FragmentPagerAdapter {
 
         for (int i = 0; i < stat_list.size() / 2; i++) {
             statPaths.add(stat_list.get("stat_path" + i).toString());
-            Log.d("Data", "data" + i + ": " + statPaths.get(i));
             statNames.add(stat_list.get("stat_name" + i).toString());
-            Log.d("Data", "data" + i + ": " + statNames.get(i));
         }
     }
 

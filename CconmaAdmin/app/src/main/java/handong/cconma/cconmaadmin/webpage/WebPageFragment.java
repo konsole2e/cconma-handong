@@ -65,9 +65,7 @@ public class WebPageFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("Debugging", "onCreate IN!!!");
         url = getArguments().getString(ARG_URL);
-        Log.d("debugging", "URL URL: " + url);
         location = getResources().getString(R.string.www);
     }
 
@@ -127,7 +125,6 @@ public class WebPageFragment extends Fragment{
         }
 
         public void onPageFinished(WebView view, String url){
-            Log.d("debugging", "URL: " + url);
             current_page = url;
             progressBar.setVisibility(View.GONE);
             Cookies.getInstance(mContext).updateCookies(url);

@@ -82,7 +82,6 @@ public class BoardAdapter extends BaseAdapter{
                 }else{
                     data.check = false;
                 }
-                Log.d("mark", "data.check = " + data.check);
             }
         });
 

@@ -30,7 +30,6 @@ public class ScrollingFabBehavior extends CoordinatorLayout.Behavior<FloatingAct
             CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             int fabBottomMargin = lp.bottomMargin;
             int distanceToScroll = fab.getHeight();
-            Log.d("debugging", "dependency: " + dependency.getY() + " ");
             float ratio = dependency.getY() / 140;
             fab.setTranslationY(-distanceToScroll * ratio);
         }
