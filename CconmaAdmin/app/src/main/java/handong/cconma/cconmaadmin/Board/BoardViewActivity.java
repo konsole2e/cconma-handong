@@ -17,7 +17,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Selection;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Display;
@@ -30,6 +34,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +57,7 @@ import java.util.regex.Pattern;
 
 import handong.cconma.cconmaadmin.R;
 import handong.cconma.cconmaadmin.data.BasicData;
+import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 import handong.cconma.cconmaadmin.mainpage.AdminApplication;
 import handong.cconma.cconmaadmin.http.HttpConnection;
@@ -62,11 +68,11 @@ import handong.cconma.cconmaadmin.http.HttpConnection;
  * Created by eundi on 15. 7. 6..
  */
 
-public class BoardViewActivity extends AppCompatActivity{
+public class BoardViewActivity extends AppCompatActivity {
     private Toolbar toolbar;
-    boolean firstTime=true;
-    boolean marked=false;
-    int width_notice=0;
+    boolean firstTime = true;
+    boolean marked = false;
+    int width_notice = 0;
     int insert_mode;
     int modify_position;
     private CircularProgressBar circularProgressBar;
@@ -92,10 +98,10 @@ public class BoardViewActivity extends AppCompatActivity{
     JSONObject result;
 
 
-    String view_content="";
+    String view_content = "";
     HashMap hashtag;
 
-    String from="";
+    String from = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +114,8 @@ public class BoardViewActivity extends AppCompatActivity{
         from = this.getIntent().getStringExtra("from");
 
 
-        Display dis = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        width_notice = dis.getWidth()*9/14;
+        Display dis = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        width_notice = dis.getWidth() * 9 / 14;
 
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -118,27 +124,27 @@ public class BoardViewActivity extends AppCompatActivity{
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        circularProgressBar = (CircularProgressBar)findViewById(R.id.progressbar_circular);
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.progressbar_circular);
         new ViewAsyncTask().execute();
     }
 
-    View.OnClickListener clickListener = new View.OnClickListener(){
+    View.OnClickListener clickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
-            switch(v.getId()){
+            switch (v.getId()) {
                 case R.id.btn_board_view_comment:
                     long now = System.currentTimeMillis();
                     Date date = new Date(now);
                     SimpleDateFormat sdfNow = new SimpleDateFormat("MM/dd\nHH:mm");
                     String strNow = sdfNow.format(date);
-                    if(!(edit_board_view_comment.getText().toString()).equals("")) {
+                    if (!(edit_board_view_comment.getText().toString()).equals("")) {
                         /*****************************     댓글 수정       ********************************/
-                        if(edit_board_view_comment.getTag() != null){
+                        if (edit_board_view_comment.getTag() != null) {
                             insert_mode = 1;
                             new InsertAsyncTask().execute();
                             edit_board_view_comment.setText("");
-                        }else{
+                        } else {
                             /*************************        댓글 입력         ****************************/
                             String html_comment = edit_board_view_comment.getText().toString().replace("\n", "<br>");
                             insert_mode = 0;
@@ -163,14 +169,16 @@ public class BoardViewActivity extends AppCompatActivity{
 
         }
     };
-    public void dialog(final int index, final int position){
+
+    public void dialog(final int index, final int position) {
         String alert_message = "";
         String pos_message = "";
         String neg_message = "";
         AlertDialog.Builder alert_build = new AlertDialog.Builder(this);
-        switch(index){
+        switch (index) {
             case 0:
-                alert_message = "게시글을 수정하시겠습니까?\n※ 사진이나 표가 포함된 글은 수정시 ";
+                alert_message = "게시글을 수정하시겠습니까?\n※ 사진이나 표가 포함된 글은 수정 시 " +
+                        "제대로 수정되지 않습니다";
                 pos_message = "YES";
                 neg_message = "NO";
                 break;
@@ -194,9 +202,9 @@ public class BoardViewActivity extends AppCompatActivity{
                         if (index == 0) {
                             Intent intent = new Intent(BoardViewActivity.this, BoardModifyActivity.class);
 
-                            String tag="";
-                            for(int i=0; i<hashtag.size(); i++){
-                                tag = tag + "@" + hashtag.get("hash_tag"+i) + " ";
+                            String tag = "";
+                            for (int i = 0; i < hashtag.size(); i++) {
+                                tag = tag + "@" + hashtag.get("hash_tag" + i) + " ";
                             }
                             intent.putExtra("board_no", board_no);
                             intent.putExtra("boardarticle_no", boardarticle_no);
@@ -206,12 +214,12 @@ public class BoardViewActivity extends AppCompatActivity{
 
 
                             startActivity(intent);
-                        } else if(index == 1){
+                        } else if (index == 1) {
                             //게시글 삭제하는 코드.
-                            try{
+                            try {
                                 new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
-                                        +board_no+"/articles/" + boardarticle_no, "DELETE", "").execute().get();
-                            }catch(Exception e){
+                                        + board_no + "/articles/" + boardarticle_no, "DELETE", "").execute().get();
+                            } catch (Exception e) {
 
                             }
 
@@ -221,12 +229,12 @@ public class BoardViewActivity extends AppCompatActivity{
                             int index;
                             String board_no;
 
-                            for( int i = 0; i < board_list.size() / 2; i++ ){
+                            for (int i = 0; i < board_list.size() / 2; i++) {
                                 tabTitles.add(board_list.get("board_title" + i).toString());
                             }
 
                             index = tabTitles.indexOf(getIntent().getStringExtra("board_no"));
-                            if( index != -1 ){
+                            if (index != -1) {
                                 board_no = tabTitles.get(index).split("e")[1];
                                 AdminApplication.getInstance().
                                         setTabPosition(Integer.parseInt(board_no));
@@ -235,7 +243,7 @@ public class BoardViewActivity extends AppCompatActivity{
                             ////////////
 
                             finish();
-                        } else{
+                        } else {
                             adapter_comment.dialogComment(1, position);
                         }
 
@@ -243,11 +251,11 @@ public class BoardViewActivity extends AppCompatActivity{
                 }).setNegativeButton(neg_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (index == 2){
+                if (index == 2) {
 
-                    String tag="";
-                    for(int i=0; i<adapter_comment.board_comment_list_data.get(position).comment_hashMap.size()/2; i++){
-                        tag = tag + "@" + adapter_comment.board_comment_list_data.get(position).comment_hashMap.get("hash_tag"+i) + " ";
+                    String tag = "";
+                    for (int i = 0; i < adapter_comment.board_comment_list_data.get(position).comment_hashMap.size() / 2; i++) {
+                        tag = tag + "@" + adapter_comment.board_comment_list_data.get(position).comment_hashMap.get("hash_tag" + i) + " ";
                     }
                     edit_board_view_comment.setText(tag + Html.fromHtml(adapter_comment.board_comment_list_data.get(position).comment).toString());
                     edit_board_view_comment.setTag(adapter_comment.board_comment_list_data.get(position).boardcomment_no);
@@ -257,8 +265,7 @@ public class BoardViewActivity extends AppCompatActivity{
                     Selection.setSelection(edt, edt.length());
 
                     list_board_view_comment.setSelectionFromTop(position, 0);
-                }
-                else
+                } else
                     dialog.cancel();
             }
         });
@@ -268,18 +275,19 @@ public class BoardViewActivity extends AppCompatActivity{
         alert.show();
     }
 
-    class InsertAsyncTask extends AsyncTask<String, Void, JSONObject>{
+    class InsertAsyncTask extends AsyncTask<String, Void, JSONObject> {
         String requestBody;
         String commentNO;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            String html_comment=edit_board_view_comment.getText().toString().replace("\n", "<br>");
-            if(insert_mode == 0){
+            String html_comment = edit_board_view_comment.getText().toString().replace("\n", "<br>");
+            if (insert_mode == 0) {
                 requestBody = "board_no=" + board_no
                         + "&boardarticle_no=" + boardarticle_no
-                        +"&content=" + html_comment;
-            }else if(insert_mode == 1){
+                        + "&content=" + html_comment;
+            } else if (insert_mode == 1) {
                 requestBody = "_METHOD=" + "PUT"
                         + "&board_no=" + board_no
                         + "&boardarticle_no=" + boardarticle_no
@@ -292,8 +300,8 @@ public class BoardViewActivity extends AppCompatActivity{
 
         @Override
         protected JSONObject doInBackground(String... params) {
-            try{
-                if(insert_mode == 0) {
+            try {
+                if (insert_mode == 0) {
                     HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
                             + board_no + "/articles/" + boardarticle_no + "/comments", "POST", requestBody);
                     String sResult = connection.init();
@@ -352,10 +360,10 @@ public class BoardViewActivity extends AppCompatActivity{
                             adapter_comment.addItem(boardcomment_no, comment_name, comment_reg_date, comment_content, commentHashMap);
                         }
                     }
-                }else if(insert_mode == 1){
+                } else if (insert_mode == 1) {
                     //modify
                     HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
-                            +board_no+"/articles/" + boardarticle_no + "/comments/"
+                            + board_no + "/articles/" + boardarticle_no + "/comments/"
                             + commentNO, "POST", requestBody);
 
                     String sResult = connection.init();
@@ -393,16 +401,16 @@ public class BoardViewActivity extends AppCompatActivity{
                     }
 
 
-                }else if(insert_mode == 2){
+                } else if (insert_mode == 2) {
                     //delete
                     HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
-                            +board_no+"/articles/" + boardarticle_no + "/comments/"
+                            + board_no + "/articles/" + boardarticle_no + "/comments/"
                             + adapter_comment.board_comment_list_data.get(modify_position).boardcomment_no, "DELETE", "");
                     connection.init();
 
                     adapter_comment.board_comment_list_data.remove(modify_position);
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
 
             }
             return null;
@@ -417,7 +425,7 @@ public class BoardViewActivity extends AppCompatActivity{
         }
     }
 
-    class ViewAsyncTask extends AsyncTask<String, Void, JSONObject>{
+    class ViewAsyncTask extends AsyncTask<String, Void, JSONObject> {
 
         @Override
         protected void onPreExecute() {
@@ -426,7 +434,7 @@ public class BoardViewActivity extends AppCompatActivity{
 
             header.setLongClickable(false);
 
-            list_board_view_comment = (ListView)findViewById(R.id.list_board_view_comment);
+            list_board_view_comment = (ListView) findViewById(R.id.list_board_view_comment);
             list_board_view_comment.addHeaderView(header);
             list_board_view_comment.setHeaderDividersEnabled(false);
 
@@ -436,35 +444,35 @@ public class BoardViewActivity extends AppCompatActivity{
             list_board_view_comment.setAdapter(adapter_comment);
             list_board_view_comment.setFocusable(false);
 
-            layout_view_notice = (LinearLayout)findViewById(R.id.layout_view_notice);
-            edit_board_view_comment = (EditText)findViewById(R.id.edit_board_view_comment);
+            layout_view_notice = (LinearLayout) findViewById(R.id.layout_view_notice);
+            edit_board_view_comment = (EditText) findViewById(R.id.edit_board_view_comment);
             edit_board_view_comment.setOnClickListener(clickListener);
-            btn_board_view_comment = (Button)findViewById(R.id.btn_board_view_comment);
+            btn_board_view_comment = (Button) findViewById(R.id.btn_board_view_comment);
             btn_board_view_comment.setOnClickListener(clickListener);
 
-            text_board_view_title = (TextView)header.findViewById(R.id.text_board_view_title);
-            text_board_view_writer = (TextView)header.findViewById(R.id.text_board_view_writer);
-            text_board_view_date = (TextView)header.findViewById(R.id.text_board_view_date);
+            text_board_view_title = (TextView) header.findViewById(R.id.text_board_view_title);
+            text_board_view_writer = (TextView) header.findViewById(R.id.text_board_view_writer);
+            text_board_view_date = (TextView) header.findViewById(R.id.text_board_view_date);
 
-            webView_content = (WebView)header.findViewById(R.id.webView_content);
+            webView_content = (WebView) header.findViewById(R.id.webView_content);
 
             circularProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected JSONObject doInBackground(String... params) {
-            try{
+            try {
                 Log.d("test", "doInBackground");
                 HttpConnection connection = new HttpConnection("http://www.cconma.com/admin/api/board/v1/boards/"
-                        +Integer.parseInt(board_no)+"/articles/"
-                        +Integer.parseInt(boardarticle_no), "GET", "");
+                        + Integer.parseInt(board_no) + "/articles/"
+                        + Integer.parseInt(boardarticle_no), "GET", "");
                 String sResult = connection.init();
 
                 JSONObject json = new JSONObject(sResult);
 
                 Log.d("test", json.toString());
                 return json;
-            }catch(Exception e){
+            } catch (Exception e) {
                 Log.e("JSON", Log.getStackTraceString(e));
                 return null;
             }
@@ -473,7 +481,7 @@ public class BoardViewActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(JSONObject json) {
             //pDialog.dismiss();
-            try{
+            try {
                 String subject = json.getString("subject");
                 String name = json.getString("name");
                 String reg_date = json.getString("reg_date");
@@ -484,7 +492,7 @@ public class BoardViewActivity extends AppCompatActivity{
                 JSONObject scrap = json.getJSONObject("scrap_info");
                 String scrap_on = scrap.getString("scraped");
 
-                if(scrap_on.equals("on"))
+                if (scrap_on.equals("on"))
                     marked = true;
                 else
                     marked = false;
@@ -503,7 +511,7 @@ public class BoardViewActivity extends AppCompatActivity{
                     for (int k = 0; k < noticeArr.length(); k++) {
                         JSONObject noticeObj = noticeArr.getJSONObject(k);
                         String notice_tag = noticeObj.getString("hash_tag");
-                        hashtag.put("hash_tag"+k, notice_tag);
+                        hashtag.put("hash_tag" + k, notice_tag);
                         String notice_tag_type = noticeObj.getString("hash_tag_type");
 
                         TextView textView = new TextView(getApplicationContext());
@@ -550,31 +558,32 @@ public class BoardViewActivity extends AppCompatActivity{
                 text_board_view_writer.setText(name);
                 text_board_view_writer.setPaintFlags(text_board_view_writer.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
 
-                webView_content.loadData(content, "text/html; charset=utf-8", "UTF-8");
                 webView_content.getSettings().setBuiltInZoomControls(true);
-
+                webView_content.canGoBackOrForward(10);
                 webView_content.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
+                webView_content.loadData(content, "text/html; charset=utf-8", "UTF-8");
+                webView_content.setWebViewClient(new WebClient());
 
                 JSONArray jsonArray = json.getJSONArray("comments");
-                for(int i=0; i<jsonArray.length(); i++){
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject commentObj = jsonArray.getJSONObject(i);
                     String comment_name = commentObj.getString("name");
 
 
                     String comment_reg_date = commentObj.getString("reg_date");
                     StringTokenizer st = new StringTokenizer(comment_reg_date, "- :");
-                    int count=0;
-                    String date="";
-                    while(st.hasMoreTokens()){
+                    int count = 0;
+                    String date = "";
+                    while (st.hasMoreTokens()) {
                         String stDate = st.nextToken();
-                        if(count == 1){
+                        if (count == 1) {
                             date = date + stDate;
-                        }else if(count ==2){
-                            date = date + "/" +stDate;
-                        }else if(count == 3){
-                            date = date+ "\n" + stDate;
-                        }else if(count == 4){
-                            date = date + ":" +stDate;
+                        } else if (count == 2) {
+                            date = date + "/" + stDate;
+                        } else if (count == 3) {
+                            date = date + "\n" + stDate;
+                        } else if (count == 4) {
+                            date = date + ":" + stDate;
                             break;
                         }
                         count++;
@@ -585,18 +594,18 @@ public class BoardViewActivity extends AppCompatActivity{
                     String boardcomment_no = commentObj.getString("boardcomment_no");
                     JSONArray hashArr = commentObj.getJSONArray("comment_hash_tags");
                     HashMap commentHashMap = new HashMap();
-                    if(hashArr.length()!=0) {
+                    if (hashArr.length() != 0) {
                         for (int j = 0; j < hashArr.length(); j++) {
                             JSONObject hashObj = hashArr.getJSONObject(j);
-                            commentHashMap.put("hash_tag"+j, hashObj.getString("hash_tag"));
-                            commentHashMap.put("hash_tag_type"+j, hashObj.getString("hash_tag_type"));
+                            commentHashMap.put("hash_tag" + j, hashObj.getString("hash_tag"));
+                            commentHashMap.put("hash_tag_type" + j, hashObj.getString("hash_tag_type"));
                         }
                     }
                     adapter_comment.addItem(boardcomment_no, comment_name, comment_reg_date, comment_content, commentHashMap);
                 }
                 adapter_comment.notifyDataSetChanged();
 
-            }catch(Exception e){
+            } catch (Exception e) {
 
             }
 
@@ -609,13 +618,14 @@ public class BoardViewActivity extends AppCompatActivity{
 
         public Context context = null;
         public ArrayList<BoardCommentData> board_comment_list_data = new ArrayList<BoardCommentData>();
-        int width_comment=0;
-        public BoardCommentAdapter(Context context){
+        int width_comment = 0;
+
+        public BoardCommentAdapter(Context context) {
             super();
             this.context = context;
 
-            Display dis = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-            width_comment = dis.getWidth()*2/3;
+            Display dis = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+            width_comment = dis.getWidth() * 2 / 3;
         }
 
         @Override
@@ -637,14 +647,14 @@ public class BoardViewActivity extends AppCompatActivity{
         public View getView(final int position, View convertView, ViewGroup parent) {
             final ViewHolder holder;
             holder = new ViewHolder();
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.board_comment_list_item, null);
 
-            holder.text_board_view_comment_writer = (TextView)convertView.findViewById(R.id.text_board_view_comment_writer);
-            holder.text_board_view_comment = (TextView)convertView.findViewById(R.id.text_board_view_comment);
-            holder.text_board_view_comment_date = (TextView)convertView.findViewById(R.id.text_board_view_comment_date);
-            holder.layout_comment_notice = (LinearLayout)convertView.findViewById(R.id.layout_comment_notice);
-            holder.btn_comment = (ImageButton)convertView.findViewById(R.id.btn_comment);
+            holder.text_board_view_comment_writer = (TextView) convertView.findViewById(R.id.text_board_view_comment_writer);
+            holder.text_board_view_comment = (TextView) convertView.findViewById(R.id.text_board_view_comment);
+            holder.text_board_view_comment_date = (TextView) convertView.findViewById(R.id.text_board_view_comment_date);
+            holder.layout_comment_notice = (LinearLayout) convertView.findViewById(R.id.layout_comment_notice);
+            holder.btn_comment = (ImageButton) convertView.findViewById(R.id.btn_comment);
             holder.btn_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -679,17 +689,16 @@ public class BoardViewActivity extends AppCompatActivity{
                 }
             });
 
-            if(data.comment_hashMap.size() != 0){
+            if (data.comment_hashMap.size() != 0) {
                 int sum_of_width_notice = 0;
                 int addingCount = 0;
                 int layout_num = 0;
                 LinearLayout l1 = new LinearLayout(convertView.getContext());
                 LinearLayout l2 = new LinearLayout(convertView.getContext());
                 LinearLayout l3 = new LinearLayout(convertView.getContext());
-                for(int i=0; i < data.comment_hashMap.size()/2; i++)
-                {
-                    String hash_tag = data.comment_hashMap.get("hash_tag"+i).toString();
-                    String hash_tag_type = data.comment_hashMap.get("hash_tag_type"+i).toString();
+                for (int i = 0; i < data.comment_hashMap.size() / 2; i++) {
+                    String hash_tag = data.comment_hashMap.get("hash_tag" + i).toString();
+                    String hash_tag_type = data.comment_hashMap.get("hash_tag_type" + i).toString();
 
                     TextView textView = new TextView(convertView.getContext());
                     color(textView, hash_tag, hash_tag_type);
@@ -697,21 +706,21 @@ public class BoardViewActivity extends AppCompatActivity{
                     textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
                     sum_of_width_notice = sum_of_width_notice + textView.getMeasuredWidth() + 5;
 
-                    if(sum_of_width_notice > width_comment){
+                    if (sum_of_width_notice > width_comment) {
                         addingCount = 0;
                         layout_num++;
                         sum_of_width_notice = textView.getMeasuredWidth() + 5;
                     }
 
-                    if(layout_num == 0 && addingCount == 0){
+                    if (layout_num == 0 && addingCount == 0) {
                         holder.layout_comment_notice.addView(l1);
-                    }else if(layout_num == 1 && addingCount == 0){
+                    } else if (layout_num == 1 && addingCount == 0) {
                         holder.layout_comment_notice.addView(l2);
-                    }else if(layout_num == 2 && addingCount == 0){
+                    } else if (layout_num == 2 && addingCount == 0) {
                         holder.layout_comment_notice.addView(l3);
                     }
 
-                    switch(layout_num){
+                    switch (layout_num) {
                         case 0:
                             l1.addView(textView);
                             break;
@@ -728,14 +737,28 @@ public class BoardViewActivity extends AppCompatActivity{
 
             holder.text_board_view_comment.setText(Html.fromHtml(data.comment));
             holder.text_board_view_comment.setMovementMethod(LinkMovementMethod.getInstance());
-            holder.text_board_view_comment.setAutoLinkMask(Linkify.WEB_URLS);
+            //holder.text_board_view_comment.setAutoLinkMask(Linkify.WEB_URLS);
             holder.text_board_view_comment_date.setText(data.comment_date);
+
+            CharSequence text = holder.text_board_view_comment.getText();
+            if(text instanceof Spannable){
+                int end = text.length();
+                Spannable sp = (Spannable)holder.text_board_view_comment.getText();
+                URLSpan[] urls=sp.getSpans(0, end, URLSpan.class);
+                SpannableStringBuilder style=new SpannableStringBuilder(text);
+                style.clearSpans();//should clear old spans
+                for(URLSpan url : urls){
+                    CustomerTextClick click = new CustomerTextClick(url.getURL());
+                    style.setSpan(click, sp.getSpanStart(url),sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                holder.text_board_view_comment.setText(style);
+            }
 
             convertView.setFocusable(false);
             return convertView;
         }
 
-        public void addItem(String boardcomment_no, String comment_writer, String comment_date, String comment, HashMap commentHashMap){
+        public void addItem(String boardcomment_no, String comment_writer, String comment_date, String comment, HashMap commentHashMap) {
             BoardCommentData addData = new BoardCommentData();
 
             addData.boardcomment_no = boardcomment_no;
@@ -747,7 +770,7 @@ public class BoardViewActivity extends AppCompatActivity{
             board_comment_list_data.add(addData);
         }
 
-        public class ViewHolder{
+        public class ViewHolder {
             public TextView text_board_view_comment_writer;
             public TextView text_board_view_comment;
             public TextView text_board_view_comment_date;
@@ -759,14 +782,14 @@ public class BoardViewActivity extends AppCompatActivity{
 
         }
 
-        public void update(int position, String comment, HashMap hashMap){
+        public void update(int position, String comment, HashMap hashMap) {
             BoardCommentData updateData = board_comment_list_data.get(position);
 
             board_comment_list_data.get(position).comment = comment;
             board_comment_list_data.get(position).comment_hashMap = hashMap;
         }
 
-        public void dialogComment(final int index, final int position){
+        public void dialogComment(final int index, final int position) {
             String alert_message = "";
             AlertDialog.Builder alert_build = new AlertDialog.Builder(context);
             alert_build.setMessage("댓글을 삭제하시겠습니까?").setCancelable(false)
@@ -774,11 +797,11 @@ public class BoardViewActivity extends AppCompatActivity{
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             ////댓글 삭제하는 코드
-                            try{
+                            try {
                                 insert_mode = 2;
                                 modify_position = position;
                                 new InsertAsyncTask().execute();
-                            }catch(Exception e){
+                            } catch (Exception e) {
 
                             }
                         }
@@ -794,7 +817,7 @@ public class BoardViewActivity extends AppCompatActivity{
         }
     }
 
-    public void color(final TextView textView, String tag, String type){
+    public void color(final TextView textView, String tag, String type) {
         textView.setText(" " + tag + " ");
 
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -807,12 +830,12 @@ public class BoardViewActivity extends AppCompatActivity{
 
                 String currentComment = edit_board_view_comment.getText().toString();
                 boolean isValid = true;
-                Pattern pattern = Pattern.compile("@"+textView.getText().toString().substring(1));
+                Pattern pattern = Pattern.compile("@" + textView.getText().toString().substring(1));
                 Matcher matcher = pattern.matcher(currentComment);
-                while(matcher.find()){
+                while (matcher.find()) {
                     isValid = false;
                 }
-                if(isValid){
+                if (isValid) {
                     edit_board_view_comment.setText(currentComment + "@" + textView.getText().toString().substring(1));
                     Editable edt = edit_board_view_comment.getText();
                     Selection.setSelection(edt, edt.length());
@@ -821,21 +844,19 @@ public class BoardViewActivity extends AppCompatActivity{
         });
 
         Resources res = getApplicationContext().getResources();
-        if(type.equals("notice_myteam")) {
+        if (type.equals("notice_myteam")) {
             Drawable d = res.getDrawable(R.drawable.notice_myteam);
             textView.setBackgroundDrawable(d);
             textView.setTextColor(Color.rgb(255, 255, 255));
-        }
-        else if(type.equals("notice_team")) {
+        } else if (type.equals("notice_team")) {
             Drawable d = res.getDrawable(R.drawable.notice_team);
             textView.setBackgroundDrawable(d);
             textView.setTextColor(Color.rgb(42, 117, 0));
-        }
-        else if(type.equals("notice_member")) {
+        } else if (type.equals("notice_member")) {
             Drawable d = res.getDrawable(R.drawable.notice_member);
             textView.setBackgroundDrawable(d);
             textView.setTextColor(Color.rgb(59, 89, 152));
-        }else if(type.equals("notice_me")){
+        } else if (type.equals("notice_me")) {
             Drawable d = res.getDrawable(R.drawable.notice_me);
             textView.setBackgroundDrawable(d);
             textView.setTextColor(Color.rgb(255, 255, 255));
@@ -846,7 +867,7 @@ public class BoardViewActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if(from.equals("Mark")){
+                if (from.equals("Mark")) {
                     Intent intent = new Intent(this, BoardMarkedActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -856,9 +877,9 @@ public class BoardViewActivity extends AppCompatActivity{
             case R.id.favorite:
                 AlertDialog.Builder alert_build = new AlertDialog.Builder(this);
                 String alertStr = "";
-                if(!marked){
+                if (!marked) {
                     alertStr = "이 글을 즐겨찾기 등록하시겠습니까?";
-                }else{
+                } else {
                     alertStr = "이 글을 즐겨찾기 해제하시겠습니까?";
 
                 }
@@ -868,26 +889,25 @@ public class BoardViewActivity extends AppCompatActivity{
                             public void onClick(DialogInterface dialog, int which) {
                                 //수정하거나 삭제하는 코드.
                                 BasicData basicData = BasicData.getInstance();
-                                try{
+                                try {
                                     JSONObject json = new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/"
                                             + board_no
                                             + "/articles/" + boardarticle_no
                                             + "/scraped_members/" + basicData.getMem_no()
                                             , "PUT", "").execute().get();
                                     Log.d("scrap", json.get("status").toString());
-                                }catch(Exception e){
+                                } catch (Exception e) {
 
                                 }
 
                                 if (!marked) {
                                     Toast.makeText(getApplicationContext(), "즐겨찾기 추가되었습니다", Toast.LENGTH_SHORT).show();
                                     marked = true;
-                                }else {
+                                } else {
 
                                     Toast.makeText(getApplicationContext(), "즐겨찾기 해제되었습니다", Toast.LENGTH_SHORT).show();
                                     marked = false;
                                 }
-
 
 
                             }
@@ -906,9 +926,9 @@ public class BoardViewActivity extends AppCompatActivity{
                 AlertDialog.Builder alert_builder = new AlertDialog.Builder(this);
                 String alertSt = "";
                 final String complete = text_board_view_title.getText().toString().substring(0, 4);
-                if(!complete.equals("[완료]")){
+                if (!complete.equals("[완료]")) {
                     alertSt = "이 글을 완료하시겠습니까?";
-                }else{
+                } else {
                     alertSt = "이 글을 완료 해제하시겠습니까?";
                 }
                 final String html_content = view_content.replace("\n", "<br>");
@@ -918,19 +938,19 @@ public class BoardViewActivity extends AppCompatActivity{
                             public void onClick(DialogInterface dialog, int which) {
                                 //수정하거나 삭제하는 코드.
                                 BasicData basicData = BasicData.getInstance();
-                                String tag="";
-                                for(int i=0; i<hashtag.size(); i++){
-                                    tag = tag + "@" + hashtag.get("hash_tag"+i) + " ";
+                                String tag = "";
+                                for (int i = 0; i < hashtag.size(); i++) {
+                                    tag = tag + "@" + hashtag.get("hash_tag" + i) + " ";
                                 }
                                 if (!complete.equals("[완료]")) {
                                     Toast.makeText(getApplicationContext(), "완료 되었습니다", Toast.LENGTH_SHORT).show();
                                     text_board_view_title.setText("[완료]" + text_board_view_title.getText());
-                                }else {
+                                } else {
                                     Toast.makeText(getApplicationContext(), "완료 해제되었습니다", Toast.LENGTH_SHORT).show();
                                     text_board_view_title.setText(text_board_view_title.getText().toString().substring(4));
                                 }
 
-                                try{
+                                try {
 
                                     String requestBody = "subject=" + text_board_view_title.getText()
                                             + "&content=" + tag + html_content
@@ -941,10 +961,9 @@ public class BoardViewActivity extends AppCompatActivity{
                                     Log.d("test", requestBody);
                                     new MainAsyncTask("http://www.cconma.com/admin/api/board/v1/boards/" + board_no
                                             + "/articles/" + boardarticle_no, "POST", requestBody).execute().get();
-                                }catch(Exception e){
+                                } catch (Exception e) {
 
                                 }
-
 
 
                             }
@@ -977,4 +996,32 @@ public class BoardViewActivity extends AppCompatActivity{
         return true;
     }
 
+    class WebClient extends WebViewClient {
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            Cookies.getInstance(BoardViewActivity.this).updateCookies(url);
+            return true;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(webView_content.canGoBack())
+            webView_content.goBack();
+        else
+            super.onBackPressed();
+    }
+    class CustomerTextClick extends ClickableSpan {
+
+        private String mUrl;
+        CustomerTextClick(String url) {
+            mUrl =url;
+        }
+        @Override
+        public void onClick(View widget) {
+            // TODO Auto-generated method stub
+            Toast.makeText(BoardViewActivity.this, "hello google!",Toast.LENGTH_LONG).show();
+        }
+    }
 }
+

@@ -38,7 +38,7 @@ public class StartupWebView extends AppCompatActivity {
         webview = (WebView) findViewById(R.id.webView);
 
         isPageLoaded = false;
-        IntegratedSharedPreferences pref = new IntegratedSharedPreferences(StartupWebView.this);
+        /*IntegratedSharedPreferences pref = new IntegratedSharedPreferences(StartupWebView.this);
 
         url = "http://www.cconma.com/mobile/admin-app/startup.pmv";
         String requestBody = "autoLoginAuthToken=" +
@@ -53,7 +53,23 @@ public class StartupWebView extends AppCompatActivity {
         String userAgent = webview.getSettings().getUserAgentString();
         webview.getSettings().setUserAgentString(userAgent + ";com.cconma.app");
         webview.postUrl(url, requestBody.getBytes());
-        webview.setWebViewClient(new WebClient());
+        webview.setWebViewClient(new WebClient());*/
+        Log.d("debugging", "StartupWebView opened!!!");
+        IntegratedSharedPreferences pref = new IntegratedSharedPreferences(StartupWebView.this);
+
+        String requestBody = "autoLoginAuthToken=" + pref.getValue("AUTO_LOGIN_AUTH_TOKEN", "")
+                + "&push_id=" + pref.getValue("PUSH_ID", "") + "&app_ver=" +
+                pref.getValue("APP_VERSION", "1.0.0") + "&android_id=" +
+                pref.getValue("ANDROID_ID", "1");
+
+        Log.d("debugging", "AUTO LOGIN AUTH TOKEN: " + requestBody);
+        url = "http://www.cconma.com/mobile/admin-app/startup.pmv";
+        Cookies.getInstance(StartupWebView.this).updateCookies(url);
+        new StartUp(StartupWebView.this).post(requestBody);
+
+        Intent intent = new Intent(StartupWebView.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     class WebClient extends WebViewClient {

@@ -5,6 +5,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -29,7 +30,8 @@ public class ScrollingFabBehavior extends CoordinatorLayout.Behavior<FloatingAct
             CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             int fabBottomMargin = lp.bottomMargin;
             int distanceToScroll = fab.getHeight();
-            float ratio = dependency.getY()/(float)toolbarHeight;
+            Log.d("debugging", "dependency: " + dependency.getY() + " ");
+            float ratio = dependency.getY() / 140;
             fab.setTranslationY(-distanceToScroll * ratio);
         }
         return true;

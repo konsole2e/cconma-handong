@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import handong.cconma.cconmaadmin.board.BoardData;
 import handong.cconma.cconmaadmin.board.BoardRecyclerAdapter;
 import handong.cconma.cconmaadmin.board.BoardSearchActivity;
 import handong.cconma.cconmaadmin.board.BoardViewActivity;
+import handong.cconma.cconmaadmin.board.MyLinearLayoutManager;
 import handong.cconma.cconmaadmin.customview.SwipeRefreshLayoutBottom;
 import handong.cconma.cconmaadmin.http.HttpConnection;
 
@@ -55,6 +57,7 @@ public class BoardFragment extends Fragment {
     private String board_title;
     private String board_no;
     private int page_no;
+    private int overallYScroll = 0;
     private int overallXScroll = 0;
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView recyclerView;
@@ -68,19 +71,7 @@ public class BoardFragment extends Fragment {
     private int total = 0;
     private int firstVisibleItemCount;
     private int lastVisibleItemCount;
-    int isSearch;
-
-    private View actionView;
-
-    //FrameLayout layout_board_search;
-    Spinner spinner_board_condition;
-    EditText edit_board_search;
-    Button btn_board_search;
-
-    String search_keyword="";
-    String search_cond = "";
-
-    InputMethodManager input_manager;
+    private GestureDetector mGestureDetector;
 
     public static BoardFragment newInstance(String page_no, String title) {
         Bundle args = new Bundle();
@@ -122,8 +113,8 @@ public class BoardFragment extends Fragment {
        View view = inflater.inflate(R.layout.board_layout, container, false);
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
-        recyclerView.setOnTouchListener(touchListener);
-        linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
+        linearLayoutManager = new MyLinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.VERTICAL, false, 500);
+
         recyclerView.setLayoutManager(linearLayoutManager);
         circularProgressBar = (CircularProgressBar)view.findViewById(R.id.progressbar_circular);
         refresh_bottom = (SwipeRefreshLayoutBottom)view.findViewById(R.id.refresh_bottom);
@@ -154,6 +145,50 @@ public class BoardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //if(savedInstanceState == null)
             new BoardAsyncTask_test(getActivity().getApplicationContext(), 0).execute();
+        mGestureDetector = new GestureDetector(
+                getActivity().getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                if (e.getX() > 100) {
+                    View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                    int position = recyclerView.getChildAdapterPosition(view);
+                    Log.d("debugging", "POSITION: " + String.valueOf(position));
+                    // handle single tap
+                    if (view != null && position != -1) {
+                        Intent i = new Intent(getActivity(), BoardViewActivity.class);
+
+                        i.putExtra("board_no", boardDataList.get(position).board_no);
+                        i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
+                        i.putExtra("number", boardDataList.get(position).boardarticle_no);
+                        i.putExtra("marked", boardDataList.get(position).board_marked);
+                        i.putExtra("from", "fragment");
+
+                        startActivity(i);
+                    }
+                }
+                return super.onSingleTapConfirmed(e);
+            }
+
+            public void onLongPress(MotionEvent e) {
+                View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                int position = recyclerView.getChildAdapterPosition(view);
+                // handle long press
+
+                super.onLongPress(e);
+            }
+        });
+
+        recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                mGestureDetector.onTouchEvent(e);
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+            }
+        });
 
         refresh_bottom.setColorSchemeResources(android.R.color.holo_red_light,
                 android.R.color.holo_blue_bright,
@@ -169,7 +204,7 @@ public class BoardFragment extends Fragment {
                     public void run() {
                         new BoardAsyncTask_test(getActivity().getApplicationContext(), -1).execute();
                     }
-                }, 1000);
+                }, 300);
             }
         });
     }
@@ -200,65 +235,28 @@ public class BoardFragment extends Fragment {
             if( page == 0 ) {
                 adapter = new BoardRecyclerAdapter(boardDataList, context);
                 recyclerView.setAdapter(adapter);
-                recyclerView.setItemAnimator(null);
-
-                final GestureDetector mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-                    @Override
-                    public boolean onSingleTapConfirmed(MotionEvent e) {
-                        if (e.getX() > 100) {
-                            View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                            int position = recyclerView.getChildAdapterPosition(view);
-                            Log.d("debugging", "POSITION: " + String.valueOf(position));
-                            // handle single tap
-                            if (view != null && position != -1) {
-                                Intent i = new Intent(getActivity(), BoardViewActivity.class);
-
-                                Log.d(TAG, boardDataList.get(position).board_no.toString() + " " + boardDataList.get(position).boardarticle_no.toString() + " " +
-                                        boardDataList.get(position).boardarticle_no);
-                                i.putExtra("board_no", boardDataList.get(position).board_no);
-                                i.putExtra("boardarticle_no", boardDataList.get(position).boardarticle_no);
-                                i.putExtra("number", boardDataList.get(position).boardarticle_no);
-                                i.putExtra("marked", boardDataList.get(position).board_marked);
-                                i.putExtra("from", "fragment");
-
-                                startActivity(i);
-                            }
-                        }
-                        return super.onSingleTapConfirmed(e);
-                    }
-
-                    public void onLongPress(MotionEvent e) {
-                        View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                        int position = recyclerView.getChildAdapterPosition(view);
-                        // handle long press
-
-                        super.onLongPress(e);
-                    }
-                });
-
+                //recyclerView.setItemAnimator(null);
                 recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                         super.onScrolled(recyclerView, dx, dy);
 
-                        Log.d("debugging", "DX:  " + dy);
-                        overallXScroll = overallXScroll + dy;
-                        Log.d("debugging", "OVERALL DX:  " + overallXScroll);
+                        overallXScroll = overallXScroll + dx;
+                        overallYScroll = overallYScroll + dy;
+                        DisplayMetrics displaymetrics = new DisplayMetrics();
+                        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
 
+                        Log.d("debugging", " " + overallYScroll + " " + displaymetrics.heightPixels);
                         total = linearLayoutManager.getItemCount();
                         //firstVisibleItemCount = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
                         firstVisibleItemCount = linearLayoutManager.findFirstVisibleItemPosition();
                         lastVisibleItemCount = linearLayoutManager.findLastVisibleItemPosition();
-                        Log.d("number", String.valueOf(total) + " " + String.valueOf(firstVisibleItemCount) + " "
-                                + String.valueOf(lastVisibleItemCount));
-                        Log.d("number", String.valueOf(isLoading));
 
                         View view = recyclerView.getChildAt(firstVisibleItemCount);
                         int itemHeight = 148;
-                        if( view != null ) {
+                        if (view != null) {
                             itemHeight = recyclerView.getChildAt(firstVisibleItemCount).getHeight();
                         }
-                        Log.d("number", String.valueOf(itemHeight));
                         if (!isLoading) {
                             if (total > 0)
                                 if ((total - 1) == lastVisibleItemCount) {
@@ -272,34 +270,15 @@ public class BoardFragment extends Fragment {
 
                     }
                 });
-
-                recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
-                    @Override
-                    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                        mGestureDetector.onTouchEvent(e);
-                        return false;
-                    }
-
-                    @Override
-                    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-                    }
-
-                });
-
-                fab_up.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        linearLayoutManager.scrollToPosition(0);
-                    }
-                });
             }
             refresh_bottom.setRefreshing(false);
             circularProgressBar.setVisibility(View.GONE);
             adapter.notifyItemInserted(boardDataList.size() - 1);
 
-           // recyclerView.smoothScrollBy(0, overallXScroll);
-           // overallXScroll = 0;
-
+            //recyclerView.scrollBy(overallXScroll, overallYScroll);
+            //linearLayoutManager.scrollToPositionWithOffset(0, overallXScroll);
+            // recyclerView.smoothScrollBy(0, overallXScroll);
+            //overallYScroll = 0;
         }
     }
 
@@ -378,32 +357,4 @@ public class BoardFragment extends Fragment {
             Log.d(TAG, "Exception in BoardFragement Line 125: " + e.getMessage());
         }
     }
-
-    View.OnTouchListener touchListener = new View.OnTouchListener() {
-        int prevY, curY, dy;
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            if(event.getAction() == MotionEvent.ACTION_DOWN){
-                prevY = (int)event.getY();
-            }else if(event.getAction() == MotionEvent.ACTION_MOVE){
-                curY = (int)event.getY();
-
-                if(prevY < curY){
-                    dy = curY-prevY;
-                    if(dy > 150){
-
-                    }
-                }else{
-                    dy = prevY -curY;
-                    if(dy > 150){
-                    }
-                }
-
-            }
-
-            return false;
-        }
-    };
 }

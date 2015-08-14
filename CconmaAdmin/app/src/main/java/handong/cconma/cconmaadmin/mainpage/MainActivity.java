@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 }else{
                     backPressedTime = tempTime;
-                    Toast.makeText(getApplicationContext(), "'뒤로'버튼을 한번 더 누르면 종료", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "뒤로버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 fragmentManager.popBackStack();

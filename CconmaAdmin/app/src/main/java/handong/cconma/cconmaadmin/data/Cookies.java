@@ -28,9 +28,9 @@ public class Cookies extends Application {
         //if (mCookies == null) {
             mCookies = new Cookies(context);
             return mCookies;
-        //}else{
-        //    return mCookies;
-       // }
+        /*}else{
+            return mCookies;
+        }*/
 
     }
 
