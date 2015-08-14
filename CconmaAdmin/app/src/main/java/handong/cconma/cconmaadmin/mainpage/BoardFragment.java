@@ -147,7 +147,6 @@ public class BoardFragment extends Fragment {
                 if (e.getX() > 100) {
                     View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
                     int position = recyclerView.getChildAdapterPosition(view);
-                    Log.d("debugging", "POSITION: " + String.valueOf(position));
                     // handle single tap
                     if (view != null && position != -1) {
                         Intent i = new Intent(getActivity(), BoardViewActivity.class);

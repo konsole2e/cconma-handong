@@ -67,7 +67,6 @@ public class StartPage extends AppCompatActivity {
 
         logoImage = (ImageView) findViewById(R.id.startup_image);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.progressbar_circular);
-        circularProgressBar.setVisibility(View.VISIBLE);
 
         getInstanceIdToken();
 
@@ -107,6 +106,16 @@ public class StartPage extends AppCompatActivity {
                 finish();
             }
         }, 2000);
+
+        AnimationSet set = new AnimationSet(true);
+        set.setInterpolator(new AccelerateInterpolator());
+
+        Animation animation = new TranslateAnimation(0, 0, 0, -150);//TranslateAnimation (float fromXDelta, float toXDelta, float fromYDelta, float toYDelta)
+        animation.setDuration(1000);
+        animation.setFillAfter(true);
+        logoImage.startAnimation(animation);
+
+        circularProgressBar.setVisibility(View.VISIBLE);
     }
 
     public void getInstanceIdToken() {

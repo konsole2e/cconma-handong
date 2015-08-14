@@ -73,7 +73,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         this.dataItemList = dataItemList;
         this.context = context;
         Display dis = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        width_notice = dis.getWidth()*0.6;
+        width_notice = dis.getWidth()*0.55;
     }
 
 
