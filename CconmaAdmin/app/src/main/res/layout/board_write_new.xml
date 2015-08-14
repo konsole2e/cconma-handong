@@ -20,13 +20,6 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
             style="@android:style/Widget.Holo.Light.DropDownItem.Spinner"/>
-        <CheckBox
-            android:id="@+id/checkbox_notice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
-            android:text="공지사항"
-            style="@style/SmallBlack"/>
     </FrameLayout>
     <HorizontalScrollView
         android:layout_width="match_parent"

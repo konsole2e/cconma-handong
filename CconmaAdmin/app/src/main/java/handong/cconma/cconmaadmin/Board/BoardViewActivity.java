@@ -61,6 +61,7 @@ import handong.cconma.cconmaadmin.data.Cookies;
 import handong.cconma.cconmaadmin.etc.MainAsyncTask;
 import handong.cconma.cconmaadmin.mainpage.AdminApplication;
 import handong.cconma.cconmaadmin.http.HttpConnection;
+import handong.cconma.cconmaadmin.webpage.WebViewForOthers;
 
 
 /**
@@ -1020,7 +1021,9 @@ public class BoardViewActivity extends AppCompatActivity {
         @Override
         public void onClick(View widget) {
             // TODO Auto-generated method stub
-            Toast.makeText(BoardViewActivity.this, "hello google!",Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(BoardViewActivity.this, WebViewForOthers.class);
+            intent.putExtra("url", mUrl);
+            startActivity(intent);
         }
     }
 }

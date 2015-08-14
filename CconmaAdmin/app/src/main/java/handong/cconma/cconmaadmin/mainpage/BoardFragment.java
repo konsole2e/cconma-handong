@@ -236,7 +236,6 @@ public class BoardFragment extends Fragment {
             if( page == 0 ) {
                 adapter = new BoardRecyclerAdapter(boardDataList, context);
                 recyclerView.setAdapter(adapter);
-                //recyclerView.setItemAnimator(null);
                 recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
