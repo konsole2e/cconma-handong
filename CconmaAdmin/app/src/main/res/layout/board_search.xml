@@ -41,18 +41,21 @@
 
         <TextView
             android:id="@+id/search_none_tv"
-            android:layout_gravity="center_horizontal|center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
             android:background="#00000000"
-            android:visibility="gone"
             android:text="검색 결과가 없습니다."
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="gone" />
 
-        <android.support.v7.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_below="@+id/top"
+            android:scrollbars="vertical" />
 
         <fr.castorflex.android.circularprogressbar.CircularProgressBar
             android:id="@+id/progressbar_circular"

@@ -112,7 +112,7 @@ public class BoardSearchActivity extends AppCompatActivity {
             public void onClick(View v) {
                 recyclerView.removeAllViewsInLayout();
                 recyclerView.invalidate();
-                if(edit_board_search.getText().length() == 0){
+                if (edit_board_search.getText().length() == 0) {
                     Toast.makeText(getApplicationContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -149,7 +149,7 @@ public class BoardSearchActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("검색");
 
-            board_no = getIntent().getStringExtra("board_no");
+        board_no = getIntent().getStringExtra("board_no");
         board_title = getIntent().getStringExtra("board_title");
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -192,8 +192,6 @@ public class BoardSearchActivity extends AppCompatActivity {
                 return super.onSingleTapConfirmed(e);
             }
         });
-        RelativeLayout rl = (RelativeLayout)findViewById(R.id.footer);
-        recyclerView.removeView(rl);
     }
 
     public class SpinnerAdapter extends ArrayAdapter<String> {
@@ -261,7 +259,7 @@ public class BoardSearchActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean empty) {
-            adapter = new BoardRecyclerAdapter(boardDataList, getApplicationContext());
+            adapter = new BoardRecyclerAdapter(boardDataList, getApplicationContext(), true);
             recyclerView.setAdapter(adapter);
             searchTv.setText("\"" + board_title + "\" 게시판에서 \"" + edit_board_search.getText() + "\" 검색 완료");
             searchTv.setSelected(true);
@@ -275,6 +273,7 @@ public class BoardSearchActivity extends AppCompatActivity {
             circularProgressBar.setVisibility(View.GONE);
 
             adapter.notifyDataSetChanged();
+
         }
     }
 
@@ -283,7 +282,7 @@ public class BoardSearchActivity extends AppCompatActivity {
         boolean empty = true;
         try {
             String url = "http://www.cconma.com/admin/api/board/v1/boards/"
-                    + board_no + search_cond + search_keyword;
+                    + board_no + search_cond + search_keyword + "&page=1&n=50";
 
             HttpConnection connection = new HttpConnection(url, "GET", "");
             sResult = connection.init();

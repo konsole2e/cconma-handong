@@ -33,9 +33,9 @@ import handong.cconma.cconmaadmin.http.HttpConnection;
  * Created by Young Bin Kim on 2015-07-27.
  */
 public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdapter.ViewHolder> {
-    private static final int VIEW_MAIN  = 0;
+    private static final int VIEW_MAIN = 0;
     private static final int VIEW_FOOTER = 1;
-
+    private boolean mSearch = false;
     private List<BoardData> dataItemList;
     private Context context;
     private double width_notice;
@@ -55,7 +55,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
         public ViewHolder(View itemView, int i) {
             super(itemView);
-            if( i == VIEW_MAIN ) {
+            if (i == VIEW_MAIN) {
                 text_board_title = (TextView) itemView.findViewById(R.id.text_board_title);
                 text_board_comment_num = (TextView) itemView.findViewById(R.id.text_board_comment_num);
                 text_board_date = (TextView) itemView.findViewById(R.id.text_board_date);
@@ -64,11 +64,18 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
                 btn_board_mark.setFocusable(false);
                 layout_notice = (LinearLayout) itemView.findViewById(R.id.layout_notice);
                 holderId = 0;
-            }
-            else{
+            } else {
                 holderId = 1;
             }
         }
+    }
+
+    public BoardRecyclerAdapter(List<BoardData> dataItemList, Context context, boolean search) {
+        mSearch = search;
+        this.dataItemList = dataItemList;
+        this.context = context;
+        Display dis = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        width_notice = dis.getWidth() * 0.6;
     }
 
     public BoardRecyclerAdapter(List<BoardData> dataItemList, Context context) {
@@ -81,16 +88,20 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        if( i == VIEW_MAIN ) {
+        if (i == VIEW_MAIN) {
             View view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.board_item, viewGroup, false);
 
             return new ViewHolder(view, i);
-        }
-        else{
-            View view = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.board_footer, viewGroup, false);
-
+        } else {
+            View view;
+            if (!mSearch) {
+                view = LayoutInflater.from(viewGroup.getContext())
+                        .inflate(R.layout.board_footer, viewGroup, false);
+            } else {
+                view = LayoutInflater.from(viewGroup.getContext())
+                        .inflate(R.layout.fake_footer, viewGroup, false);
+            }
             return new ViewHolder(view, i);
         }
     }
@@ -98,7 +109,7 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
 
-        if( viewHolder.holderId == 0 ) {
+        if (viewHolder.holderId == 0) {
             if (dataItemList != null) {
                 final BoardData dataItem = dataItemList.get(i);
 
@@ -215,42 +226,40 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
     @Override
     public int getItemViewType(int position) {
-        if ( position == dataItemList.size() )
+        if (position == dataItemList.size())
             return VIEW_FOOTER;
 
         return VIEW_MAIN;
     }
 
-    public void color(TextView textView, BoardData boardData, int n){
-        String hash_tag_type = boardData.hashMap.get("hash_tag_type"+n).toString();
-        textView.setText(" "+boardData.hashMap.get("hash_tag" + n).toString()+" ");
+    public void color(TextView textView, BoardData boardData, int n) {
+        String hash_tag_type = boardData.hashMap.get("hash_tag_type" + n).toString();
+        textView.setText(" " + boardData.hashMap.get("hash_tag" + n).toString() + " ");
 
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         llp.setMargins(0, 0, 5, 2); // llp.setMargins(left, top, right, bottom);
         textView.setLayoutParams(llp);
         Resources res = context.getResources();
-        if(hash_tag_type.equals("notice_myteam")) {
+        if (hash_tag_type.equals("notice_myteam")) {
             Drawable d = res.getDrawable(R.drawable.notice_myteam);
             textView.setBackgroundDrawable(d);
             textView.setTextColor(Color.rgb(255, 255, 255));
-        }
-        else if(hash_tag_type.equals("notice_team")) {
+        } else if (hash_tag_type.equals("notice_team")) {
             Drawable d = res.getDrawable(R.drawable.notice_team);
             textView.setBackgroundDrawable(d);
             textView.setTextColor(Color.rgb(42, 117, 0));
-        }
-        else if(hash_tag_type.equals("notice_member")) {
+        } else if (hash_tag_type.equals("notice_member")) {
             Drawable d = res.getDrawable(R.drawable.notice_member);
             textView.setBackgroundDrawable(d);
             textView.setTextColor(Color.rgb(59, 89, 152));
-        }else if(hash_tag_type.equals("notice_me")){
+        } else if (hash_tag_type.equals("notice_me")) {
             Drawable d = res.getDrawable(R.drawable.notice_me);
             textView.setBackgroundDrawable(d);
             textView.setTextColor(Color.rgb(255, 255, 255));
         }
     }
 
-    class MarkAsync extends AsyncTask<String, Void, String>{
+    class MarkAsync extends AsyncTask<String, Void, String> {
 
         BasicData basicData = BasicData.getInstance();
 
@@ -258,10 +267,10 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
         protected void onPreExecute() {
             super.onPreExecute();
 
-            if(dataItemList.get(markpos).board_marked){
+            if (dataItemList.get(markpos).board_marked) {
                 Toast.makeText(context, "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
                 dataItemList.get(markpos).board_marked = false;
-            }else{
+            } else {
                 Toast.makeText(context, "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
                 dataItemList.get(markpos).board_marked = true;
             }
