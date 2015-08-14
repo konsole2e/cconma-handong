@@ -261,10 +261,12 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 //////////////////back key control in fragment
     @Override
     public void onBack() {
-        WebView webView = (WebView) viewPagerAdapter.getFragment(pos).getView().
-                findViewById(R.id.navi_webView);
-        if (webView.canGoBack()) {
-            webView.goBack();
+        Fragment fragment = viewPagerAdapter.getFragment(pos);
+        if( fragment != null ){
+            WebView webView = (WebView) viewPagerAdapter.getFragment(pos).getView().
+                    findViewById(R.id.navi_webView);
+            if (webView.canGoBack())
+                webView.goBack();
         } else {
             MainActivity activity = (MainActivity) getActivity();
             activity.setOnKeyBackPressedListener(null);
