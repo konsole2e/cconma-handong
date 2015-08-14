@@ -227,9 +227,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("board_no", board_no);
             intent.putExtra("boardarticle_no", boardArticle_no);
             intent.putExtra("from", "push");
-       /*     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
+
             startActivity(intent);
             AdminApplication.getInstance().setBoardNo(null);
             AdminApplication.getInstance().setArticleNo(null);

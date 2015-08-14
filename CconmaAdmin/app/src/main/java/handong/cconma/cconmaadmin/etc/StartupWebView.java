@@ -68,6 +68,7 @@ public class StartupWebView extends AppCompatActivity {
         new StartUp(StartupWebView.this).post(requestBody);
 
         Intent intent = new Intent(StartupWebView.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }

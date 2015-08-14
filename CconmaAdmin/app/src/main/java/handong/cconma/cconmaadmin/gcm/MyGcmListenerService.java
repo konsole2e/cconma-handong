@@ -55,7 +55,6 @@ public class MyGcmListenerService extends GcmListenerService {
         Intent intent = new Intent(this, StartPage.class);
         intent.putExtra("board_no", board_no);
         intent.putExtra("boardarticle_no", boardarticle_no);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
