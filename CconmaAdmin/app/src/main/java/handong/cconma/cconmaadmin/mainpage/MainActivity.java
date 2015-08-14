@@ -320,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 }else{
                     backPressedTime = tempTime;
-                    Toast.makeText(getApplicationContext(), "'뒤로'버튼을 한번 더 누르면 종료", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "뒤로버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 fragmentManager.popBackStack();
@@ -379,10 +379,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void drawerDefault() {
-        navigationView.inflateMenu(R.menu.menu_default);
         Menu menu = navigationView.getMenu();
         menu.removeGroup(R.id.menu_user);
+        navigationView.inflateMenu(R.menu.menu_default);
         getDynamicMenu();
+        mPreviousMenuItem.setChecked(false);
+        mPreviousMenuItem.setChecked(true);
         arrow.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
         status = 0;
     }

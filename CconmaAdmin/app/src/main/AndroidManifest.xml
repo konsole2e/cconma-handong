@@ -51,6 +51,7 @@
         <activity android:name=".board.BoardModifyActivity" />
 
         <activity android:name=".board.BoardSearchActivity" />
+
         <activity
             android:name=".board.BoardViewActivity"
             android:windowSoftInputMode="adjustResize" />
@@ -58,6 +59,8 @@
         <activity android:name=".board.BoardMarkedActivity" />
 
         <activity android:name=".push.PushView" />
+
+        <activity android:name=".webpage.WebViewForOthers"/>
 
         <!-- GCM -->
         <receiver

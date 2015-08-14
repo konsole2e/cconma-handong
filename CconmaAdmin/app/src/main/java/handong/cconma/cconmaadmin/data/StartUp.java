@@ -27,7 +27,6 @@ public class StartUp {
             responseJson = new MainAsyncTask(
                     "http://www.cconma.com/mobile/admin-app/startup.pmv",
                     "POST", requestBody).execute().get();
-            //Cookies.getInstance(context).updateCookies("http://wwww.cconma.com/mobile/admin-app/startup.pmv");
             handleInfo(responseJson);
         } catch (Exception e) {
             e.printStackTrace();

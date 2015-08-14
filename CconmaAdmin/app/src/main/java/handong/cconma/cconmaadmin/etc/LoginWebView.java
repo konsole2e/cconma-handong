@@ -49,6 +49,7 @@ public class LoginWebView extends AppCompatActivity {
         String userAgent = webview.getSettings().getUserAgentString();
         Cookies.getInstance(null).removeAllCookies();
         webview.getSettings().setUserAgentString(userAgent + ";com.cconma.app");
+        webview.getSettings().setDomStorageEnabled(true);
         webview.loadUrl(url);
         webview.setWebViewClient(new WebClient());
     }

@@ -40,7 +40,6 @@ import handong.cconma.cconmaadmin.mainpage.MainFragment;
 public class WebPageFragment extends Fragment{
     private static final String ARG_URL = "ARG_URL";
     private String url;
-    private String static_url;
     private View view;
     private WebView pageWebView;
     private static WebPageFragment fragment;
@@ -68,7 +67,6 @@ public class WebPageFragment extends Fragment{
         url = getArguments().getString(ARG_URL);
         Log.d("debugging", "URL URL: " + url);
         location = getResources().getString(R.string.www);
-        static_url = location + url;
     }
 
     @Override
@@ -95,10 +93,6 @@ public class WebPageFragment extends Fragment{
                 pageWebView.loadUrl(current_page);
             }
         });
-
-        final TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabLayout);
-        final ViewPager viewPager = (ViewPager)getActivity().findViewById(R.id.etc_viewpager);
-
         loadingUrl();
 
         return view;
@@ -110,6 +104,7 @@ public class WebPageFragment extends Fragment{
         pageWebView.getSettings().setUserAgentString(userAgent + ";com.admincconma.app");
         pageWebView.getSettings().setBuiltInZoomControls(true);
         pageWebView.getSettings().setSupportZoom(true);
+        pageWebView.getSettings().setBuiltInZoomControls(false);
         pageWebView.getSettings().setLoadWithOverviewMode(true);
         pageWebView.getSettings().setUseWideViewPort(true);
         pageWebView.setWebViewClient(new WebClient());
@@ -135,6 +130,7 @@ public class WebPageFragment extends Fragment{
             Log.d("debugging", "URL: " + url);
             current_page = url;
             progressBar.setVisibility(View.GONE);
+            Cookies.getInstance(getActivity().getApplicationContext()).updateCookies(url);
             if( sr.isRefreshing() ){
                 sr.setRefreshing(false);
             }

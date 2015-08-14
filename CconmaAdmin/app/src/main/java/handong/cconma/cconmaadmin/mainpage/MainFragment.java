@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
     private String url;
     private int fragment_pos = 0;
     private int position = 0;
+    private int mPreviousPosition;
 
     int pos;
     public MainFragment(){
@@ -92,7 +94,6 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     super.onTabSelected(tab);
-
                 }
 
                 @Override
@@ -101,9 +102,12 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
 
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
-                    Fragment fragment = viewPagerAdapter.getFragment(tab.getPosition());
-                    BoardFragment bf = (BoardFragment)fragment;
-                    bf.refresh(getActivity().getApplicationContext());
+                    fragment_pos = tab.getPosition();
+                    Fragment fragment = viewPagerAdapter.getFragment(fragment_pos);
+                    if( fragment != null ) {
+                        BoardFragment bf = (BoardFragment) fragment;
+                        bf.refresh(getActivity().getApplicationContext());
+                    }
                 }
             });
 
@@ -135,6 +139,11 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             fab_up.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Fragment fragment = viewPagerAdapter.getFragment(fragment_pos);
+                    if( fragment != null ) {
+                        RecyclerView rv = (RecyclerView) fragment.getView().findViewById(R.id.recycler_view);
+                        rv.smoothScrollToPosition(0);
+                    }
                 }
             });
 
