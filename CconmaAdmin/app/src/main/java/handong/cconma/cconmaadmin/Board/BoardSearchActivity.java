@@ -130,7 +130,7 @@ public class BoardSearchActivity extends AppCompatActivity {
                 } catch (Exception e) {
 
                 }
-
+                new BoardAsyncTask().execute("", "GET", "");
                 input_manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 input_manager.hideSoftInputFromWindow(edit_board_search.getWindowToken(), 0);
             }
