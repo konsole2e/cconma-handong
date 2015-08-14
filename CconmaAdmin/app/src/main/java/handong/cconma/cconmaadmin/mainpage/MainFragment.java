@@ -44,7 +44,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
     private int position = 0;
     private boolean reSelect = true;
 
-    int pos;
+    int pos = 0;
     public MainFragment(){
     }
 
@@ -98,6 +98,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
                     if(viewPager.getCurrentItem() != tab.getPosition()){
                         reSelect = false;
                     }
+                    pos = tab.getPosition();
                     super.onTabSelected(tab);
                 }
 
@@ -149,7 +150,7 @@ public class MainFragment extends Fragment implements MainActivity.onKeyBackPres
             fab_up.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment fragment = viewPagerAdapter.getFragment(fragment_pos);
+                    Fragment fragment = viewPagerAdapter.getFragment(pos);
                     if( fragment != null ) {
                         RecyclerView rv = (RecyclerView) fragment.getView().findViewById(R.id.recycler_view);
                         rv.smoothScrollToPosition(0);
